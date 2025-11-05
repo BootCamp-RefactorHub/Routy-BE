@@ -1,8 +1,5 @@
-package com.c4.routy.config;
+package com.c4.routy.domain.user.security;
 
-import com.c4.routy.common.util.CustomOAuth2FailureHandler;
-import com.c4.routy.common.util.CustomOAuth2SuccessHandler;
-import com.c4.routy.common.util.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

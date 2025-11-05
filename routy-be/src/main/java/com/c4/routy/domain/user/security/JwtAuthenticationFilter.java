@@ -1,4 +1,4 @@
-package com.c4.routy.common.util;
+package com.c4.routy.domain.user.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

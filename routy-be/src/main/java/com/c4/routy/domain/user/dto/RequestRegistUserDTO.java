@@ -10,6 +10,6 @@ public class RequestRegistUserDTO {
     private String email;
     private String password;
     private String phone;
-    private String age;
+    private Integer age;
     private String gender;
 }

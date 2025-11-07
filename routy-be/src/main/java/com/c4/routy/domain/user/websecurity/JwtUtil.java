@@ -39,30 +39,38 @@ public class JwtUtil {
         this.authService = authService;
     }
 
+    // 일반 로그인 용 Jwt 토큰 생성기
     public String getToken(Authentication authResult) {
         log.info("로그인 성공 이후 스프링 시큐리티가 Authentication 객체로 관리되며 넘어옴: {}", authResult);
 
         // JWT 제작
-        // 1. JWT 제작을 위한 재료 추출 (jwt.io / json web tokens)
         // 토큰의 페이로드에 아이디, 권한, 만료시간을 담기
         // 프로바이더에서 반환한 내용 중 User의 내용은 Principal로 저장되어 있음
+
+        // 1. JWT 제작을 위한 재료 추출 (jwt.io / json web tokens)
         // 페이로드에 담을 내용 중 아이디를 추출
-        String userName = ((User) authResult.getPrincipal()).getUsername();
-        log.info("회원의 아이디: {}", userName);
+        String email = ((CustomUserDetails) authResult.getPrincipal()).getUsername();
 
         // 페이로드에 담을 내용 중 권한을 추출
         List<String> roles = authResult.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-        log.info("List<String> 형태로 뽑아낸 로그인한 회원의 권한들: {}", roles);
-        log.info("만료시간: {}", expirationTime);
+
+        // 페이로드에 담을 내용 중 userNo를 추출
+        String userNo = String.valueOf(((CustomUserDetails) authResult.getPrincipal()).getUserNo());
 
         // 2. 재료를 활용한 JWT 제작
-        Claims claims = Jwts.claims().setSubject(userName); // 등록된 클레임
-        claims.put("auth", roles);                          // 비공개 클레임
+        log.info("회원의 이메일: {}", email);
+        log.info("List<String> 형태로 뽑아낸 로그인한 회원의 권한들: {}", roles);
+        log.info("회원 번호: {}", userNo);
+        log.info("만료시간: {}", expirationTime);
+
+        Claims claims = Jwts.claims().setSubject(userNo); // 등록된 클레임
+        claims.put("auth", roles);                        // 비공개 클레임
+        claims.put("email", email);
 
         String token = Jwts.builder()
-                .setClaims(claims)                          // 등록된 클레임 + 비공개 클레임
+                .setClaims(claims)// 등록된 클레임 + 비공개 클레임
                 .setExpiration(new java.util.Date(System.currentTimeMillis()
                         + Long.parseLong(expirationTime)))
                 .signWith(SignatureAlgorithm.HS256, key)
@@ -71,6 +79,7 @@ public class JwtUtil {
         return token;
     }
 
+    // 토큰 유효성 검사 메서드
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);

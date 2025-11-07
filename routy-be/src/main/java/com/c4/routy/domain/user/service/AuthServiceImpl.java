@@ -2,6 +2,7 @@ package com.c4.routy.domain.user.service;
 
 import com.c4.routy.domain.user.entity.UserEntity;
 import com.c4.routy.domain.user.repository.UserRepository;
+import com.c4.routy.domain.user.websecurity.CustomUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -46,11 +47,6 @@ public class AuthServiceImpl implements AuthService {
         // DB에서 조회된 해당 아이디의 회원이 가진 권한들을 가져와 List<GrandtedAuthority>로 전환
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         grantedAuthorities.add(new SimpleGrantedAuthority(loginUser.getRole()));
-        return new User(loginUser.getEmail(),
-                loginUser.getPassword(),
-                true,
-                true,
-                true,
-                true, grantedAuthorities);
+        return new CustomUserDetails(loginUser);
     }
 }

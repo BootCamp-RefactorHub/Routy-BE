@@ -8,7 +8,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -27,13 +26,14 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Override // 토큰을 주면 이렇게 처리하겠습니다.
+    // 로그인 인증
+    @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        UserDetails userDetails = authService.loadUserByUsername(email);
+        CustomUserDetails userDetails = (CustomUserDetails) authService.loadUserByUsername(email);
 
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");

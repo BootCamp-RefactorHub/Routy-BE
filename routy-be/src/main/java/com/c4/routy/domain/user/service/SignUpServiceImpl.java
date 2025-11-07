@@ -31,6 +31,7 @@ public class SignUpServiceImpl implements SignUpService{
     // 비밀번호 암호화 및 DB 등록 및 회원가입 완료 메시지 반환
     @Override
     public void registUser(UserDTO userDTO) {
+        log.info("회원가입 서비스 메서드: {}", userDTO);
         if (userRepository.existsByEmail(userDTO.getEmail())) {
             throw new DuplicateUserException("이미 가입된 이메일입니다.");
         }

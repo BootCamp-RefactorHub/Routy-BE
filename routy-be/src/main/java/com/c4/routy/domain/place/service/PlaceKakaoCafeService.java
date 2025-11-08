@@ -33,7 +33,7 @@ public class PlaceKakaoCafeService {
     public String findNearbyCafes(double latitude, double longitude) {
         try {
             String apiUrl = String.format(
-                    "%s?category_group_code=%s&x=%f&y=%f&radius=10000&sort=distance",
+                    "%s?category_group_code=%s&x=%f&y=%f&radius=20000&sort=accuracy",
                     BASE_URL, PlaceCategory.CE7, longitude, latitude
             );
 

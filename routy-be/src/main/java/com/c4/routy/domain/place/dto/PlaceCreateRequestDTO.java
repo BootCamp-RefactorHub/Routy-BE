@@ -1,11 +1,11 @@
 package com.c4.routy.domain.place.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
-// Kakao 장소 선택 시, 일정(planId)에 장소 추가 요청 DTO
+/**
+ * Kakao 장소 선택 시, 일정(planId)에 장소 추가 요청 DTO
+ */
+@Setter
 @Getter
 @ToString
 @NoArgsConstructor
@@ -24,5 +24,8 @@ public class PlaceCreateRequestDTO {
     private String description;            // 설명(선택)
     private String imagePath;              // 이미지 경로(선택)
     private String runTime;                // 소요 시간(선택)
+
     private Integer planId;                // 일정 ID (duration_id 조회용)
+    private Integer durationId;            // 일차 ID (직접 전달 가능)
+    private Integer travelDay;             // ex. 1일차, 2일차
 }

@@ -16,6 +16,15 @@ public class PlaceController {
 
     private final PlaceService placeService;
 
+
+    /** 여러 장소 한꺼번에 저장 (배치 저장) */
+    @PostMapping("/batch")
+    public ResponseEntity<String> addPlaces(@RequestBody List<PlaceCreateRequestDTO> dtoList) {
+        placeService.saveAll(dtoList);
+        return ResponseEntity.ok(" 장소들이 모두 저장되었습니다!");
+    }
+
+
     /** 장소 추가 (Kakao API → 일정에 저장) */
     @PostMapping
     public ResponseEntity<String> addPlace(@RequestBody PlaceCreateRequestDTO dto) {
@@ -24,7 +33,7 @@ public class PlaceController {
     }
 
     /** 일정에 등록된 장소 조회 */
-    @GetMapping("/{planId}")
+    @GetMapping("plan/{planId}")
     public ResponseEntity<List<PlaceEntity>> getPlaces(@PathVariable Integer planId) {
         List<PlaceEntity> places = placeService.getPlacesByPlanId(planId);
         return ResponseEntity.ok(places);

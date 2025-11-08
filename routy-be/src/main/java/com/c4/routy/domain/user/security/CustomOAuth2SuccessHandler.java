@@ -89,8 +89,8 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
 
         userDTO.setEmail(email);
         userDTO.setUsername(username);
-        userDTO.setRole("ROLE_일반회원");
-        userDTO.setIsDeleted(0);
+        userDTO.setRole("ROLE_USER");
+        userDTO.setDeleted(false);
 
         UserDTO existUser = userService.findUserByEmail(userDTO);
         if (existUser == null) {

@@ -1,18 +1,15 @@
 package com.c4.routy.domain.user.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@Data
-public class UserDTO {
-
-    private Integer userNo;
+@Getter
+@AllArgsConstructor
+public class RequestRegistUserDTO {
     private String username;
     private String email;
     private String password;
     private String phone;
     private Integer age;
     private String gender;
-    private String role;
-    private boolean isDeleted;
-
 }

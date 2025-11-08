@@ -3,6 +3,7 @@ package com.c4.routy.config;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -16,8 +17,14 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")                   // origin 이후 요청 경로 패턴
-                .allowedOrigins("*")                            // origin 등록(어떤 front 서버든 상관 없이)
+//                .allowedOrigins("*")                            // origin 등록(어떤 front 서버든 상관 없이)
                 .allowedOrigins("http://localhost:5173")        // origin 등록
+                .allowCredentials(true)                         // 이것 없으면 헤더에 쿠키가 전송 안됨.
                 .allowedMethods("GET", "POST", "PUT", "DELETE");
+    }
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

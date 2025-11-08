@@ -97,13 +97,15 @@ public class JwtUtil {
         return false;
     }
 
-    // 유효성 검증이 끝난 토크에서 인증 객체(Authenticatioin)를 반환
+    // 유효성 검증이 끝난 토큰에서 인증 객체(Authenticatioin)를 반환
     public Authentication getAuthentication(String token) {
 
         Claims claims = parseClaims(token);
 
         // 토큰에 들어있던 아이디로 DB에서 회원 조회하고 UserDetails로 가져옴
-        UserDetails userDetails = authService.loadUserByUsername(claims.getSubject());
+        // subject에 userNo가 들어있음
+        Integer userNo = Integer.parseInt(claims.getSubject());
+        UserDetails userDetails = authService.loadUserByUserNo(userNo);
 
         // 토큰에 들어있는 권한들을 List<GrantedAuthority>로 꺼내보기
         // 1. 토큰에 권한이 들어있을 때

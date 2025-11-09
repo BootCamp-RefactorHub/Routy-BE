@@ -1,41 +1,45 @@
 package com.c4.routy.domain.plan.controller;
 
-import com.c4.routy.domain.plan.dto.PlanDetailResponseDTO;
-import com.c4.routy.domain.plan.dto.PlanSummaryResponseDTO;
+import com.c4.routy.domain.plan.dto.PlanCreateRequestDTO;
+import com.c4.routy.domain.plan.dto.PlanResponseDTO;
+import com.c4.routy.domain.plan.entity.PlanEntity;
+import com.c4.routy.domain.plan.repository.PlanRepository;
 import com.c4.routy.domain.plan.service.PlanService;
-import com.c4.routy.domain.user.websecurity.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+
 
 @RestController
+@RequestMapping("/api/plans")
 @RequiredArgsConstructor
-@RequestMapping("/api/plan")
 public class PlanController {
 
     private final PlanService planService;
 
-    /**
-     * 일정 상세 조회
-     */
-    @GetMapping("/{planId}")
-    public PlanDetailResponseDTO getPlanDetail(
-            @PathVariable Integer planId,
-            Authentication authentication
-    ) {
-        CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
-        Integer userNo = user.getUserNo();  // ✅ 로그인한 유저 번호
-
-        return planService.getPlanDetail(planId, userNo);
+    @PostMapping
+    public PlanEntity createPlan(@RequestBody PlanCreateRequestDTO dto) {
+        return planService.createPlan(dto);
     }
 
-    /**
-     * 특정 사용자의 일정 목록 조회 (mypage에 '내 일정' section부분)
-     */
-    @GetMapping("/list/{userId}")
-    public List<PlanSummaryResponseDTO> getUserPlans(@PathVariable Integer userId) {
-        return planService.getUserPlans(userId);
+
+    // 전체 플랜 조회
+    @GetMapping
+    public List<PlanResponseDTO> getAllPlans() {
+        return planService.getAllPlans();
+    }
+
+    // 사용자별 플랜 조회
+    @GetMapping("/user/{userId}")
+    public List<PlanResponseDTO> getPlansByUser(@PathVariable Integer userId) {
+        return planService.getPlansByUser(userId);
+    }
+
+    // 단일 플랜 조회
+    @GetMapping("/{planId}")
+    public Optional<PlanResponseDTO> getPlanById(@PathVariable Integer planId) {
+        return planService.getPlanById(planId);
     }
 }

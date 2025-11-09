@@ -24,13 +24,12 @@ public class PlaceController {
         return ResponseEntity.ok(" 장소들이 모두 저장되었습니다!");
     }
 
-
-    /** 장소 추가 (Kakao API → 일정에 저장) */
-    @PostMapping
-    public ResponseEntity<String> addPlace(@RequestBody PlaceCreateRequestDTO dto) {
-        placeService.savePlace(dto);
-        return ResponseEntity.ok("장소 저장 완료");
-    }
+//    /** 장소 추가 (Kakao API → 일정에 저장) */
+//    @PostMapping
+//    public ResponseEntity<String> addPlace(@RequestBody PlaceCreateRequestDTO dto) {
+//        placeService.savePlace(dto);
+//        return ResponseEntity.ok("장소 저장 완료");
+//    }
 
     /** 일정에 등록된 장소 조회 */
     @GetMapping("plan/{planId}")

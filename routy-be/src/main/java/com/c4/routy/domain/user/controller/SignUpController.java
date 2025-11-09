@@ -29,12 +29,13 @@ public class SignUpController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> signUp(@RequestBody RequestRegistUserDTO newUser) {
+    public ResponseEntity<ResponseRegistUser> signUp(@RequestBody RequestRegistUserDTO newUser) {
 
         UserDTO userDTO = modelMapper.map(newUser, UserDTO.class);
         signUpService.registUser(userDTO);
-        ResponseRegistUser response = new ResponseRegistUser();
-        response.setMessage("회원가입이 완료되었습니다.");
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        ResponseRegistUser response = new ResponseRegistUser("회원가입이 완료되었습니다.");
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 }

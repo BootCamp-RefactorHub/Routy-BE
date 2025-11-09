@@ -16,9 +16,9 @@ public class PlanService {
 
     private final PlanQueryMapper planQueryMapper;
 
-    public PlanDetailResponseDTO getPlanDetail(Integer planId) {
+    public PlanDetailResponseDTO getPlanDetail(Integer planId, Integer userNo) {
         // 1 평면 구조로 가져오기 (MyBatis XML 그대로)
-        List<Map<String, Object>> rows = planQueryMapper.selectPlanDetailFlat(planId);
+        List<Map<String, Object>> rows = planQueryMapper.selectPlanDetailFlat(planId, userNo);
 
         if (rows == null || rows.isEmpty()) {
             return null;

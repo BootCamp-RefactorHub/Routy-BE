@@ -3,7 +3,9 @@ package com.c4.routy.domain.plan.controller;
 import com.c4.routy.domain.plan.dto.PlanDetailResponseDTO;
 import com.c4.routy.domain.plan.dto.PlanSummaryResponseDTO;
 import com.c4.routy.domain.plan.service.PlanService;
+import com.c4.routy.domain.user.websecurity.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +21,14 @@ public class PlanController {
      * 일정 상세 조회
      */
     @GetMapping("/{planId}")
-    public PlanDetailResponseDTO getPlanDetail(@PathVariable Integer planId) {
-        return planService.getPlanDetail(planId);
+    public PlanDetailResponseDTO getPlanDetail(
+            @PathVariable Integer planId,
+            Authentication authentication
+    ) {
+        CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
+        Integer userNo = user.getUserNo();  // ✅ 로그인한 유저 번호
+
+        return planService.getPlanDetail(planId, userNo);
     }
 
     /**

@@ -1,5 +1,27 @@
 package com.c4.routy.domain.place.entity;
 
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Getter
+@ToString
+@NoArgsConstructor
 public class PlaceEntity {
+
+    private Integer travelId;
+    private Integer travelOrder;
+    private Integer estimatedTravelTime;
+    private String title;
+    private Double latitude;
+    private Double longitude;
+    private String categoryCode;
+    private String categoryGroupName;
+    private String addressName;
+    private String placeUrl;
+    private String description;
+    private String imagePath;
+    private String runTime;
+    private Integer durationId;
 }

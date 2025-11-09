@@ -11,7 +11,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -62,6 +61,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/file/**").permitAll()
                         .requestMatchers("/api/**").permitAll()
                         .anyRequest().authenticated())
+
                 // OAuth2.0 Client를 위한 요청 허용
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
@@ -78,7 +78,7 @@ public class WebSecurityConfig {
                 // 로그인 후 요청에 대한 필터 (JWT 토큰 인증)
                 .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
-                log.info("요청: {}", http);
+        log.info("요청: {}", http);
         return http.build();
     }
 

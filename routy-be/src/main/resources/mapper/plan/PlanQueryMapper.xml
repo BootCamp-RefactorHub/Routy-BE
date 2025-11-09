@@ -43,29 +43,29 @@
 
 
     <!-- =======================================================
-         일정 상세조회 쿼리
+         일정 상세조회 쿼리 (플랫 구조)
          ======================================================= -->
-    <select id="selectPlanDetailFlat" parameterType="map" resultType="map">
+    <select id="selectPlanDetail" parameterType="int" resultMap="PlanDetailResult">
         SELECT
-        p.plan_id,
-        p.plan_title,
-        p.start_time,
-        p.end_time,
-        r.region_name,
-        r.theme,
-        d.duration_id,
-        d.day AS travel_day,  <!-- ✅ 반드시 alias 지정 -->
-        DATE_ADD(p.start_time, INTERVAL (d.day - 1) DAY) AS day_date,
-        t.travel_id,
-        t.title AS travel_title,
-        t.address_name,
-        t.category_group_name,
-        t.place_url
+            p.plan_id,
+            p.plan_title,
+            p.start_time,
+            p.end_time,
+            r.region_name,
+            r.theme,
+            d.duration_id,
+            d.day,
+            DATE_ADD(p.start_time, INTERVAL (d.day - 1) DAY) AS day_date,
+            t.travel_id,
+            t.title AS travel_title,
+            t.address_name,
+            t.category_group_name,
+            t.place_url
         FROM TBL_PLAN p
-        JOIN TBL_REGION r ON p.region_id = r.region_id
-        LEFT JOIN TBL_DURATION d ON p.plan_id = d.plan_id
-        LEFT JOIN TBL_TRAVEL t ON d.duration_id = t.duration_id
-        WHERE p.plan_id = #{planId} AND p.user_id = #{userNo}
+                 LEFT JOIN TBL_REGION r ON p.region_id = r.region_id
+                 LEFT JOIN TBL_DURATION d ON p.plan_id = d.plan_id
+                 LEFT JOIN TBL_TRAVEL t ON d.duration_id = t.duration_id
+        WHERE p.plan_id = #{planId}
         ORDER BY d.day ASC, t.travel_order ASC
     </select>
 
@@ -83,7 +83,7 @@
             r.theme,
             tr.transport_name AS transportation
         FROM TBL_PLAN p
-                 JOIN TBL_REGION r ON p.region_id = r.region_id
+                 LEFT JOIN TBL_REGION r ON p.region_id = r.region_id
                  LEFT JOIN TBL_TRANSPORT tr ON p.plan_id = tr.plan_id
         WHERE p.user_id = #{userId}
           AND p.is_deleted = 0

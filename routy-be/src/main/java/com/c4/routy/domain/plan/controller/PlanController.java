@@ -1,6 +1,7 @@
 package com.c4.routy.domain.plan.controller;
 
 import com.c4.routy.domain.plan.dto.PlanCreateRequestDTO;
+import com.c4.routy.domain.plan.dto.PlanDetailResponseDTO;
 import com.c4.routy.domain.plan.dto.PlanResponseDTO;
 import com.c4.routy.domain.plan.entity.PlanEntity;
 import com.c4.routy.domain.plan.repository.PlanRepository;
@@ -37,9 +38,13 @@ public class PlanController {
         return planService.getPlansByUser(userId);
     }
 
-    // 단일 플랜 조회
+
+    // 일정 상세 조회
     @GetMapping("/{planId}")
-    public Optional<PlanResponseDTO> getPlanById(@PathVariable Integer planId) {
-        return planService.getPlanById(planId);
+    public PlanDetailResponseDTO getPlanDetail(
+            @PathVariable Integer planId
+
+    ) {
+        return planService.getPlanDetail(planId);
     }
 }

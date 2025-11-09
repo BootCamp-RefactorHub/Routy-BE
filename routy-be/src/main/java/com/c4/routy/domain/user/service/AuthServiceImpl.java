@@ -1,5 +1,6 @@
 package com.c4.routy.domain.user.service;
 
+import com.c4.routy.domain.user.dto.RequestChangePwdDTO;
 import com.c4.routy.domain.user.entity.UserEntity;
 import com.c4.routy.domain.user.repository.UserRepository;
 import com.c4.routy.domain.user.websecurity.CustomUserDetails;
@@ -11,9 +12,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,10 +25,12 @@ import java.util.List;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public AuthServiceImpl(UserRepository userRepository) {
+    public AuthServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     // UserDetailsService에 의한 로그인을 위한 DB 조회용 메서드
@@ -146,5 +149,27 @@ public class AuthServiceImpl implements AuthService {
 
         response.addCookie(cookie);
         log.info("HttpOnly 쿠키 삭제 완료");
+    }
+
+    @Override
+    public void modifyPwd(RequestChangePwdDTO newPwd) {
+        // 1. 비밀번호 유효성 검사
+        if (newPwd.getNewPassword() == null || newPwd.getNewPassword().length() < 8) {
+            throw new IllegalArgumentException("비밀번호는 8자 이상이어야 합니다.");
+        }
+
+        // 2. 사용자 조회
+        UserEntity user = userRepository.findByEmail(newPwd.getEmail());
+
+        // 3. 새 비밀번호 암호화
+        String encodedPassword = bCryptPasswordEncoder.encode(newPwd.getNewPassword());
+
+        // 4. 비밀번호 변경
+        user.setPassword(encodedPassword);
+
+        log.info("비밀번호 변경 완료 - 이메일: {}", user.getEmail());
+
+        // 5. DB 저장
+        userRepository.save(user);
     }
 }

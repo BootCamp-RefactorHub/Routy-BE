@@ -16,7 +16,7 @@
         SELECT
             u.user_no  AS userNo,
             u.username AS username,
-            u.image    AS profileImage,
+            u.image_url    AS profileImage,
 
             /* 내가 만든 일정 수 */
             (

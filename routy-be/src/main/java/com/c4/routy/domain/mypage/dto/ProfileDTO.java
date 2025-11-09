@@ -23,5 +23,12 @@ public class ProfileDTO {
     private int totalReviewCount;    // 내가 작성한 리뷰 수
     private int totalLikeReceived;   // 내가 만든 일정들이 받은 좋아요 수
     private int totalBookmarkCount;  // 내가 북마크해둔 일정 수
+
+    // profile 이미지 추가하는 부분
+    public void applyDefaultProfile(String defaultUrl) {
+        if (this.profileImage == null || this.profileImage.isBlank()) {
+            this.profileImage = defaultUrl;
+        }
+    }
 }
 

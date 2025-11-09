@@ -16,7 +16,7 @@
         SELECT
             u.user_no  AS userNo,
             u.username AS username,
-            u.image    AS profileImage,
+            u.image_url AS profileImage,
 
             /* 내가 만든 일정 수 */
             (
@@ -113,9 +113,8 @@
                  LEFT JOIN TBL_REGION r ON p.region_id = r.region_id
         WHERE p.user_id = #{userNo}
           AND (p.is_deleted IS NULL OR p.is_deleted = 0)
-          AND p.start_time <![CDATA[>=]]> #{today}
         ORDER BY p.start_time ASC
-            LIMIT 5
+            LIMIT 10
     </select>
 
 

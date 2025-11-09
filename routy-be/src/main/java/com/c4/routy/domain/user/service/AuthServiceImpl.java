@@ -36,8 +36,18 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        // 쿼리 메소드를 활용한 아이디 where절을 활용
-        UserEntity loginUser = userRepository.findByEmail(email);
+//        // 쿼리 메소드를 활용한 아이디 where절을 활용
+//        UserEntity loginUser = userRepository.findByEmail(email);
+
+        UserEntity loginUser;
+
+        if (email.matches("\\d+")) { // 숫자면 user_no로 조회
+            Integer userNo = Integer.parseInt(email);
+            loginUser = userRepository.findById(userNo)
+                    .orElseThrow(() -> new UsernameNotFoundException(userNo + "번 회원은 존재하지 않습니다."));
+        } else {
+            loginUser = userRepository.findByEmail(email);
+        }
 
         // 사용자가 로그인 시 아이디를 잘못 입력했다면
         if(loginUser == null) {

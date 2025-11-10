@@ -56,12 +56,14 @@ public class WebSecurityConfig {
 
                 // 해당 경로 요청 허용
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("*").permitAll()
-                        .requestMatchers("/user/register", "/validation/sendmail").permitAll()
-                        .requestMatchers("/api/login", "/api/signup", "/oauth2/**", "/login/**").permitAll()
-                        .requestMatchers("/file/**").permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers("/**").permitAll()
+//                        .requestMatchers("/user/register", "/validation/sendmail").permitAll()
+//                        .requestMatchers("/api/login", "/api/signup", "/oauth2/**", "/login/**").permitAll()
+//                        .requestMatchers("/file/**").permitAll()
+//                        .anyRequest().authenticated())
+                )
                 // OAuth2.0 Client를 위한 요청 허용
+
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
                         .successHandler(oAuth2LoginSuccessHandler)

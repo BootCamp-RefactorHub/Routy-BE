@@ -18,8 +18,8 @@ public class PlanEntity {
     private String planTitle;
 
     private boolean isShared;
-    private String startTime;
-    private String endTime;
+    private String startDate;
+    private String endDate;
     private boolean isDeleted;
     @Column(nullable = false)
     private Integer bookmarkCount = 0; // 기본값 추가

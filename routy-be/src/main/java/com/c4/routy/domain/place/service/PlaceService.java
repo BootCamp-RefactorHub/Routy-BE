@@ -33,11 +33,6 @@ public class PlaceService {
         // 저장
         placeMapper.insertPlacesBatch(dtoList);
     }
-    /** 단건 장소 저장 */
-    @Transactional
-    public void savePlace(PlaceCreateRequestDTO dto) {
-        placeMapper.insertPlace(dto);
-    }
 
     /** 일정에 포함된 장소 리스트 조회 */
     public List<PlaceEntity> getPlacesByPlanId(Integer planId) {

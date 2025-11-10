@@ -8,8 +8,8 @@ import lombok.Setter;
 public class PlanResponseDTO {
     private Integer planId;
     private String planTitle;
-    private String startTime;
-    private String endTime;
+    private String startDate;
+    private String endDate;
     private Integer regionId;
     private Integer userId;
     private Integer bookmarkCount;

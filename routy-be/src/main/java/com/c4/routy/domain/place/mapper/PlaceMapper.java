@@ -12,8 +12,6 @@ import java.util.List;
 @Mapper
 public interface PlaceMapper {
     void insertPlacesBatch(@Param("places") List<PlaceCreateRequestDTO> places);
-    // 장소 저장
-    void insertPlace(PlaceCreateRequestDTO dto);
 
     // 특정 planId에 속한 장소 목록 조회
     List<PlaceEntity> findPlacesByPlanId(Integer planId);

@@ -55,7 +55,7 @@
             r.theme,
             d.duration_id,
             d.day,
-            DATE_ADD(p.start_time, INTERVAL (d.day - 1) DAY) AS day_date,
+            DATE_ADD(p.start_date, INTERVAL (d.day - 1) DAY) AS day_date,
             t.travel_id,
             t.title AS travel_title,
             t.address_name,
@@ -87,7 +87,7 @@
                  LEFT JOIN TBL_TRANSPORT tr ON p.plan_id = tr.plan_id
         WHERE p.user_id = #{userId}
           AND p.is_deleted = 0
-        ORDER BY p.start_time ASC
+        ORDER BY p.start_date ASC
     </select>
 
 </mapper>

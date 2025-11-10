@@ -6,9 +6,12 @@ import com.c4.routy.domain.plan.entity.PlanEntity;
 import com.c4.routy.domain.plandraw.dto.PlanCreateRequestDTO;
 import com.c4.routy.domain.plandraw.dto.PlanResponseDTO;
 import com.c4.routy.domain.plandraw.repository.PlanDrawRepository;
+import com.c4.routy.domain.user.websecurity.CustomUserDetails;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -32,13 +35,18 @@ public class PlanDrawService {
     @Transactional
     public PlanEntity createPlan(PlanCreateRequestDTO dto) {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+        Integer userNo = userDetails.getUserNo();
+
         // PlanEntity 생성 및 저장
         PlanEntity plan = new PlanEntity();
         plan.setPlanTitle(dto.getPlanTitle());
         plan.setStartDate(dto.getStartDate());
         plan.setEndDate(dto.getEndDate());
         plan.setRegionId(dto.getRegionId());
-        plan.setUserId(dto.getUserId() != null ? dto.getUserId() : 1);
+//        plan.setUserId(dto.getUserId() != null ? dto.getUserId() : 1);
+        plan.setUserId(userNo);
         plan.setCreatedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
         PlanEntity savedPlan = planRepository.save(plan);

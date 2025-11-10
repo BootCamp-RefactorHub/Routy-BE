@@ -65,26 +65,26 @@
         <!-- DTO에 id 라고 돼있으니까 그대로 매핑 -->
         <result property="id" column="plan_id"/>
         <result property="title" column="plan_title"/>
-        <result property="startDate" column="start_time"/>
-        <result property="endDate" column="end_time"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
     </resultMap>
 
     <select id="selectCalendarPlans" resultMap="CalendarPlanMap">
         SELECT
             p.plan_id,
             p.plan_title,
-            p.start_time,
-            p.end_time
+            p.start_date,
+            p.end_date
         FROM TBL_PLAN p
         WHERE p.user_id = #{userNo}
           AND (p.is_deleted IS NULL OR p.is_deleted = 0)
             /* 해당 월과 겹치는 일정만 */
           AND (
-            (p.start_time <![CDATA[>=]]> #{startDate} AND p.start_time <![CDATA[<=]]> #{endDate})
-                OR (p.end_time   <![CDATA[>=]]> #{startDate} AND p.end_time   <![CDATA[<=]]> #{endDate})
-                OR (p.start_time <![CDATA[<=]]> #{startDate} AND p.end_time   <![CDATA[>=]]> #{endDate})
+            (p.start_date <![CDATA[>=]]> #{startDate} AND p.start_date <![CDATA[<=]]> #{endDate})
+                OR (p.end_date   <![CDATA[>=]]> #{startDate} AND p.end_date   <![CDATA[<=]]> #{endDate})
+                OR (p.start_date <![CDATA[<=]]> #{startDate} AND p.end_date   <![CDATA[>=]]> #{endDate})
             )
-        ORDER BY p.start_time ASC
+        ORDER BY p.start_date ASC
     </select>
 
 
@@ -97,8 +97,8 @@
         <result property="planId" column="plan_id"/>
         <result property="title" column="plan_title"/>
         <result property="regionName" column="region_name"/>
-        <result property="startDate" column="start_time"/>
-        <result property="endDate" column="end_time"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
         <!-- durationLabel / status 는 서비스에서 채움 -->
     </resultMap>
 
@@ -107,13 +107,13 @@
             p.plan_id,
             p.plan_title,
             r.region_name,
-            p.start_time,
-            p.end_time
+            p.start_date,
+            p.end_date
         FROM TBL_PLAN p
                  LEFT JOIN TBL_REGION r ON p.region_id = r.region_id
         WHERE p.user_id = #{userNo}
           AND (p.is_deleted IS NULL OR p.is_deleted = 0)
-        ORDER BY p.start_time ASC
+        ORDER BY p.start_date ASC
             LIMIT 10
     </select>
 
@@ -139,14 +139,14 @@
                            LIMIT 1
             )             AS thumbnailUrl,
             p.plan_title AS title,
-            p.start_time AS startTime,
-            p.end_time   AS endTime
+            p.start_date AS startTime,
+            p.end_date   AS endTime
         FROM TBL_PLAN p
         WHERE p.user_id = #{userNo}
           AND (p.is_deleted IS NULL OR p.is_deleted = 0)
             /* 지난 일정만: DB 날짜가 문자열이라도 'YYYY-MM-DD' 라고 가정하고 CURRENT_DATE()와 비교 */
-          AND p.end_time <![CDATA[<]]> CURRENT_DATE()
-        ORDER BY p.end_time DESC
+          AND p.end_date <![CDATA[<]]> CURRENT_DATE()
+        ORDER BY p.end_date DESC
             LIMIT 3
     </select>
 

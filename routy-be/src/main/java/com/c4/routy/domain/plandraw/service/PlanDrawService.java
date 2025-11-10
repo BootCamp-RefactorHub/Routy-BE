@@ -43,19 +43,6 @@ public class PlanDrawService {
 
         PlanEntity savedPlan = planRepository.save(plan);
 
-        // 시작일~종료일 일수 계산
-        LocalDate start = LocalDate.parse(dto.getStartDate());
-        LocalDate end = LocalDate.parse(dto.getEndDate());
-        long totalDays = ChronoUnit.DAYS.between(start, end) + 1;
-
-        // Duration 자동 생성
-        for (int i = 1; i <= totalDays; i++) {
-            DurationEntity duration = new DurationEntity();
-            duration.setDay(i);
-            duration.setPlanId(savedPlan.getPlanId());
-            durationRepository.save(duration);
-        }
-
         return savedPlan;
     }
 

@@ -17,6 +17,7 @@ public class PlanDrawController {
 
     private final PlanDrawService planDrawService;
 
+    // 플랜 생성
     @PostMapping
     public PlanEntity createPlan(@RequestBody PlanCreateRequestDTO dto) {
         return planDrawService.createPlan(dto);

@@ -113,7 +113,7 @@
                  LEFT JOIN TBL_REGION r ON p.region_id = r.region_id
         WHERE p.user_id = #{userNo}
           AND (p.is_deleted IS NULL OR p.is_deleted = 0)
-        ORDER BY p.start_date ASC
+        ORDER BY p.created_at DESC
             LIMIT 10
     </select>
 

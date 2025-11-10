@@ -20,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
 //                .allowedOrigins("*")                            // origin 등록(어떤 front 서버든 상관 없이)
                 .allowedOrigins("http://localhost:5173")        // origin 등록
                 .allowCredentials(true)                         // 이것 없으면 헤더에 쿠키가 전송 안됨.
-                .allowedMethods("GET", "POST", "PUT", "DELETE");
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS");
     }
 
     @Bean

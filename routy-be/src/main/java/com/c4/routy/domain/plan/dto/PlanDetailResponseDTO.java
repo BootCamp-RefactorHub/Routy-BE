@@ -30,4 +30,7 @@ public class PlanDetailResponseDTO {
     private boolean editable;        // 수정/삭제 버튼 노출여부 (작성자일 때 true)
 
     private List<PlanDayDTO> dayList; // Day 1, Day 2 ...
+
+    private Boolean isDeleted;      // 삭제 여부 판단
+    private Boolean isPublic;       // 공유하기 여부 판단
 }

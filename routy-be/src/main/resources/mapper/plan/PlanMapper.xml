@@ -18,6 +18,7 @@
         <result property="url" column="place_url"/>
     </resultMap>
 
+
     <!-- Day 단위 일정 묶음 -->
     <resultMap id="PlanDayResult" type="com.c4.routy.domain.plan.dto.PlanDayDTO">
         <id property="dayId" column="duration_id"/>
@@ -36,6 +37,8 @@
         <result property="endDate" column="end_date"/>
         <result property="destination" column="region_name"/>
         <result property="theme" column="theme"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="isPublic" column="is_public"/>
         <collection property="dayList"
                     ofType="com.c4.routy.domain.plan.dto.PlanDayDTO"
                     resultMap="PlanDayResult"/>
@@ -90,4 +93,24 @@
         ORDER BY p.start_date ASC
     </select>
 
+    <!-- =======================================================
+     게시물 삭제
+     ======================================================= -->
+    <update id="softDeletePlan" parameterType="int">
+        UPDATE TBL_PLAN
+        SET is_deleted = 1
+        WHERE plan_id = #{planId}
+    </update>
+
+    <!-- =======================================================
+    공유하기
+    ======================================================= -->
+    <update id="togglePlanPublic">
+        UPDATE TBL_PLAN
+        SET is_public = CASE
+        WHEN is_public = 0 THEN 1
+        ELSE 0
+        END
+        WHERE plan_id = #{planId}
+    </update>
 </mapper>

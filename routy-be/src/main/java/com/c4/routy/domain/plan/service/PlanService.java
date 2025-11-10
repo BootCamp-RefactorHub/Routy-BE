@@ -1,9 +1,12 @@
 package com.c4.routy.domain.plan.service;
 
 import com.c4.routy.domain.plan.dto.PlanDetailResponseDTO;
+import com.c4.routy.domain.plan.entity.PlanEntity;
 import com.c4.routy.domain.plan.mapper.PlanMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -43,5 +46,25 @@ public class PlanService {
         dto.setReviewWritable(true);
 
         return dto;
+    }
+
+    @Transactional
+    public void softDeletePlan(Integer planId) {
+        PlanDetailResponseDTO dto = planMapper.selectPlanDetail(planId);
+
+        if (dto == null) {
+            throw new IllegalArgumentException("존재하지 않는 일정입니다. planId=" + planId);
+        }
+
+        if (Boolean.TRUE.equals(dto.getIsDeleted())) {
+            throw new IllegalStateException("이미 삭제된 일정입니다. planId=" + planId);
+        }
+
+        planMapper.softDeletePlan(planId);
+    }
+
+    @Transactional
+    public void togglePlanPublic(Integer planId) {
+        planMapper.togglePlanPublic(planId);
     }
 }

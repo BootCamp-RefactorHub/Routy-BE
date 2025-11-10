@@ -1,5 +1,8 @@
 package com.c4.routy.domain.plan.service;
 
+import com.c4.routy.domain.plan.dto.BrowseDetailResponseDTO;
+import com.c4.routy.domain.plan.dto.BrowseResponseDTO;
+import com.c4.routy.domain.plan.dto.PlanDayDTO;
 import com.c4.routy.domain.plan.dto.PlanDetailResponseDTO;
 import com.c4.routy.domain.plan.entity.PlanEntity;
 import com.c4.routy.domain.plan.mapper.PlanMapper;
@@ -9,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 
 @Service
@@ -17,10 +21,7 @@ public class PlanService {
 
     private final PlanMapper planMapper;
 
-    /**
-     *  상세 조회 (userId + planId 기반)
-     * Mapper를 통해 PlanDetailResponseDTO 직접 매핑
-     */
+    // 상세 조회
     public PlanDetailResponseDTO getPlanDetail(Integer planId) {
         PlanDetailResponseDTO dto = planMapper.selectPlanDetail(planId);
 
@@ -48,23 +49,44 @@ public class PlanService {
         return dto;
     }
 
-    @Transactional
+    // 게시글 소프트 삭제 기능
     public void softDeletePlan(Integer planId) {
-        PlanDetailResponseDTO dto = planMapper.selectPlanDetail(planId);
-
-        if (dto == null) {
-            throw new IllegalArgumentException("존재하지 않는 일정입니다. planId=" + planId);
-        }
-
-        if (Boolean.TRUE.equals(dto.getIsDeleted())) {
-            throw new IllegalStateException("이미 삭제된 일정입니다. planId=" + planId);
-        }
-
         planMapper.softDeletePlan(planId);
     }
 
-    @Transactional
+    // 공유하기 기능
     public void togglePlanPublic(Integer planId) {
         planMapper.togglePlanPublic(planId);
+    }
+
+    // 헤더 부분에 있는 여행 루트 둘러러보기
+    public List<BrowseResponseDTO> getPublicPlans(int page, int size, String sort, Integer regionId, Integer days) {
+        int offset = page * size;
+        return planMapper.selectPublicPlans(offset, size, sort, regionId, days);
+    }
+
+
+    //브라우저 카드 일정 상세 조회 (모달용)
+    public BrowseDetailResponseDTO getPublicPlanDetail(Integer planId) {
+        //  기본 정보 및 리뷰
+        BrowseDetailResponseDTO dto = planMapper.selectPublicPlanDetail(planId);
+        if (dto == null) return null;
+
+        //  리뷰 이미지 문자열을 List<String>으로 변환
+        if (dto.getReview() != null && dto.getReview().getImages() != null) {
+            Object imgField = dto.getReview().getImages();
+
+            if (imgField instanceof String imgStr) {
+                dto.getReview().setImages(imgStr);
+            }
+        }
+        // Day 및 장소 목록 구성
+        List<PlanDayDTO> dayList = planMapper.selectPlanDays(planId);
+        for (PlanDayDTO day : dayList) {
+            day.setPlaces(planMapper.selectPlanPlaces(day.getDayId()));
+        }
+        dto.setDayList(dayList);
+
+        return dto;
     }
 }

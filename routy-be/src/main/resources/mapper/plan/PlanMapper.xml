@@ -44,6 +44,44 @@
                     resultMap="PlanDayResult"/>
     </resultMap>
 
+    <!-- =======================================================
+     브라우저 상세 모달
+    ======================================================= -->
+    <resultMap id="BrowseDetailResult" type="com.c4.routy.domain.plan.dto.BrowseDetailResponseDTO">
+        <id property="planId" column="plan_id"/>
+        <result property="title" column="plan_title"/>
+        <result property="destination" column="region_name"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="days" column="days"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="isPublic" column="is_public"/>
+        <result property="isDeleted" column="is_deleted"/>
+
+        <result property="userId" column="user_no"/>
+        <result property="username" column="username"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="bookmarkCount" column="bookmark_count"/>
+        <result property="viewCount" column="view_count"/>
+
+        <!-- 리뷰 -->
+        <association property="review"
+                     javaType="com.c4.routy.domain.plan.dto.BrowseReviewModalDTO">
+            <id property="reviewId" column="review_id"/>
+            <result property="content" column="review_content"/>
+            <result property="createdAt" column="review_created"/>
+            <result property="rating" column="review_rating"/>
+            <result property="username" column="review_username"/>
+            <result property="images" column="review_images"/>
+        </association>
+
+        <!-- Day 목록 -->
+        <collection property="dayList"
+                    ofType="com.c4.routy.domain.plan.dto.PlanDayDTO"
+                    select="selectPlanDays"
+                    column="plan_id"/>
+    </resultMap>
+
 
     <!-- =======================================================
          일정 상세조회 쿼리 (플랫 구조)
@@ -113,4 +151,124 @@
         END
         WHERE plan_id = #{planId}
     </update>
+
+    <!-- =======================================================
+    헤더에 있는 여행 루트 둘러보기
+    (상세 일정은 DTO 내부에서 다른 DTO를 호출하기 때문에 자동 매핑을 했지만,
+     브라우저는 DTO 호출 없디 단순하기 때문에 명시적 매핑을 진행)
+    ======================================================= -->
+    <select id="selectPublicPlans" resultType="com.c4.routy.domain.plan.dto.BrowseResponseDTO">
+        SELECT
+        p.plan_id AS planId,
+        p.plan_title AS title,
+        r.region_name AS destination,
+        DATE_FORMAT(p.start_date, '%Y-%m-%d') AS startDate,
+        DATE_FORMAT(p.end_date, '%Y-%m-%d') AS endDate,
+        DATEDIFF(p.end_date, p.start_date) + 1 AS days,
+        u.username AS userNickname,
+        COUNT(l.like_id) AS likeCount,
+        p.bookmark_count AS bookmarkCount,
+        p.view_count AS viewCount,
+        p.is_public AS isPublic
+        FROM TBL_PLAN p
+        JOIN TBL_USER u ON u.user_no = p.user_id
+        JOIN TBL_REGION r ON r.region_id = p.region_id
+        LEFT JOIN TBL_LIKE l ON l.plan_id = p.plan_id
+        WHERE p.is_deleted = 0
+        AND p.is_public = 0
+        <if test="regionId != null">
+            AND p.region_id = #{regionId}
+        </if>
+        <if test="days != null and days != ''">
+            <choose>
+                <when test="days == 5">
+                    AND DATEDIFF(p.end_date, p.start_date) + 1 &gt;= 5
+                </when>
+                <otherwise>
+                    AND DATEDIFF(p.end_date, p.start_date) + 1 = #{days}
+                </otherwise>
+            </choose>
+        </if>
+        GROUP BY p.plan_id, p.plan_title, r.region_name, p.start_date, p.end_date,
+        u.username, p.bookmark_count, p.view_count, p.is_public
+        <choose>
+            <when test="sort == 'bookmark'">
+                ORDER BY p.bookmark_count DESC
+            </when>
+            <when test="sort == 'view'">
+                ORDER BY p.view_count DESC
+            </when>
+            <otherwise>
+                ORDER BY p.created_at DESC
+            </otherwise>
+        </choose>
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <!-- 브라우저 모달 쿼리 -->
+    <select id="selectPublicPlanDetail"
+            resultMap="BrowseDetailResult">
+        SELECT
+            p.plan_id,
+            p.plan_title,
+            r.region_name,
+            DATE_FORMAT(p.start_date, '%Y-%m-%d') AS start_date,
+            DATE_FORMAT(p.end_date, '%Y-%m-%d') AS end_date,
+            DATEDIFF(p.end_date, p.start_date) + 1 AS days,
+            DATE_FORMAT(p.created_at, '%Y-%m-%d') AS created_at,
+            p.is_public,
+            p.is_deleted,
+            u.user_no,
+            u.username,
+            IFNULL(l.like_count, 0) AS like_count,
+            p.bookmark_count,
+            p.view_count,
+
+            rv.review_id,
+            rv.content AS review_content,
+            DATE_FORMAT(rv.created_at, '%Y-%m-%d') AS review_created,
+            rv.rating AS review_rating,
+            ru.username AS review_username,
+            GROUP_CONCAT(CONCAT(f.file_path, '/', f.file_rename)) AS review_images
+
+        FROM TBL_PLAN p
+                 JOIN TBL_REGION r ON r.region_id = p.region_id
+                 JOIN TBL_USER u ON u.user_no = p.user_id
+                 LEFT JOIN (SELECT plan_id, COUNT(*) AS like_count FROM TBL_LIKE GROUP BY plan_id) l
+                           ON l.plan_id = p.plan_id
+                 LEFT JOIN TBL_REVIEW rv ON rv.plan_id = p.plan_id AND rv.is_deleted = 0
+                 LEFT JOIN TBL_USER ru ON ru.user_no = rv.user_id
+                 LEFT JOIN TBL_REVIEWFILES f ON f.review_id = rv.review_id AND f.is_deleted = 0
+
+        WHERE p.plan_id = #{planId}
+          AND p.is_deleted = 0
+          AND p.is_public = 0
+        GROUP BY p.plan_id
+    </select>
+
+    <!-- Day 및 장소 -->
+    <select id="selectPlanDays"
+            resultType="com.c4.routy.domain.plan.dto.PlanDayDTO">
+        SELECT
+            d.duration_id AS day_id,
+            d.day AS day_no,
+            DATE_ADD(p.start_date, INTERVAL (d.day - 1) DAY) AS date
+        FROM TBL_DURATION d
+            JOIN TBL_PLAN p ON d.plan_id = p.plan_id
+        WHERE d.plan_id = #{planId}
+        ORDER BY d.day ASC
+    </select>
+
+    <select id="selectPlanPlaces" resultType="com.c4.routy.domain.plan.dto.PlanActivityDTO">
+        SELECT
+            t.travel_id,
+            t.title AS travel_title,
+            t.address_name,
+            t.category_group_name,
+            t.place_url
+        FROM TBL_TRAVEL t
+        WHERE t.duration_id = #{dayId}
+        ORDER BY t.travel_order ASC
+    </select>
+
 </mapper>

@@ -18,4 +18,5 @@ public class PlanDayDTO {
     private Integer dayNo;           // 1, 2, 3 ...
     private String date;             // YYYY-MM-DD
     private List<PlanActivityDTO> activities = new ArrayList<>();;  // 해당 날짜의 일정들
+    private List<PlanPlaceDTO> places;
 }

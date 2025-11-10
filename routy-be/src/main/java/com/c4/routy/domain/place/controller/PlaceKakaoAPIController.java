@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/kakao")
-public class PlaceAPIController {
+public class PlaceKakaoAPIController {
 
     private final PlaceKakaoHotelService placeKakaoHotelService;
     private final PlaceKakaoFoodService placeKakaoFoodService;

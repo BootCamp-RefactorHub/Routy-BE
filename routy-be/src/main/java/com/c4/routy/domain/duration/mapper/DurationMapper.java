@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @Mapper
-public interface DurationQueryMapper {
+public interface DurationMapper {
 
     // 특정 planId에 해당하는 duration 목록 조회
     List<DurationEntity> findByPlanId(@Param("planId") Integer planId);

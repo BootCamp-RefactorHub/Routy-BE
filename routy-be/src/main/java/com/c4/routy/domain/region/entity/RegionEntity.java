@@ -21,9 +21,6 @@ public class RegionEntity {
     @Column(name = "region_name", nullable = false)
     private String regionName;
 
-    @Column(name = "region_code")
-    private Integer regionCode;
-
     @Column(name = "admin_code")
     private Integer adminCode;
 

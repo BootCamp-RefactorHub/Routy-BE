@@ -23,7 +23,7 @@ public class DurationController {
         return ResponseEntity.ok(durations);
     }
 
-    // 특정 일정(planId)에 일차 생성 (예: 1일차~n일차)
+    // 특정 일정(planId)에 일차 생성 (1일차~n일차)
     @PostMapping
     public ResponseEntity<List<DurationEntity>> createDurations(
             @PathVariable Integer planId,

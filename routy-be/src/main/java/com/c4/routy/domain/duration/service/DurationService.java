@@ -1,7 +1,7 @@
 package com.c4.routy.domain.duration.service;
 
 import com.c4.routy.domain.duration.entity.DurationEntity;
-import com.c4.routy.domain.duration.mapper.DurationQueryMapper;
+import com.c4.routy.domain.duration.mapper.DurationMapper;
 import com.c4.routy.domain.duration.repository.DurationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,15 +14,10 @@ import java.util.List;
 public class DurationService {
 
     private final DurationRepository durationRepository;
-    private final DurationQueryMapper durationQueryMapper;
+    private final DurationMapper durationMapper;
 
     public List<DurationEntity> findByPlanId(Integer planId) {
-        return durationQueryMapper.findByPlanId(planId);
-    }
-
-    // 특정 일정의 일차 리스트 조회
-    public List<DurationEntity> getDurationsByPlanId(Integer planId) {
-        return durationRepository.findByPlanId(planId);
+        return durationMapper.findByPlanId(planId);
     }
 
     // 일정 생성 시 총 일수(dayCount)에 맞게 Duration 자동 생성

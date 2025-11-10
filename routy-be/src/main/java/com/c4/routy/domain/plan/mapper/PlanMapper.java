@@ -5,10 +5,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 @Mapper
-public interface PlanQueryMapper {
+public interface PlanMapper {
 
     // 계층형 매핑 결과 직접 DTO로 받음
     PlanDetailResponseDTO selectPlanDetail(
-            @Param("planId") Integer planId
-    );
+            @Param("planId") Integer planId);
 }

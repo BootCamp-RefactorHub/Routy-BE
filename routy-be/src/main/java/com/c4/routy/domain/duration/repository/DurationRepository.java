@@ -8,5 +8,4 @@ import java.util.List;
 
 @Repository
 public interface DurationRepository extends JpaRepository<DurationEntity, Integer> {
-    List<DurationEntity> findByPlanId(Integer planId);
 }

@@ -4,15 +4,14 @@ import com.c4.routy.domain.user.dto.RequestChangePwdDTO;
 import com.c4.routy.domain.user.dto.RequestModifyUserInfoDTO;
 import com.c4.routy.domain.user.dto.ResponseAuthStatusDTO;
 import com.c4.routy.domain.user.dto.ResponseLogoutDTO;
+import com.c4.routy.domain.user.mapper.AuthMapper;
 import com.c4.routy.domain.user.service.AuthService;
-import com.c4.routy.domain.user.service.AwsS3Service;
 import com.c4.routy.domain.user.websecurity.CustomUserDetails;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,8 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class AuthController {
 
     private final AuthService authService;
-    private final AwsS3Service awsS3Service;
-
+    private final AuthMapper authMapper;
     /**
      * 로그아웃 API
      */
@@ -75,6 +73,14 @@ public class AuthController {
         Integer userNo = userDetails.getUserNo();
         String message = authService.modifyUserInfo(newUserInfo, userNo, profile);
         return ResponseEntity.ok(message);
+    }
+
+    @GetMapping("/auth/find-email")
+    public ResponseEntity<?> findEmail(@RequestParam String username,
+                                       @RequestParam String phone) {
+
+        String email = authMapper.findEmailByUsernameAndPhone(username, phone);
+        return ResponseEntity.ok().body(email);
     }
 
 }

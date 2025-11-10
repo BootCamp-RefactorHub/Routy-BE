@@ -1,16 +1,21 @@
 package com.c4.routy.domain.user.controller;
 
 import com.c4.routy.domain.user.dto.RequestChangePwdDTO;
+import com.c4.routy.domain.user.dto.RequestModifyUserInfoDTO;
 import com.c4.routy.domain.user.dto.ResponseAuthStatusDTO;
 import com.c4.routy.domain.user.dto.ResponseLogoutDTO;
 import com.c4.routy.domain.user.service.AuthService;
+import com.c4.routy.domain.user.service.AwsS3Service;
+import com.c4.routy.domain.user.websecurity.CustomUserDetails;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
@@ -18,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final AwsS3Service awsS3Service;
 
     /**
      * 로그아웃 API
@@ -53,4 +59,22 @@ public class AuthController {
                     .body("비밀번호 변경에 실패했습니다: " + e.getMessage());
         }
     }
+
+    @PutMapping(
+            value = "/auth/modifyuserinfo",
+            consumes = {"multipart/form-data", "multipart/mixed"}
+    )
+    public ResponseEntity<String> modifyUserInfo(
+            @RequestPart(value = "newUserInfo", required = false) RequestModifyUserInfoDTO newUserInfo,
+            @RequestPart(value = "profile", required = false) MultipartFile profile,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        log.info("회원정보 요청: {}", newUserInfo);
+        log.info("회원정보 요청: {}", profile);
+        log.info("회원정보 요청: {}", userDetails.getEmail());
+        Integer userNo = userDetails.getUserNo();
+        String message = authService.modifyUserInfo(newUserInfo, userNo, profile);
+        return ResponseEntity.ok(message);
+    }
+
 }

@@ -9,6 +9,7 @@ import com.c4.routy.domain.plan.repository.PlanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,14 +34,18 @@ public class DurationService {
         PlanEntity plan = planRepository.findById(planId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 planId가 존재하지 않습니다: " + planId));
 
-        LocalDateTime startDate = DateTimeUtil.toLocalDateTime(plan.getStartDate());
+        LocalDate startDate = LocalDate.parse(plan.getStartDate());
 
         for (int i = 1; i <= dayCount; i++) {
-            LocalDateTime currentDate = startDate.plusDays(i - 1);
-            String formattedDate = DateTimeUtil.format(currentDate); // yyyy-MM-dd 형식 문자열 변환
+            LocalDate currentDate = startDate.plusDays(i - 1);
+
+            // DateTimeUtil이 LocalDateTime만 받으면 이 한 줄 추가
+            String formattedDate = DateTimeUtil.format(currentDate.atStartOfDay()); // "yyyy-MM-dd"
 
             DurationEntity duration = DurationEntity.builder()
-                    .day(i)
+                    .day(i)                  // day_no 같은 필드
+//                    .date(formattedDate)     // TBL_DURATION.date NOT NULL이면 꼭 넣기
+                    .plan(plan)              //
                     .build();
 
             durations.add(durationRepository.save(duration));

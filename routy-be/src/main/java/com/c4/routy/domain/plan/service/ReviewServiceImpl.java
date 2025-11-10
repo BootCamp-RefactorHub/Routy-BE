@@ -4,11 +4,15 @@ import com.c4.routy.domain.plan.dto.PlanReviewFormDTO;
 import com.c4.routy.domain.plan.dto.PlanReviewResponseDTO;
 import com.c4.routy.domain.plan.dto.PlanReviewUploadRequestDTO;
 import com.c4.routy.domain.plan.dto.ReviewFileDTO;
+import com.c4.routy.domain.plan.entity.PlanEntity;
 import com.c4.routy.domain.plan.entity.ReviewEntity;
 import com.c4.routy.domain.plan.entity.ReviewFileEntity;
 import com.c4.routy.domain.plan.mapper.PlanMapper;
+import com.c4.routy.domain.plan.repository.PlanRepository;
 import com.c4.routy.domain.plan.repository.ReviewFileRepository;
 import com.c4.routy.domain.plan.repository.ReviewRepository;
+import com.c4.routy.domain.user.entity.UserEntity;
+import com.c4.routy.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,19 +20,20 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-//리뷰 서비스 구현체
-// MyBatis 조회 / JPA 등록·수정
-
 @Service
 @RequiredArgsConstructor
-public class ReviewServiceImpl implements ReviewService{
+public class ReviewServiceImpl implements ReviewService {
+
     private final PlanMapper planMapper;
     private final ReviewRepository reviewRepository;
     private final ReviewFileRepository reviewFileRepository;
 
+    // ✅ 새로 추가
+    private final PlanRepository planRepository;
+    private final UserRepository userRepository;
+
     /**
-     * 리뷰 작성 모달 데이터 조회
-     * (MyBatis로 기존 리뷰 + 파일 정보 가져오기)
+     * 리뷰 작성 모달 데이터 조회 (MyBatis)
      */
     @Override
     public PlanReviewFormDTO getReviewForm(Integer planId) {
@@ -42,22 +47,29 @@ public class ReviewServiceImpl implements ReviewService{
     @Transactional
     public PlanReviewResponseDTO createOrUpdateReview(PlanReviewUploadRequestDTO dto, Integer loginUserId) {
 
-        // 1️⃣ ReviewEntity 생성 또는 수정
-        ReviewEntity review = dto.getReviewId() == null
-                ? new ReviewEntity()  // 신규 리뷰
-                : reviewRepository.findById(dto.getReviewId())
-                .orElse(new ReviewEntity()); // 없으면 신규 생성
+        // Plan / User 조회
+        PlanEntity plan = planRepository.findById(dto.getPlanId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 일정(planId=" + dto.getPlanId() + ")이 존재하지 않습니다."));
+        UserEntity user = userRepository.findById(loginUserId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자(userId=" + loginUserId + ")가 존재하지 않습니다."));
 
-        // (planId, userId는 컨트롤러나 서비스단에서 주입)
+        // 신규 or 기존 리뷰 불러오기
+        ReviewEntity review = dto.getReviewId() == null
+                ? new ReviewEntity()
+                : reviewRepository.findById(dto.getReviewId()).orElse(new ReviewEntity());
+
+        // 필드 세팅
+        review.setPlan(plan);
+        review.setUser(user);
         review.setContent(dto.getContent());
         review.setRating(dto.getRating());
 
+        // 리뷰 저장
         reviewRepository.save(review);
 
-        // 2️⃣ 리뷰 파일 저장
+        // 파일 저장
         if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
             for (MultipartFile file : dto.getFiles()) {
-                // 실제로는 S3 업로드 로직 필요. 지금은 파일명으로 가짜 URL 생성.
                 String fileUrl = "/uploads/" + file.getOriginalFilename();
 
                 ReviewFileEntity fileEntity = ReviewFileEntity.builder()
@@ -70,10 +82,10 @@ public class ReviewServiceImpl implements ReviewService{
             }
         }
 
-        // 3️⃣ 응답 DTO 조립 (방금 저장한 리뷰 + 파일들)
+        // 응답 조립
         return PlanReviewResponseDTO.builder()
                 .reviewId(review.getReviewId())
-                .planId(review.getPlan() != null ? review.getPlan().getPlanId() : dto.getPlanId())
+                .planId(plan.getPlanId())
                 .content(review.getContent())
                 .rating(review.getRating())
                 .createdAt(review.getCreatedAt() != null ? review.getCreatedAt().toString() : null)

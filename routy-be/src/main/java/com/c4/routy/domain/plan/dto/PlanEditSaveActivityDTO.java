@@ -15,9 +15,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PlanEditSaveActivityDTO {
     private Integer travelId;         // 기존 일정이면 있음, 새로 추가면 null
-    private Integer orderNo;          // 위/아래 정렬용 (같은 Day 안에서의 순서)
+    private Integer travelOrder;          // 위/아래 정렬용 (같은 Day 안에서의 순서)
 
-    private String title;             // 사용자가 적은 한 줄 제목 (제주 공항 도착)
     private String tag;               // 숙소/식당/카페/관광 등
 
     // ===== 카카오 장소 정보 =====

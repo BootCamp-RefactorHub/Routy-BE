@@ -24,37 +24,21 @@ public class TravelEntity {
     @JoinColumn(name = "duration_id")
     private DurationEntity duration;
 
-    @Column(name = "title")
-    private String title;               // 제주 공항 도착
-
     @Column(name = "place_name")
-    private String placeName;           // 카카오 place_name
+    private String placeName;           // 장소이름
 
-    @Column(name = "address_name")
+    @Column(name = "address_name")       //주소
     private String addressName;
 
     @Column(name = "category_group_name")
     private String categoryGroupName;
 
-    @Column(name = "place_url")
+    @Column(name = "place_url")       // 장소url
     private String placeUrl;
 
     @Column(name = "tag")
     private String tag;                 // 숙소/식당/관광...
 
-    @Column(name = "order_no")
-    private Integer orderNo;
-
-    @Column(name = "memo")
-    private String memo;
-    /** === 편의 메서드 === */
-    public void updateFromDTO(com.c4.routy.domain.plan.dto.PlanEditSaveActivityDTO dto) {
-        this.title = dto.getTitle();
-        this.placeName = dto.getPlaceName();
-        this.addressName = dto.getAddressName();
-        this.categoryGroupName = dto.getCategoryGroupName();
-        this.placeUrl = dto.getPlaceUrl();
-        this.tag = dto.getTag();
-        this.orderNo = dto.getOrderNo();
-    }
+    @Column(name = "travel_order")
+    private Integer travelOrder;
 }

@@ -47,7 +47,7 @@ public class PlanDrawService {
         plan.setPlanTitle(dto.getPlanTitle());
         plan.setStartDate(dto.getStartDate());
         plan.setEndDate(dto.getEndDate());
-        // ✅ region_id → RegionEntity 로 변환해서 주입
+        //  region_id -> RegionEntity 로 변환해서 주입
         RegionEntity region = RegionRepository.findById(dto.getRegionId())
                 .orElseThrow(() -> new IllegalArgumentException("지역 없음"));
         plan.setRegion(region);

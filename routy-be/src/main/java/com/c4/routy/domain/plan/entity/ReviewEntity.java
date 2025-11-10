@@ -27,7 +27,7 @@ public class ReviewEntity {
     private PlanEntity plan;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_no")
+    @JoinColumn(name = "user_id")
     private UserEntity user;
 
     @Column(columnDefinition = "TEXT")

@@ -26,13 +26,5 @@ public class ReviewFileEntity {
 
     @Column(name = "original_name")
     private String originalName;
-//
-//    /** 유틸 생성자 */
-//    public static ReviewFile of(Review review, String url, String originalName) {
-//        return ReviewFile.builder()
-//                .review(review)
-//                .url(url)
-//                .originalName(originalName)
-//                .build();
-//    }
+
 }

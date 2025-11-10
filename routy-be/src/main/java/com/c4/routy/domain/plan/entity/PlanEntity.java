@@ -5,6 +5,8 @@ import com.c4.routy.common.util.DateTimeUtil;
 import com.c4.routy.domain.duration.entity.DurationEntity;
 import com.c4.routy.domain.region.entity.RegionEntity;
 import com.c4.routy.domain.user.entity.UserEntity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,6 +26,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PlanEntity {
 
     @Id
@@ -34,13 +37,13 @@ public class PlanEntity {
     @Column(name = "plan_title", nullable = false)
     private String planTitle;
 
-    @Column(name = "is_shared", nullable = false)
+    @Column(name = "is_public", nullable = false)
     private boolean shared;
 
-    @Column(name = "start_time", nullable = false)
+    @Column(name = "start_date", nullable = false)
     private String startDate = DateTimeUtil.now();
 
-    @Column(name = "end_time", nullable = false)
+    @Column(name = "end_date", nullable = false)
     private String endDate;
 
     @Column(name = "is_deleted", nullable = false)
@@ -63,10 +66,11 @@ public class PlanEntity {
     private RegionEntity region;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_no")
+    @JoinColumn(name = "user_id")
     private UserEntity user;
 
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<DurationEntity> durations = new ArrayList<>();
 
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)

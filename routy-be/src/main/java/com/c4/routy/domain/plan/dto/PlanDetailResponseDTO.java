@@ -18,8 +18,8 @@ import java.util.List;
 public class PlanDetailResponseDTO {
     private Integer planId;       // TBL_PLAN.plan_id (일정PK)
     private String title;         // 여행 제목
-    private String startDate;     // YYYY-DD-MM
-    private String endDate;       // YYYY-DD-MM
+    private String startDate;     // YYYY-MM-DD
+    private String endDate;       // YYYY-MM-DD
 
     private String status;           // 진행예정 / 진행중 / 완료 (날짜로 계산해서)
     private String destination;      // 여행지 TBL_REGION.region_name

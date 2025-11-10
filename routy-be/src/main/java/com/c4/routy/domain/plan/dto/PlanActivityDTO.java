@@ -12,15 +12,11 @@ import lombok.*;
 @AllArgsConstructor
 public class PlanActivityDTO {
     private Integer travelId;     // TBL_TRAVEL.travel_id (없으면 null)
-    private String title;         // 제주 공항 도착, 점심 식사 ...
-    private String place;         // 제주국제공항, 흑돼지 거리 ... (장소명)
+    private String placeName;    // 장소 이름
+    private String addressName;     // 주소
+    private String categoryGroup; // 카테고리 그룹
+    private String placeUrl;       // 카카오 상세페이지 URL
 
     private String tag;           // 숙소 / 카페 / 식당 / 관광 / 기타 ... (아이콘 바인딩용)
-    private String url;           // 여행지 정보url
 
-
-
-    //일정수정 변경사항
-    // address_name(여행장소), category_group_name(카테고리), plcae_name(여행지 제목), plcae_url(여행지 정보url)
-    //장소명, 장소 주소, 장소 카테고리, 장소 정보 url 뿌려주기로함
 }

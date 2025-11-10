@@ -111,13 +111,12 @@ public class PlanServiceImpl implements PlanService {
             for (PlanEditSaveActivityDTO actDTO : dayDTO.getActivities()) {
                 TravelEntity travel = TravelEntity.builder()
                         .duration(dayEntity)
-                        .title(actDTO.getTitle())
                         .placeName(actDTO.getPlaceName())
                         .addressName(actDTO.getAddressName())
                         .categoryGroupName(actDTO.getCategoryGroupName())
                         .placeUrl(actDTO.getPlaceUrl())
                         .tag(actDTO.getTag())
-                        .orderNo(actDTO.getOrderNo())
+                        .travelOrder(actDTO.getTravelOrder())  // 엔티티에 맞게 수정
                         .build();
                 travelRepository.save(travel);
             }

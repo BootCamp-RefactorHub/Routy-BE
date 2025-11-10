@@ -2,6 +2,8 @@ package com.c4.routy.domain.duration.entity;
 
 import com.c4.routy.domain.plan.entity.PlanEntity;
 import com.c4.routy.domain.plan.entity.TravelEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,6 +17,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class DurationEntity {
 
     @Id
@@ -27,6 +30,7 @@ public class DurationEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "plan_id", nullable = false)
+    @JsonBackReference
     private PlanEntity plan;
 
     @OneToMany(mappedBy = "duration", cascade = CascadeType.ALL, orphanRemoval = true)

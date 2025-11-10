@@ -13,7 +13,7 @@ public class PlaceEntity {
     private Integer travelId;
     private Integer travelOrder;
     private Integer estimatedTravelTime;
-    private String title;
+    private String placeName;
     private Double latitude;
     private Double longitude;
     private String categoryCode;

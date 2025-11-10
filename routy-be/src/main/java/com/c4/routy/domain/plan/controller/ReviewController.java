@@ -4,7 +4,9 @@ import com.c4.routy.domain.plan.dto.PlanReviewFormDTO;
 import com.c4.routy.domain.plan.dto.PlanReviewResponseDTO;
 import com.c4.routy.domain.plan.dto.PlanReviewUploadRequestDTO;
 import com.c4.routy.domain.plan.service.ReviewService;
+import com.c4.routy.domain.user.websecurity.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 //리뷰 모달 컨트롤러
@@ -24,14 +26,18 @@ public class ReviewController {
     @PostMapping
     public PlanReviewResponseDTO uploadReview(
             @PathVariable Integer planId,
-            @ModelAttribute PlanReviewUploadRequestDTO dto) {
-        // ✅ 1️⃣ PathVariable로 planId 주입
+            @ModelAttribute PlanReviewUploadRequestDTO dto ,
+    @AuthenticationPrincipal CustomUserDetails userDetails)
+    {
+        // PathVariable로 planId 주입
         dto.setPlanId(planId);
 
-        // ✅ 2️⃣ 로그인 유저 임시 하드코딩 (예: user_id = 3)
-        Integer loginUserId = 3;
+        // 로그인 유저 임시 하드코딩
+//        Integer loginUserId = 11;
 
-        // ✅ 3️⃣ 서비스에 두 번째 파라미터로 함께 넘기기
+        Integer loginUserId = userDetails.getUserNo();
+
+        // 서비스에 두 번째 파라미터로 함께 넘기기
         return reviewService.createOrUpdateReview(dto, loginUserId);
     }
 }

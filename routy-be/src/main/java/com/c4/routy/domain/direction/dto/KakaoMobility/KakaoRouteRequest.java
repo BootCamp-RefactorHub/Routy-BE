@@ -19,4 +19,6 @@ public class KakaoRouteRequest {
     @JsonProperty("waypoints")
     private List<Location> wayPoints;
     private Priority priority = Priority.RECOMMEND;
+    @JsonProperty("roadevent")
+    private int roadEvent = 2;
 }

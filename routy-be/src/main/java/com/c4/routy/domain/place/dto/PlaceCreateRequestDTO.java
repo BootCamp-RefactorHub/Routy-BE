@@ -14,7 +14,7 @@ public class PlaceCreateRequestDTO {
 
     private Integer travelOrder;           // 순서
     private Integer estimatedTravelTime;   // 예상 이동 시간
-    private String title;                  // 장소명
+    private String placeName;                  // 장소명
     private Double latitude;               // 위도
     private Double longitude;              // 경도
     private String categoryCode;           // Kakao 카테고리 코드

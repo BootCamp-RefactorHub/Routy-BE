@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// 리뷰에 연결된 파일 정보 DTO
+// 조회 응답에 포함
+// 리뷰 수정 시에도 기존 파일 리스트로 내려줌
 //리뷰에 연결된 파일 정보
 @Data
 @NoArgsConstructor

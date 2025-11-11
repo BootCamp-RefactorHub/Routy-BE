@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface PlanDrawRepository extends JpaRepository<PlanEntity, Integer> {
     // 사용자별 플랜 조회
-    List<PlanEntity> findByUserId(Integer userId);
+    List<PlanEntity> findByUser_UserNo(Integer userNo);
 }

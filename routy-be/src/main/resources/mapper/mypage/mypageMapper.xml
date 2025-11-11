@@ -7,15 +7,13 @@
 
     <!-- =========================================================
          1) 상단 프로필
-         Mybatis 메서드: selectProfile(Integer userNo)
-         DTO: com.c4.routy.domain.mypage.dto.ProfileDTO
          ========================================================= -->
     <select id="selectProfile"
             parameterType="int"
             resultType="com.c4.routy.domain.mypage.dto.ProfileDTO">
         SELECT
-            u.user_no  AS userNo,
-            u.username AS username,
+            u.user_no   AS userNo,
+            u.username  AS username,
             u.image_url AS profileImage,
 
             /* 내가 만든 일정 수 */
@@ -26,8 +24,7 @@
                   AND (p.is_deleted IS NULL OR p.is_deleted = 0)
             ) AS totalPlanCount,
 
-            /* 내가 만든 일정에 달린 리뷰 수
-               (TBL_REVIEW 에 user_no 없으니까 PLAN 통해서 역으로) */
+            /* 내가 만든 일정에 달린 리뷰 수 */
             (
                 SELECT COUNT(*)
                 FROM TBL_REVIEW r
@@ -44,7 +41,7 @@
                 WHERE p3.user_id = u.user_no
             ) AS totalLikeReceived,
 
-            /* 내가 북마크한 일정 수 (user_id 컬럼) */
+            /* 내가 북마크한 일정 수 */
             (
                 SELECT COUNT(*)
                 FROM TBL_BOOKMARK b
@@ -58,15 +55,12 @@
 
     <!-- =========================================================
          2) 달력에 뿌릴 일정들
-         Mybatis 메서드: selectCalendarPlans(userNo, startDate, endDate)
-         DTO: CalendarPlanDTO
          ========================================================= -->
     <resultMap id="CalendarPlanMap" type="com.c4.routy.domain.mypage.dto.CalendarPlanDTO">
-        <!-- DTO에 id 라고 돼있으니까 그대로 매핑 -->
-        <result property="id" column="plan_id"/>
-        <result property="title" column="plan_title"/>
+        <result property="id"        column="plan_id"/>
+        <result property="title"     column="plan_title"/>
         <result property="startDate" column="start_date"/>
-        <result property="endDate" column="end_date"/>
+        <result property="endDate"   column="end_date"/>
     </resultMap>
 
     <select id="selectCalendarPlans" resultMap="CalendarPlanMap">
@@ -90,45 +84,41 @@
 
     <!-- =========================================================
          3) 오른쪽 "내 일정" (다가오는 일정)
-         Mybatis 메서드: selectUpcomingPlans(userNo, today)
-         DTO: MyPlanDTO
+         ✅ 여기만 바뀜
          ========================================================= -->
     <resultMap id="MyPlanMap" type="com.c4.routy.domain.mypage.dto.MyPlanDTO">
-        <result property="planId" column="plan_id"/>
-        <result property="title" column="plan_title"/>
+        <result property="planId"    column="plan_id"/>
+        <result property="title"     column="plan_title"/>
         <result property="regionName" column="region_name"/>
         <result property="startDate" column="start_date"/>
-        <result property="endDate" column="end_date"/>
-        <!-- durationLabel / status 는 서비스에서 채움 -->
+        <result property="endDate"   column="end_date"/>
     </resultMap>
 
     <select id="selectUpcomingPlans" resultMap="MyPlanMap">
         SELECT
-            p.plan_id,
-            p.plan_title,
-            r.region_name,
-            p.start_date,
-            p.end_date
+        p.plan_id,
+        p.plan_title,
+        r.region_name,
+        p.start_date,
+        p.end_date
         FROM TBL_PLAN p
-                 LEFT JOIN TBL_REGION r ON p.region_id = r.region_id
+        LEFT JOIN TBL_REGION r ON p.region_id = r.region_id
         WHERE p.user_id = #{userNo}
-          AND (p.is_deleted IS NULL OR p.is_deleted = 0)
-        ORDER BY p.created_at DESC
-            LIMIT 10
+        AND (p.is_deleted IS NULL OR p.is_deleted = 0)
+        AND STR_TO_DATE(p.start_date, '%Y-%m-%d') <![CDATA[>=]]> CURRENT_DATE()
+        ORDER BY p.start_date ASC
+        LIMIT 10
     </select>
 
 
     <!-- =========================================================
          4) 여행 기록 (지난 일정)
-         Mybatis 메서드: selectTravelHistory(userNo)
-         DTO: TravelRecordDTO
          ========================================================= -->
     <select id="selectTravelHistory"
             parameterType="int"
             resultType="com.c4.routy.domain.mypage.dto.TravelRecordDTO">
         SELECT
             p.plan_id   AS planId,
-            /* 썸네일: 해당 플랜의 duration 중 첫 travel 의 image_path 하나 */
             (
                 SELECT t.image_path
                 FROM TBL_TRAVEL t
@@ -144,8 +134,7 @@
         FROM TBL_PLAN p
         WHERE p.user_id = #{userNo}
           AND (p.is_deleted IS NULL OR p.is_deleted = 0)
-            /* 지난 일정만: DB 날짜가 문자열이라도 'YYYY-MM-DD' 라고 가정하고 CURRENT_DATE()와 비교 */
-          AND p.end_date <![CDATA[<]]> CURRENT_DATE()
+          AND STR_TO_DATE(p.end_date, '%Y-%m-%d') <![CDATA[<]]> CURRENT_DATE()
         ORDER BY p.end_date DESC
             LIMIT 3
     </select>
@@ -153,8 +142,6 @@
 
     <!-- =========================================================
          5) 북마크 목록
-         Mybatis 메서드: selectBookmarks(userNo)
-         DTO: BookmarkDTO
          ========================================================= -->
     <select id="selectBookmarks"
             parameterType="int"

@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PlanSummaryResponseDTO {
     private Integer planId;         // 일정 ID
-    private String title;           // 여행 제목
+    private String placeName;           // 여행 제목
     private String regionName;      // 여행 지역명
     private String theme;           // 테마 (힐링, 미식 등)
     private String transportation;  // 교통수단 (버스, 비행기 등)

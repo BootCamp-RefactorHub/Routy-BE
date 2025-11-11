@@ -3,8 +3,9 @@ package com.c4.routy.domain.plan.controller;
 import com.c4.routy.domain.plan.dto.BrowseDetailResponseDTO;
 import com.c4.routy.domain.plan.dto.BrowseResponseDTO;
 import com.c4.routy.domain.plan.dto.PlanDetailResponseDTO;
-
-import com.c4.routy.domain.plan.service.PlanService;
+import com.c4.routy.domain.plan.dto.PlanEditResponseDTO;
+import com.c4.routy.domain.plan.dto.PlanEditSaveRequestDTO;
+import com.c4.routy.domain.plan.service.PlanServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +16,12 @@ import java.util.List;
 @RequestMapping("/api/plans")
 @RequiredArgsConstructor
 public class PlanController {
+    private final PlanServiceImpl planService;
 
-    private final PlanService planService;
 
-    // 일정 상세 조회
+    // 상세보기 (일정 상세 조회)
     @GetMapping("/{planId}")
-    public PlanDetailResponseDTO getPlanDetail(
-            @PathVariable Integer planId) {
+    public PlanDetailResponseDTO getPlanDetail(@PathVariable Integer planId) {
         return planService.getPlanDetail(planId);
     }
 
@@ -60,4 +60,21 @@ public class PlanController {
         }
         return ResponseEntity.ok(dto);
     }
+
+    // 수정화면 로딩
+    @GetMapping("/{planId}/edit")
+    public PlanEditResponseDTO getPlanEdit(@PathVariable Integer planId) {
+        return planService.getPlanEdit(planId);
+    }
+
+    // 수정 저장
+    @PutMapping("/{planId}")
+    public void updatePlan(@PathVariable Integer planId,
+                           @RequestBody PlanEditSaveRequestDTO dto) {
+        dto.setPlanId(planId);
+        planService.updatePlan(dto);
+    }
 }
+
+
+

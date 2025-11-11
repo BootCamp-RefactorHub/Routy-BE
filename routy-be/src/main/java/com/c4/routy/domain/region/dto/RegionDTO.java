@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class RegionDTO {
-    private Long regionId;
+    private Integer regionId;
     private String regionName;
     private String theme;
     private String regionDesc;

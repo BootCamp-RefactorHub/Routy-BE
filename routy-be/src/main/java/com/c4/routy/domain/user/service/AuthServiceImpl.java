@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.c4.routy.domain.user.dto.RequestChangePwdDTO;
 import com.c4.routy.domain.user.dto.RequestModifyUserInfoDTO;
 import com.c4.routy.domain.user.entity.UserEntity;
+import com.c4.routy.domain.user.mapper.AuthMapper;
 import com.c4.routy.domain.user.repository.UserRepository;
 import com.c4.routy.domain.user.websecurity.CustomUserDetails;
 import jakarta.servlet.http.Cookie;
@@ -41,14 +42,16 @@ public class AuthServiceImpl implements AuthService {
     private final AmazonS3 amazonS3;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AuthMapper authMapper;
 
     @Autowired
     public AuthServiceImpl(AmazonS3 amazonS3,
                            UserRepository userRepository,
-                           BCryptPasswordEncoder bCryptPasswordEncoder) {
+                           BCryptPasswordEncoder bCryptPasswordEncoder, AuthMapper authMapper) {
         this.amazonS3 = amazonS3;
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.authMapper = authMapper;
     }
 
     // UserDetailsService에 의한 로그인을 위한 DB 조회용 메서드
@@ -85,9 +88,7 @@ public class AuthServiceImpl implements AuthService {
         return new CustomUserDetails(loginUser);
     }
 
-    /**
-     * 회원 번호로 UserDetails 조회 (JWT 토큰 검증용)
-     */
+    // 회원 번호로 UserDetails 조회 (JWT 토큰 검증용)
     public UserDetails loadUserByUserNo(Integer userNo) throws UsernameNotFoundException {
 
         UserEntity user = userRepository.findById(userNo)
@@ -103,13 +104,12 @@ public class AuthServiceImpl implements AuthService {
         return new CustomUserDetails(user);
     }
 
-    /**
-     * 로그아웃 처리
-     * 1. HttpOnly 쿠키 삭제
-     * 2. SecurityContext 초기화
-     */
+    // 로그아웃 처리
+    // 1. HttpOnly 쿠키 삭제
+    // 2. SecurityContext 초기화
     @Override
     public void logout(HttpServletResponse response) {
+
         // 현재 인증된 사용자 정보 로깅
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
@@ -126,9 +126,7 @@ public class AuthServiceImpl implements AuthService {
         log.info("로그아웃 처리 완료 - 쿠키 삭제 및 SecurityContext 초기화");
     }
 
-    /**
-     * 현재 인증 상태 확인
-     */
+    // 현재 인증 상태 확인
     @Override
     public boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -138,9 +136,7 @@ public class AuthServiceImpl implements AuthService {
                 && !"anonymousUser".equals(authentication.getPrincipal());
     }
 
-    /**
-     * 현재 인증된 사용자 이름 반환
-     */
+    //현재 인증된 사용자 이름 반환
     @Override
     public String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -152,11 +148,7 @@ public class AuthServiceImpl implements AuthService {
         return null;
     }
 
-
-
-    /**
-     * HttpOnly 쿠키 삭제 (private helper method)
-     */
+    // HttpOnly 쿠키 삭제 (private helper method)
     private void deleteCookie(HttpServletResponse response) {
         Cookie cookie = new Cookie("token", null);
         cookie.setHttpOnly(true);
@@ -169,8 +161,10 @@ public class AuthServiceImpl implements AuthService {
         log.info("HttpOnly 쿠키 삭제 완료");
     }
 
+    // 비밀번호 변경
     @Override
     public void modifyPwd(RequestChangePwdDTO newPwd) {
+
         // 1. 비밀번호 유효성 검사
         if (newPwd.getNewPassword() == null || newPwd.getNewPassword().length() < 8) {
             throw new IllegalArgumentException("비밀번호는 8자 이상이어야 합니다.");
@@ -237,5 +231,20 @@ public class AuthServiceImpl implements AuthService {
         } catch (StringIndexOutOfBoundsException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 형식의 파일" + fileName + ") 입니다.");
         }
+    }
+
+    // 이메일 찾기 및 유효성 검사
+    @Override
+    public String findEmail(String username, String phone) {
+
+        String email = authMapper.findEmailByUsernameAndPhone(username, phone);
+
+        // 사용자를 찾지 못한 경우
+        if (email == null || email.isEmpty()) {
+            return "존재하지 않는 회원입니다.";
+        }
+
+        // 이메일을 찾은 경우 그대로 반환
+        return email;
     }
 }

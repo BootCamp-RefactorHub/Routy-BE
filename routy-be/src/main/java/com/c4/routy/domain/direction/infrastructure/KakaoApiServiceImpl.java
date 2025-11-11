@@ -55,7 +55,7 @@ public class KakaoApiServiceImpl implements KakaoApiService {
     @Override
     public int getTimes(Location origin, Location destination) {
         try {
-            // ✅ 1. GET 요청이므로 쿼리스트링 방식으로 파라미터 설정
+            //  1. GET 요청이므로 쿼리스트링 방식으로 파라미터 설정
             String url = UriComponentsBuilder.fromHttpUrl(kakaoDirectionsUri)
                     .queryParam("origin", origin.getX() + "," + origin.getY())
                     .queryParam("destination", destination.getX() + "," + destination.getY())
@@ -65,14 +65,14 @@ public class KakaoApiServiceImpl implements KakaoApiService {
                     .build()
                     .toUriString();
 
-            // ✅ 2. 헤더 설정
+            // 2. 헤더 설정
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.set("Authorization", "KakaoAK " + kakaoApiKey);
 
             HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-            // ✅ 3. GET 방식 호출
+            // 3. GET 방식 호출
             ResponseEntity<KakaoRouteResponse> response = restTemplate.exchange(
                     url,
                     HttpMethod.GET,
@@ -80,7 +80,7 @@ public class KakaoApiServiceImpl implements KakaoApiService {
                     KakaoRouteResponse.class
             );
 
-            // ✅ 4. 응답 파싱
+            // 4. 응답 파싱
             KakaoRouteResponse body = response.getBody();
             if (body == null || body.getRoutes() == null || body.getRoutes().isEmpty()) {
                 throw new RuntimeException("Kakao API 응답이 비어있습니다.");
@@ -88,7 +88,7 @@ public class KakaoApiServiceImpl implements KakaoApiService {
 
             int durationSec = body.getRoutes().get(0).getSummary().getDuration();
 
-            log.info("🚗 두 지점 간 예상 소요 시간: {}초 ({}분)", durationSec, durationSec / 60);
+            log.info("두 지점 간 예상 소요 시간: {}초 ({}분)", durationSec, durationSec / 60);
 
             return durationSec;
 

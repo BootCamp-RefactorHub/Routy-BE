@@ -37,7 +37,7 @@ public class MapServiceImpl implements MapService {
         List<Location> points = request.getWayPoints();
         List<Integer> fixed = request.getFixPoints() != null ? request.getFixPoints() : new ArrayList<>();
 
-        // 1️⃣ 모든 지점 간 이동 시간 계산
+        // 1. 모든 지점 간 이동 시간 계산
         int[][] times = new int[n][n];
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
@@ -49,15 +49,15 @@ public class MapServiceImpl implements MapService {
             }
         }
 
-        // 2️⃣ 최적 경로 탐색 (고정된 지점 유지)
+        // 2. 최적 경로 탐색 (고정된 지점 유지)
         List<Integer> bestOrder = findOptimalOrder(times, fixed);
 
-        // 3️⃣ 순서에 따라 정렬된 지점 리스트 구성
+        // 3. 순서에 따라 정렬된 지점 리스트 구성
         List<Location> ordered = bestOrder.stream()
                 .map(points::get)
                 .toList();
 
-        // 4️⃣ 최종 경로 요청 (출발지~경유지~도착지)
+        // 4. 최종 경로 요청 (출발지~경유지~도착지)
         KakaoRouteRequest routeReq = new KakaoRouteRequest();
         routeReq.setOrigin(ordered.get(0));
         routeReq.setDestination(ordered.get(ordered.size() - 1));

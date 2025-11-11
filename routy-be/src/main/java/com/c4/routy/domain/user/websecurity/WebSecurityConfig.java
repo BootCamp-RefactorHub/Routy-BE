@@ -56,8 +56,13 @@ public class WebSecurityConfig {
                 // 해당 경로 요청 허용
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/**").permitAll()
+
+                        /* 나중에 일괄적으로 수정하기 */
 //                        .requestMatchers("*").permitAll()
 //                        .requestMatchers("/user/register", "/validation/sendmail").permitAll()
+//                        .requestMatchers("/user/login").permitAll()
+//                        .requestMatchers("/api/signup", "/oauth2/**").permitAll()
+//                        .requestMatchers("/auth/logout", "/auth/change-password").permitAll
 //                        .requestMatchers("/api/login", "/api/signup", "/oauth2/**", "/login/**").permitAll()
 //                        .requestMatchers("/file/**").permitAll()
                         .anyRequest().authenticated())

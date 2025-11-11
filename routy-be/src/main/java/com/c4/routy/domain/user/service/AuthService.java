@@ -20,4 +20,6 @@ public interface AuthService extends UserDetailsService {
     void modifyPwd(RequestChangePwdDTO newPwd);
 
     String modifyUserInfo(RequestModifyUserInfoDTO newUserInfo, Integer userNo, MultipartFile profile);
+
+    String findEmail(String username, String phone);
 }

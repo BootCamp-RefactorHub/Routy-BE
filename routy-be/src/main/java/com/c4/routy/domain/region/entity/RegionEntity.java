@@ -30,7 +30,6 @@ public class RegionEntity {
     @Column(name = "region_desc")
     private String regionDesc;
 
-    // 이 두 필드가 있어야 함!
     @Column(name = "start_lat")
     private Double startLat;
 

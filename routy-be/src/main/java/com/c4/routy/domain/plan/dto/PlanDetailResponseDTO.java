@@ -9,15 +9,17 @@ import java.util.List;
 
 
 // 일정 상세보기 DTO (전체 응답)
+// /api/plans/{planId} 이런 엔드포인트에서 내려줄 용도
+// 상단 정보 + Day 리스트를 한 번에 보냄
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlanDetailResponseDTO {
-    private Integer planId;       // TBL_PLAN.plan_id
+    private Integer planId;       // TBL_PLAN.plan_id (일정PK)
     private String title;         // 여행 제목
-    private String startDate;     // 2024-12-15
-    private String endDate;       // 2024-12-18
+    private String startDate;     // YYYY-MM-DD
+    private String endDate;       // YYYY-MM-DD
 
     private String status;           // 진행예정 / 진행중 / 완료 (날짜로 계산해서)
     private String destination;      // 여행지 TBL_REGION.region_name

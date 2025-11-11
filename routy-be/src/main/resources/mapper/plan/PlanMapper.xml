@@ -2,7 +2,6 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
 <mapper namespace="com.c4.routy.domain.plan.mapper.PlanMapper">
 
     <!-- =======================================================
@@ -12,10 +11,11 @@
     <!-- 활동(하루 안의 장소 일정) -->
     <resultMap id="PlanActivityResult" type="com.c4.routy.domain.plan.dto.PlanActivityDTO">
         <id property="travelId" column="travel_id"/>
-        <result property="title" column="travel_title"/>
-        <result property="place" column="address_name"/>
-        <result property="tag" column="category_group_name"/>
-        <result property="url" column="place_url"/>
+        <result property="placeName" column="place_name"/>
+        <result property="addressName" column="address_name"/>
+        <result property="categoryGroup" column="category_group_name"/>
+        <result property="placeUrl" column="place_url"/>
+        <result property="tag" column="tag"/>
     </resultMap>
 
     <!-- Day 단위 일정 묶음 -->
@@ -57,7 +57,7 @@
             d.day,
             DATE_ADD(p.start_date, INTERVAL (d.day - 1) DAY) AS day_date,
             t.travel_id,
-            t.title AS travel_title,
+            t.place_name AS place_name,
             t.address_name,
             t.category_group_name,
             t.place_url
@@ -88,6 +88,115 @@
         WHERE p.user_id = #{userId}
           AND p.is_deleted = 0
         ORDER BY p.start_date ASC
+    </select>
+
+
+
+
+    <select id="selectReviewForm"
+            parameterType="int"
+            resultMap="PlanReviewFormResult">
+        SELECT
+            p.plan_id,
+            p.plan_title,
+            r.review_id,
+            r.review_content,
+            r.rating,
+            rf.reviewfile_id,
+            rf.file_name,
+            rf.file_path,
+            rf.file_rename
+        FROM TBL_PLAN p
+                 LEFT JOIN TBL_REVIEW r ON p.plan_id = r.plan_id
+                 LEFT JOIN TBL_REVIEWFILES rf ON r.review_id = rf.review_id
+        WHERE p.plan_id = #{planId}
+          AND (r.is_deleted IS NULL OR r.is_deleted = 0)
+    </select>
+
+    <!-- =======================================================
+         ResultMap: PlanReviewFormDTO + ReviewFileDTO
+         ======================================================= -->
+    <resultMap id="PlanReviewFormResult" type="com.c4.routy.domain.plan.dto.PlanReviewFormDTO">
+        <id property="reviewId" column="review_id"/>
+        <result property="planId" column="plan_id"/>
+        <result property="planTitle" column="plan_title"/>
+        <result property="content" column="review_content"/>
+        <result property="rating" column="rating"/>
+
+        <collection property="files"
+                    ofType="com.c4.routy.domain.plan.dto.ReviewFileDTO">
+            <id property="reviewFileId" column="reviewfile_id"/>
+            <result property="fileName" column="file_name"/>
+            <result property="filePath" column="file_path"/>
+            <result property="fileRename" column="file_rename"/>
+        </collection>
+    </resultMap>
+
+
+
+    <!-- =======================================================
+          일정 수정 화면용 (PlanEditResponseDTO 세트)
+         ======================================================= -->
+
+    <!-- 1) 수정화면에서 하루 안의 장소들 -->
+    <resultMap id="PlanEditActivityResult" type="com.c4.routy.domain.plan.dto.PlanEditActivityDTO">
+        <id property="travelId" column="travel_id"/>
+        <result property="placeName" column="place_name"/>
+        <result property="addressName" column="address_name"/>
+        <result property="categoryGroupName" column="category_group_name"/>
+        <result property="placeUrl" column="place_url"/>
+<!--        <result property="tag" column="tag"/>-->
+        <result property="orderNo" column="travel_order"/>
+    </resultMap>
+
+    <!-- 2) 수정화면 Day -->
+    <resultMap id="PlanEditDayResult" type="com.c4.routy.domain.plan.dto.PlanEditDayDTO">
+        <id property="dayId" column="duration_id"/>
+        <result property="dayNo" column="day"/>
+        <result property="date" column="day_date"/>
+        <collection property="activities"
+                    ofType="com.c4.routy.domain.plan.dto.PlanEditActivityDTO"
+                    resultMap="PlanEditActivityResult"/>
+    </resultMap>
+
+    <!-- 3) 수정화면 전체 -->
+    <resultMap id="PlanEditResult" type="com.c4.routy.domain.plan.dto.PlanEditResponseDTO">
+        <id property="planId" column="plan_id"/>
+        <result property="title" column="plan_title"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="destination" column="region_name"/>
+<!--        <result property="theme" column="theme"/>-->
+        <collection property="dayList"
+                    ofType="com.c4.routy.domain.plan.dto.PlanEditDayDTO"
+                    resultMap="PlanEditDayResult"/>
+    </resultMap>
+
+    <!--  실제 쿼리 -->
+    <select id="selectPlanEdit" parameterType="int" resultMap="PlanEditResult">
+        SELECT
+            p.plan_id,
+            p.plan_title,
+            p.start_date,
+            p.end_date,
+            r.region_name,
+--             r.theme,
+            d.duration_id,
+            d.day,
+            DATE_ADD(p.start_date, INTERVAL (d.day - 1) DAY) AS day_date,
+            t.travel_id,
+            t.place_name AS place_name,
+            t.address_name AS address_name,
+            t.category_group_name AS category_group_name,
+            t.place_url AS place_url,
+--             t.tag AS tag,
+            t.travel_order AS travel_order
+        FROM TBL_PLAN p
+                 LEFT JOIN TBL_REGION  r ON p.region_id = r.region_id
+                 LEFT JOIN TBL_DURATION d ON p.plan_id    = d.plan_id
+                 LEFT JOIN TBL_TRAVEL  t ON d.duration_id = t.duration_id
+        WHERE p.plan_id = #{planId}
+        ORDER BY d.day ASC, t.travel_order ASC
     </select>
 
 </mapper>

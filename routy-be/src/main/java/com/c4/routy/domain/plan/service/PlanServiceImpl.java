@@ -28,6 +28,7 @@ public class PlanServiceImpl implements PlanService {
     private final TravelRepository travelRepository;
     private final RegionRepository RegionRepository;
 
+
     /**
      * 상세 조회
      * - mapper에서 기본 정보 가져오고
@@ -167,6 +168,13 @@ public class PlanServiceImpl implements PlanService {
 
     // 브라우저 모달 창 좋아요 토글
     public String toggleLike(Integer planId, Integer userId) {
+        // 작성자 ID 확인
+        Integer authorId = planMapper.selectPlanAuthorId(planId);
+        if (authorId != null && authorId.equals(userId)) {
+            throw new IllegalArgumentException("본인은 자신의 글에 좋아요를 누를 수 없습니다.");
+        }
+
+        // 좋아요 상태 확인 후 토글
         boolean exists = planMapper.checkUserLike(planId, userId);
 
         if (exists) {
@@ -178,6 +186,7 @@ public class PlanServiceImpl implements PlanService {
         }
     }
 
+
     // 좋아요 개수 조회
     public int getLikeCount(Integer planId) {
         return planMapper.countLikes(planId);
@@ -187,5 +196,43 @@ public class PlanServiceImpl implements PlanService {
         return planMapper.selectAllRegions();
     }
 
+    public void increaseViewCount(Integer planId, Integer userId) {
+        Integer authorId = planMapper.selectPlanAuthorId(planId);
+
+        // 비로그인 상태나 본인일 경우 카운트 증가 X
+        if (userId == null || authorId.equals(userId)) {
+            return;
+        }
+
+        planMapper.incrementViewCount(planId);
+    }
+
+
+    // 브라우저 북마크 관련 부분
+    @Transactional
+    public String toggleBookmark(Integer planId, Integer userId) {
+        boolean exists = planMapper.checkUserBookmark(planId, userId);
+
+        if (exists) {
+            planMapper.deleteBookmark(planId, userId);
+        } else {
+            planMapper.insertBookmark(planId, userId);
+        }
+
+        // ✅ 북마크 개수 tbl_plan에 반영
+        planMapper.updateBookmarkCount(planId);
+
+        return exists ? "북마크 취소" : "북마크 추가";
+    }
+
+
+    // 북마크 개수 가져오기
+    public int getBookmarkCount(Integer planId) {
+        return planMapper.countBookmarks(planId);
+    }
+
+    public List<BrowseResponseDTO> getUserBookmarks(Integer userId) {
+        return planMapper.selectUserBookmarks(userId);
+    }
 
 }

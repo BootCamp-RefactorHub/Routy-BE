@@ -424,4 +424,74 @@
         ORDER BY region_id
     </select>
 
+    <!-- 작성자 ID 조회 -->
+    <select id="selectPlanAuthorId" resultType="int">
+        SELECT user_id
+        FROM tbl_plan
+        WHERE plan_id = #{planId}
+    </select>
+
+    <!-- 조회수 증가 -->
+    <update id="incrementViewCount">
+        UPDATE tbl_plan
+        SET view_count = view_count + 1
+        WHERE plan_id = #{planId}
+    </update>
+
+    <!-- 북마크 여부 확인 -->
+    <select id="checkUserBookmark" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM tbl_bookmark
+        WHERE plan_id = #{planId} AND user_id = #{userId}
+    </select>
+
+    <!-- 북마크 추가 -->
+    <insert id="insertBookmark">
+        INSERT INTO tbl_bookmark (plan_id, user_id, created_at)
+        VALUES (#{planId}, #{userId}, NOW())
+    </insert>
+
+    <!-- 북마크 삭제 -->
+    <delete id="deleteBookmark">
+        DELETE FROM tbl_bookmark
+        WHERE plan_id = #{planId} AND user_id = #{userId}
+    </delete>
+
+    <!-- 북마크 개수 -->
+
+    <select id="countBookmarks" resultType="int">
+        SELECT COUNT(*) FROM tbl_bookmark WHERE plan_id = #{planId}
+    </select>
+
+    <!-- 북마크 개수 tbl_plan에 반영 -->
+    <update id="updateBookmarkCount">
+        UPDATE tbl_plan
+        SET bookmark_count = (
+            SELECT COUNT(*) FROM tbl_bookmark WHERE plan_id = #{planId}
+        )
+        WHERE plan_id = #{planId}
+    </update>
+
+    <!-- 내가 북마크한 일정 목록 -->
+    <select id="selectUserBookmarks" resultType="com.c4.routy.domain.plan.dto.BrowseResponseDTO">
+        SELECT
+            p.plan_id AS planId,
+            p.plan_title AS title,
+            r.region_name AS destination,
+            DATE_FORMAT(p.start_date, '%Y-%m-%d') AS startDate,
+            DATE_FORMAT(p.end_date, '%Y-%m-%d') AS endDate,
+            DATEDIFF(p.end_date, p.start_date) + 1 AS days,
+            u.username AS userNickname,
+            p.bookmark_count AS bookmarkCount,
+            p.view_count AS viewCount,
+            (SELECT COUNT(*) FROM tbl_like l WHERE l.plan_id = p.plan_id) AS likeCount
+        FROM tbl_bookmark b
+                 JOIN tbl_plan p ON b.plan_id = p.plan_id
+                 JOIN tbl_user u ON u.user_no = p.user_id
+                 JOIN tbl_region r ON r.region_id = p.region_id
+        WHERE b.user_id = #{userId}
+        ORDER BY b.created_at DESC
+    </select>
+
+
 </mapper>

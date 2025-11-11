@@ -62,6 +62,21 @@ public interface PlanMapper {
     void deleteLike(@Param("planId") int planId, @Param("userId") int userId);
     int countLikes(@Param("planId") int planId);
 
+    // ✅ 작성자 ID 조회 (좋아요 방지용)
+    Integer selectPlanAuthorId(@Param("planId") Integer planId);
+
     //  지역 목록 조회 추가
     List<RegionResponseDTO> selectAllRegions();
+
+    // 조회 수 증가
+    void incrementViewCount(@Param("planId") Integer planId);
+
+    boolean checkUserBookmark(@Param("planId") int planId, @Param("userId") int userId);
+    void insertBookmark(@Param("planId") int planId, @Param("userId") int userId);
+    void deleteBookmark(@Param("planId") int planId, @Param("userId") int userId);
+    int countBookmarks(@Param("planId") int planId);
+    void updateBookmarkCount(@Param("planId") int planId);
+
+    List<BrowseResponseDTO> selectUserBookmarks(@Param("userId") int userId);
+
 }

@@ -93,11 +93,48 @@ public class PlanController {
         return ResponseEntity.ok(response);
     }
 
+    // 브라우저 지역 드롭 아웃 박스
     @GetMapping("/regions")
     public List<RegionResponseDTO> getAllRegions() {
         return planService.getAllRegions();
     }
 
+    //  조회수 증가 (본인 제외)
+    @PostMapping("/{planId}/view")
+    public ResponseEntity<Void> increaseViewCount(
+            @PathVariable Integer planId,
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        Integer userId = (user != null) ? user.getUserNo() : null;
+        planService.increaseViewCount(planId, userId);
+        return ResponseEntity.ok().build();
+    }
+
+    // 브라우저 북마크 부분
+    @PostMapping("/{planId}/bookmark")
+    public ResponseEntity<Map<String, Object>> toggleBookmark(
+            @PathVariable Integer planId,
+            @AuthenticationPrincipal CustomUserDetails user) {
+
+        Integer userId = user.getUserNo();
+        String message = planService.toggleBookmark(planId, userId);
+        int bookmarkCount = planService.getBookmarkCount(planId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", message);
+        response.put("bookmarkCount", bookmarkCount);
+
+        return ResponseEntity.ok(response);
+    }
+
+    // 마이페이지 - 내가 북마크한 일정 목록
+    @GetMapping("/bookmarks")
+    public ResponseEntity<List<BrowseResponseDTO>> getUserBookmarks(
+            @AuthenticationPrincipal CustomUserDetails user) {
+        Integer userId = user.getUserNo();
+        List<BrowseResponseDTO> bookmarks = planService.getUserBookmarks(userId);
+        return ResponseEntity.ok(bookmarks);
+    }
 
 }
 

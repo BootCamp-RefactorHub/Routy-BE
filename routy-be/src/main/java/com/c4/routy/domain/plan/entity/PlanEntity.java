@@ -17,7 +17,7 @@ public class PlanEntity {
     @Column(nullable = false)
     private String planTitle;
 
-    private boolean isShared;
+    private boolean isPublic;
     private String startDate;
     private String endDate;
     private boolean isDeleted;

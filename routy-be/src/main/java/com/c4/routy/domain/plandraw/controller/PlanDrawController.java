@@ -5,6 +5,7 @@ import com.c4.routy.domain.plandraw.dto.PlanResponseDTO;
 import com.c4.routy.domain.plan.entity.PlanEntity;
 import com.c4.routy.domain.plandraw.service.PlanDrawService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +30,12 @@ public class PlanDrawController {
         return planDrawService.getAllPlans();
     }
 
+    // Plan 단건 조회 (regionId 포함)
+    @GetMapping("/select/{planId}")
+    public ResponseEntity<PlanResponseDTO> getPlanById(@PathVariable Integer planId) {
+        PlanResponseDTO plan = planDrawService.getPlanById(planId);
+        return ResponseEntity.ok(plan);
+    }
     // 사용자별 플랜 조회
     @GetMapping("/user/{userId}")
     public List<PlanResponseDTO> getPlansByUser(@PathVariable Integer userId) {

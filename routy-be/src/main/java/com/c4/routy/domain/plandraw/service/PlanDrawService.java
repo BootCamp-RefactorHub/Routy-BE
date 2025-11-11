@@ -27,8 +27,6 @@ public class PlanDrawService {
 
     private final ModelMapper modelMapper;
     private final PlanDrawRepository planRepository;
-    private final DurationRepository durationRepository;
-
     /**
      * 일정 생성 시 Duration(일차) 자동 생성
      */
@@ -48,7 +46,7 @@ public class PlanDrawService {
 
         plan.setUserId(userNo);
 
-        plan.setCreatedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        plan.setCreatedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         PlanEntity savedPlan = planRepository.save(plan);
 
@@ -61,6 +59,13 @@ public class PlanDrawService {
                 .stream()
                 .map(p -> modelMapper.map(p, PlanResponseDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    // Plan 단건 조회
+    public PlanResponseDTO getPlanById(Integer planId) {
+        PlanEntity plan = planRepository.findById(planId)
+                .orElseThrow(() -> new RuntimeException("Plan not found with id: " + planId));
+        return modelMapper.map(plan, PlanResponseDTO.class);
     }
 
     // 사용자별 플랜 조회

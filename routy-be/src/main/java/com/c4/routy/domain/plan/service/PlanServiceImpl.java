@@ -143,25 +143,44 @@ public class PlanServiceImpl implements PlanService {
 
     //브라우저 카드 일정 상세 조회 (모달용)
     public BrowseDetailResponseDTO getPublicPlanDetail(Integer planId) {
-        //  기본 정보 및 리뷰
+        // 기본 정보 및 리뷰
         BrowseDetailResponseDTO dto = planMapper.selectPublicPlanDetail(planId);
         if (dto == null) return null;
 
-        //  리뷰 이미지 문자열을 List<String>으로 변환
+        // 리뷰 이미지 문자열 변환
         if (dto.getReview() != null && dto.getReview().getImages() != null) {
             Object imgField = dto.getReview().getImages();
-
             if (imgField instanceof String imgStr) {
                 dto.getReview().setImages(imgStr);
             }
         }
+
         // Day 및 장소 목록 구성
         List<PlanDayDTO> dayList = planMapper.selectPlanDays(planId);
         for (PlanDayDTO day : dayList) {
-            day.setPlaces(planMapper.selectPlanPlaces(day.getDayId()));
+            day.setActivities(planMapper.selectPlanPlaces(day.getDayId()));  // ✅ 수정됨
         }
         dto.setDayList(dayList);
 
         return dto;
     }
+
+    // 브라우저 모달 창 좋아요 토글
+    public String toggleLike(Integer planId, Integer userId) {
+        boolean exists = planMapper.checkUserLike(planId, userId);
+
+        if (exists) {
+            planMapper.deleteLike(planId, userId);
+            return "좋아요 취소";
+        } else {
+            planMapper.insertLike(planId, userId);
+            return "좋아요 추가";
+        }
+    }
+
+    // 좋아요 개수 조회
+    public int getLikeCount(Integer planId) {
+        return planMapper.countLikes(planId);
+    }
+
 }

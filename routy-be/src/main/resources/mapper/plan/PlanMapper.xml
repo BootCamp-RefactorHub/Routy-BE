@@ -23,10 +23,11 @@
     <resultMap id="PlanDayResult" type="com.c4.routy.domain.plan.dto.PlanDayDTO">
         <id property="dayId" column="duration_id"/>
         <result property="dayNo" column="day"/>
-        <result property="date" column="day_date"/>
+        <result property="date" column="date"/>
         <collection property="activities"
                     ofType="com.c4.routy.domain.plan.dto.PlanActivityDTO"
-                    resultMap="PlanActivityResult"/>
+                    select="selectPlanPlaces"
+                    column="duration_id"/>
     </resultMap>
 
     <!-- 여행 전체 상세 -->
@@ -248,10 +249,10 @@
 
     <!-- Day 및 장소 -->
     <select id="selectPlanDays"
-            resultType="com.c4.routy.domain.plan.dto.PlanDayDTO">
+            resultMap="PlanDayResult">
         SELECT
-            d.duration_id AS day_id,
-            d.day AS day_no,
+            d.duration_id,
+            d.day,
             DATE_ADD(p.start_date, INTERVAL (d.day - 1) DAY) AS date
         FROM TBL_DURATION d
             JOIN TBL_PLAN p ON d.plan_id = p.plan_id
@@ -259,13 +260,18 @@
         ORDER BY d.day ASC
     </select>
 
-    <select id="selectPlanPlaces" resultType="com.c4.routy.domain.plan.dto.PlanActivityDTO">
+    <select id="selectPlanPlaces"
+            resultType="com.c4.routy.domain.plan.dto.PlanActivityDTO">
         SELECT
-            t.travel_id,
-            t.title AS travel_title,
-            t.address_name,
-            t.category_group_name,
-            t.place_url
+            t.travel_id AS travelId,
+            t.place_name AS placeName,
+            t.address_name AS addressName,
+            t.category_group_name AS categoryGroup,
+            CASE
+                WHEN t.category_group_name IN ('음식점','카페') THEN t.category_group_name
+                ELSE '기타'
+                END AS tag,
+            t.place_url AS placeUrl
         FROM TBL_TRAVEL t
         WHERE t.duration_id = #{dayId}
         ORDER BY t.travel_order ASC
@@ -358,7 +364,7 @@
             p.start_date,
             p.end_date,
             r.region_name,
---             r.theme,
+--          r.theme,
             d.duration_id,
             d.day,
             DATE_ADD(p.start_date, INTERVAL (d.day - 1) DAY) AS day_date,
@@ -375,6 +381,36 @@
                  LEFT JOIN TBL_TRAVEL  t ON d.duration_id = t.duration_id
         WHERE p.plan_id = #{planId}
         ORDER BY d.day ASC, t.travel_order ASC
+    </select>
+
+    <!-- =======================================================
+     좋아요 관련 쿼리
+     ======================================================= -->
+    <!-- 1. 특정 유저가 해당 계획을 좋아요 눌렀는지 확인 -->
+    <select id="checkUserLike" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM tbl_like
+        WHERE plan_id = #{planId}
+          AND user_id = #{userId}
+    </select>
+
+    <!-- 2. 좋아요 추가 -->
+    <insert id="insertLike">
+        INSERT INTO tbl_like (plan_id, user_id)
+        VALUES (#{planId}, #{userId})
+    </insert>
+
+    <!-- 3. 좋아요 삭제 -->
+    <delete id="deleteLike">
+        DELETE FROM tbl_like
+        WHERE plan_id = #{planId}
+          AND user_id = #{userId}
+    </delete>
+
+    <!-- 4. 특정 계획의 좋아요 개수 -->
+    <select id="countLikes" resultType="int">
+        SELECT COUNT(*) FROM tbl_like
+        WHERE plan_id = #{planId}
     </select>
 
 </mapper>

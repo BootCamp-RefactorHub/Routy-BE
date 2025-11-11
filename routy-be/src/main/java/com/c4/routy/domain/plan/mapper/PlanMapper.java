@@ -39,10 +39,12 @@ public interface PlanMapper {
     List<PlanDayDTO> selectPlanDays(@Param("planId") Integer planId);
 
     // Day별 장소 조회
-    List<PlanPlaceDTO> selectPlanPlaces(@Param("dayId") Integer dayId);
+    List<PlanActivityDTO> selectPlanPlaces(@Param("dayId") Integer dayId);
 
     // 리뷰 조회 (이미지 포함)
     BrowseReviewModalDTO selectPlanReview(@Param("planId") Integer planId);
+
+
 
     /**
      * 수정 페이지 로딩
@@ -53,4 +55,10 @@ public interface PlanMapper {
      * 리뷰 모달
      */
     PlanReviewFormDTO selectReviewForm(@Param("planId") Integer planId);
+
+    boolean checkUserLike(@Param("planId") int planId, @Param("userId") int userId);
+    void insertLike(@Param("planId") int planId, @Param("userId") int userId);
+    void deleteLike(@Param("planId") int planId, @Param("userId") int userId);
+    int countLikes(@Param("planId") int planId);
+
 }

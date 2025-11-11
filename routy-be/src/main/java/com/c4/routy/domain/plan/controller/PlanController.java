@@ -6,11 +6,15 @@ import com.c4.routy.domain.plan.dto.PlanDetailResponseDTO;
 import com.c4.routy.domain.plan.dto.PlanEditResponseDTO;
 import com.c4.routy.domain.plan.dto.PlanEditSaveRequestDTO;
 import com.c4.routy.domain.plan.service.PlanServiceImpl;
+import com.c4.routy.domain.user.websecurity.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/plans")
@@ -74,6 +78,25 @@ public class PlanController {
         dto.setPlanId(planId);
         planService.updatePlan(dto);
     }
+
+    //브라우저 모달 창 좋아요 수 증가 기능
+    @PostMapping("/{planId}/like")
+    public ResponseEntity<Map<String, Object>> toggleLike(
+            @PathVariable Integer planId,
+            @AuthenticationPrincipal CustomUserDetails user) {
+
+        Integer userId = user.getUserNo(); // ✅ 로그인된 사용자 번호
+
+        String message = planService.toggleLike(planId, userId);
+        int likeCount = planService.getLikeCount(planId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", message);
+        response.put("likeCount", likeCount);
+
+        return ResponseEntity.ok(response);
+    }
+
 }
 
 

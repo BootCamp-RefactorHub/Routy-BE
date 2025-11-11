@@ -10,6 +10,5 @@ import java.util.List;
 @Repository
 public interface DurationRepository extends JpaRepository<DurationEntity, Integer> {
     List<DurationEntity> findByPlan(PlanEntity plan);
-
     void deleteByPlan(PlanEntity plan);
 }

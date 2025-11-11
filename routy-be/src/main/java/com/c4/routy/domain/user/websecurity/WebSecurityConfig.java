@@ -58,13 +58,15 @@ public class WebSecurityConfig {
                         .requestMatchers("/**").permitAll()
 
                         /* 나중에 일괄적으로 수정하기 */
+//                        .requestMatchers("*").permitAll()
 //                        .requestMatchers("/user/register", "/validation/sendmail").permitAll()
 //                        .requestMatchers("/user/login").permitAll()
 //                        .requestMatchers("/api/signup", "/oauth2/**").permitAll()
 //                        .requestMatchers("/auth/logout", "/auth/change-password").permitAll
+//                        .requestMatchers("/api/login", "/api/signup", "/oauth2/**", "/login/**").permitAll()
 //                        .requestMatchers("/file/**").permitAll()
                         .anyRequest().authenticated())
-                
+
                 // OAuth2.0 Client를 위한 요청 허용
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))

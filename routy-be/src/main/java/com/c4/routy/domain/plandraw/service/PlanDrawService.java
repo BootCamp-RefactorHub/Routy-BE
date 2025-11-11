@@ -76,6 +76,13 @@ public class PlanDrawService {
                 .collect(Collectors.toList());
     }
 
+    // Plan 단건 조회
+    public PlanResponseDTO getPlanById(Integer planId) {
+        PlanEntity plan = planRepository.findById(planId)
+                .orElseThrow(() -> new RuntimeException("Plan not found with id: " + planId));
+        return modelMapper.map(plan, PlanResponseDTO.class);
+    }
+
     // 사용자별 플랜 조회
     public List<PlanResponseDTO> getPlansByUser(Integer userNo) {
         return planRepository.findByUser_UserNo(userNo)

@@ -7,9 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegionDTO {
+public class RegionALLDTO {
     private Integer regionId;
     private String regionName;
+    private String adminCode;
     private String theme;
     private String regionDesc;
+    private Double startLat;
+    private Double startLng;
 }

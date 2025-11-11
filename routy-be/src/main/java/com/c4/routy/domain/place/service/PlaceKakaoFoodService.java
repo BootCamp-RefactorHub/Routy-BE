@@ -44,7 +44,7 @@ public class PlaceKakaoFoodService {
 
             for (int page = 1; page <= 3; page++) {
                 String apiUrl = String.format(
-                        "%s?category_group_code=%s&x=%f&y=%f&radius=20000&size=15&page=%d&sort=accuracy",
+                        "%s?category_group_code=%s&x=%f&y=%f&radius=10000&size=15&page=%d&sort=accuracy",
                         BASE_URL, PlaceCategory.FD6, longitude, latitude, page  // page 변수 사용
                 );
 
@@ -55,7 +55,6 @@ public class PlaceKakaoFoodService {
 
                 // 상세 디버그 로그
                 log.info("페이지 {} 호출 - URL: {}", page, apiUrl);
-                log.info("Authorization: {}", authHeader);
 
                 HttpEntity<String> entity = new HttpEntity<>(headers);
                 RestTemplate restTemplate = new RestTemplate();

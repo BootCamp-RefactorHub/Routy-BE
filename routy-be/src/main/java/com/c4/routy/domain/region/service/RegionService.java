@@ -41,8 +41,8 @@ public class RegionService {
         dto.setAdminCode(region.getAdminCode());
         dto.setTheme(region.getTheme());
         dto.setRegionDesc(region.getRegionDesc());
-        dto.setStartLat(region.getStartLat());  // ✅ 중요!
-        dto.setStartLng(region.getStartLng());  // ✅ 중요!
+        dto.setStartLat(region.getStartLat());  // 중요!
+        dto.setStartLng(region.getStartLng());  // 중요!
 
         return dto;
     }

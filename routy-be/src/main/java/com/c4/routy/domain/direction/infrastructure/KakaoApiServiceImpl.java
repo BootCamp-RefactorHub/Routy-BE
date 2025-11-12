@@ -62,6 +62,7 @@ public class KakaoApiServiceImpl implements KakaoApiService {
                     .queryParam("priority", "RECOMMEND")   // optional
                     .queryParam("car_fuel", "GASOLINE")    // optional
                     .queryParam("summary", true)           // 요약 정보만
+                    .queryParam("roadevent", 2)
                     .build()
                     .toUriString();
 

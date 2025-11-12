@@ -22,5 +22,5 @@ public class PlanReviewResponseDTO {
     private Integer rating; // 별점
     private String createdAt; // 등록 시각 (포맷은 서비스단에서)
 
-    private List<ReviewFileDTO> files; // 첨부 이미지 목록
+    private List<String> files; // 첨부 이미지 목록
 }

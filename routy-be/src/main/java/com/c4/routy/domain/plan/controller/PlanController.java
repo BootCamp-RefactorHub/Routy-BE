@@ -33,7 +33,7 @@ public class PlanController {
         return ResponseEntity.ok().build();
     }
 
-    // 일정 공유하기
+    // 일정 공개/비공개
     @PatchMapping("/{planId}/public")
     public ResponseEntity<Void> togglePlanPublic(@PathVariable Integer planId) {
         planService.togglePlanPublic(planId);
@@ -82,7 +82,7 @@ public class PlanController {
             @PathVariable Integer planId,
             @AuthenticationPrincipal CustomUserDetails user) {
 
-        Integer userId = user.getUserNo(); // ✅ 로그인된 사용자 번호
+        Integer userId = user.getUserNo(); // 로그인된 사용자 번호
 
         String message = planService.toggleLike(planId, userId);
         int likeCount = planService.getLikeCount(planId);

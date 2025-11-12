@@ -119,6 +119,11 @@ public class PlanServiceImpl implements PlanService {
                         .addressName(actDTO.getAddressName())
                         .categoryGroupName(actDTO.getCategoryGroupName())
                         .placeUrl(actDTO.getPlaceUrl())
+                        .startTime(actDTO.getStartTime())    // 추가
+                        .endTime(actDTO.getEndTime())        // 추가
+//                        .latitude(actDTO.getLatitude())      // 추가 (있으면)
+//                        .longitude(actDTO.getLongitude())    // 추가 (있으면)
+//                        .categoryCode(actDTO.getCategoryCode()) // 추가 (있으면)
 //                        .tag(actDTO.getTag())
                         .travelOrder(actDTO.getTravelOrder())  // 엔티티에 맞게 수정
                         .build();

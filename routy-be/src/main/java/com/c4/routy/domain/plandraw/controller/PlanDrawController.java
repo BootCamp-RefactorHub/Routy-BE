@@ -36,6 +36,7 @@ public class PlanDrawController {
         PlanResponseDTO plan = planDrawService.getPlanById(planId);
         return ResponseEntity.ok(plan);
     }
+
     // 사용자별 플랜 조회
     @GetMapping("/user/{userId}")
     public List<PlanResponseDTO> getPlansByUser(@PathVariable Integer userId) {

@@ -19,7 +19,9 @@
         place_url,
         description,
         image_path,
-        run_time
+        run_time,
+        start_time,
+        end_time
         )
         VALUES
         <foreach collection="places" item="p" separator=",">
@@ -36,7 +38,9 @@
             #{p.placeUrl},
             #{p.description},
             #{p.imagePath},
-            #{p.runTime}
+            #{p.runTime},
+            #{p.startTime},
+            #{p.endTime}
             )
         </foreach>
     </insert>
@@ -56,7 +60,9 @@
             place_url,
             description,
             image_path,
-            run_time
+            run_time,
+            start_time,
+            end_time
         ) VALUES (
                      #{durationId},
                      #{travelOrder},
@@ -70,12 +76,14 @@
                      #{placeUrl},
                      #{description},
                      #{imagePath},
-                     #{runTime}
+                     #{runTime},
+                     #{startTime},
+                     #{endTime}
                  )
     </insert>
 
     <!-- 일정(planId)에 속한 장소 목록 조회 -->
-    <select id="findPlacesByPlanId" resultType="com.c4.routy.domain.place.entity.PlaceEntity">
+    <select id="findPlacesByPlanId" resultType="com.c4.routy.domain.place.dto.PlaceResponseDTO">
         SELECT
             t.travel_id AS travelId,
             t.travel_order AS travelOrder,
@@ -90,6 +98,8 @@
             t.description,
             t.image_path AS imagePath,
             t.run_time AS runTime,
+            t.start_time AS startTime,
+            t.end_Time AS endTime,
             t.duration_id AS durationId,
             d.plan_id AS planId
         FROM TBL_TRAVEL t

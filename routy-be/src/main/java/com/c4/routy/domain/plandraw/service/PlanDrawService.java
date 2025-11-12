@@ -52,16 +52,11 @@ public class PlanDrawService {
                 .orElseThrow(() -> new IllegalArgumentException("지역 없음"));
         plan.setRegion(region);
 
-
-
         UserEntity user = userRepository.findById(userNo)
                 .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
         plan.setUser(user);
 
         plan.setCreatedAt(DateTimeUtil.now());
-
-
-
 
         PlanEntity savedPlan = planRepository.save(plan);
 

@@ -11,7 +11,7 @@ public class PlanResponseDTO {
     private String startDate;
     private String endDate;
     private Integer regionId;
-    private Integer userId;
+    private Integer userNo;
     private Integer bookmarkCount;
     private Integer viewCount;
     private String createdAt;

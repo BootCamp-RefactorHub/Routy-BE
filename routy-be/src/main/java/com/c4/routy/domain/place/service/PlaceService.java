@@ -2,7 +2,7 @@ package com.c4.routy.domain.place.service;
 
 import com.c4.routy.domain.duration.mapper.DurationMapper;
 import com.c4.routy.domain.place.dto.PlaceCreateRequestDTO;
-import com.c4.routy.domain.place.entity.PlaceEntity;
+import com.c4.routy.domain.place.dto.PlaceResponseDTO;
 import com.c4.routy.domain.place.mapper.PlaceMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,13 +29,12 @@ public class PlaceService {
                 dto.setDurationId(durationId);
             }
         }
-
         // 저장
         placeMapper.insertPlacesBatch(dtoList);
     }
 
     /** 일정에 포함된 장소 리스트 조회 */
-    public List<PlaceEntity> getPlacesByPlanId(Integer planId) {
+    public List<PlaceResponseDTO> getPlacesByPlanId(Integer planId) {
         return placeMapper.findPlacesByPlanId(planId);
     }
 }

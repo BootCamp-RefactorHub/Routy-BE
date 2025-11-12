@@ -16,6 +16,8 @@
         <result property="categoryGroup" column="category_group_name"/>
         <result property="placeUrl" column="place_url"/>
         <result property="tag" column="tag"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
     </resultMap>
 
 
@@ -102,7 +104,9 @@
             t.place_name AS place_name,
             t.address_name,
             t.category_group_name,
-            t.place_url
+            t.place_url,
+            t.start_time,
+            t.end_time
         FROM TBL_PLAN p
                  LEFT JOIN TBL_REGION r ON p.region_id = r.region_id
                  LEFT JOIN TBL_DURATION d ON p.plan_id = d.plan_id

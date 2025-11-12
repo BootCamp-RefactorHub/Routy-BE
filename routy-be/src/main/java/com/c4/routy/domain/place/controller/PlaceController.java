@@ -1,7 +1,7 @@
 package com.c4.routy.domain.place.controller;
 
 import com.c4.routy.domain.place.dto.PlaceCreateRequestDTO;
-import com.c4.routy.domain.place.entity.PlaceEntity;
+import com.c4.routy.domain.place.dto.PlaceResponseDTO;
 import com.c4.routy.domain.place.service.PlaceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +27,8 @@ public class PlaceController {
 
     /** 일정에 등록된 장소 조회 */
     @GetMapping("plan/{planId}")
-    public ResponseEntity<List<PlaceEntity>> getPlaces(@PathVariable Integer planId) {
-        List<PlaceEntity> places = placeService.getPlacesByPlanId(planId);
+    public ResponseEntity<List<PlaceResponseDTO>> getPlaces(@PathVariable Integer planId) {
+        List<PlaceResponseDTO> places = placeService.getPlacesByPlanId(planId);
         return ResponseEntity.ok(places);
     }
 }

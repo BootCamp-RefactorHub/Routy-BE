@@ -2,6 +2,7 @@ package com.c4.routy.domain.user.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.c4.routy.domain.user.dto.RequestChangePwdDTO;
@@ -39,6 +40,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+
+    @Value("${folder.profile}")
+    private String folder;  // application.yml에 있는 폴더
+
     private final AmazonS3 amazonS3;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -201,6 +206,13 @@ public class AuthServiceImpl implements AuthService {
         }
 
         if (profile != null) {
+            String url = userInfo.getImageUrl();
+            if(url.contains("routy-service")) {
+                String key =  url.substring(url.indexOf(".amazonaws.com/") + ".amazonaws.com/".length());
+                log.info("key1 : {}", key);
+                amazonS3.deleteObject(new DeleteObjectRequest(bucket, key));
+            }
+            log.info("key2: {}", url);
             String fileName = createFileName(profile.getOriginalFilename());
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentLength(profile.getSize());
@@ -221,10 +233,11 @@ public class AuthServiceImpl implements AuthService {
         return "회원정보가 수정되었습니다.";
     }
 
+    // S3 객체 키(사진이름) 만들기 (application.yml에서 폴더 이름 더해야 함.)
     public String createFileName(String fileName){
-        return UUID.randomUUID().toString().concat(getFileExtension(fileName));
+        return folder + UUID.randomUUID().toString().concat(getFileExtension(fileName));
     }
-
+    // 확장자
     private String getFileExtension(String fileName){
         try{
             return fileName.substring(fileName.lastIndexOf("."));

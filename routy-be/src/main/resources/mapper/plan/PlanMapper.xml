@@ -284,7 +284,7 @@
             p.plan_id,
             p.plan_title,
             r.review_id,
-            r.review_content,
+            r.content  AS review_content,
             r.rating,
             rf.reviewfile_id,
             rf.file_name,

@@ -36,8 +36,8 @@ public class TravelEntity {
     @Column(name = "place_url")       // 장소url
     private String placeUrl;
 
-    @Column(name = "tag")
-    private String tag;                 // 숙소/식당/관광...
+//    @Column(name = "tag")
+//    private String tag;                 // 숙소/식당/관광...
 
     @Column(name = "travel_order")
     private Integer travelOrder;

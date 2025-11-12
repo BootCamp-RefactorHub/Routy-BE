@@ -86,8 +86,11 @@ public class PlanServiceImpl implements PlanService {
 
         // 제목/기간 변경
         plan.changeTitle(dto.getTitle());
-        plan.changePeriod(dto.getStartDate(), dto.getEndDate());
-
+//        plan.changePeriod(dto.getStartDate(), dto.getEndDate());
+        if (dto.getStartDate() != null && dto.getEndDate() != null
+                && !dto.getStartDate().isBlank() && !dto.getEndDate().isBlank()) {
+            plan.changePeriod(dto.getStartDate(), dto.getEndDate());
+        }
         // 지역 변경
         if (dto.getDestination() != null) {
             RegionEntity region = RegionRepository.findByRegionName(dto.getDestination());
@@ -116,7 +119,7 @@ public class PlanServiceImpl implements PlanService {
                         .addressName(actDTO.getAddressName())
                         .categoryGroupName(actDTO.getCategoryGroupName())
                         .placeUrl(actDTO.getPlaceUrl())
-                        .tag(actDTO.getTag())
+//                        .tag(actDTO.getTag())
                         .travelOrder(actDTO.getTravelOrder())  // 엔티티에 맞게 수정
                         .build();
                 travelRepository.save(travel);

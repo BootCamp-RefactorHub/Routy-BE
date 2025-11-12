@@ -70,12 +70,14 @@ public class ReviewServiceImpl implements ReviewService {
         // 파일 저장
         if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
             for (MultipartFile file : dto.getFiles()) {
-                String fileUrl = "/uploads/" + file.getOriginalFilename();
+                String filePath = "/uploads/review/" + review.getReviewId() + "/" + file.getOriginalFilename();
 
                 ReviewFileEntity fileEntity = ReviewFileEntity.builder()
                         .review(review)
-                        .url(fileUrl)
-                        .originalName(file.getOriginalFilename())
+                        .filePath(filePath)
+                        .fileName(file.getOriginalFilename())
+                        .fileRename(file.getOriginalFilename())
+                        .isDeleted(false)
                         .build();
 
                 reviewFileRepository.save(fileEntity);
@@ -92,9 +94,10 @@ public class ReviewServiceImpl implements ReviewService {
                 .files(review.getFiles() != null
                         ? review.getFiles().stream()
                         .map(f -> ReviewFileDTO.builder()
-                                .fileId(f.getFileId())
-                                .url(f.getUrl())
-                                .originalName(f.getOriginalName())
+                                .reviewfileId(f.getReviewfileId())
+                                .fileName(f.getFileName())
+                                .filePath(f.getFilePath())
+                                .fileRename(f.getFileRename())
                                 .build())
                         .toList()
                         : List.of()

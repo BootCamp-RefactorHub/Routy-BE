@@ -67,4 +67,3 @@ public class MypageController {
         return mypageService.getAllBookmarks(userNo);
     }
 }
-

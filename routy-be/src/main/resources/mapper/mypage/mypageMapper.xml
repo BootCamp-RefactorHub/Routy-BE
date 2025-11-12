@@ -167,29 +167,29 @@
             parameterType="int"
             resultType="com.c4.routy.domain.mypage.dto.TravelRecordDTO">
         SELECT
-        p.plan_id        AS planId,
-        p.plan_title     AS title,
-        p.start_date     AS startDate,
-        p.end_date       AS endDate,
-        COALESCE(
-        (
-        SELECT t.image_path
-        FROM TBL_TRAVEL t
-        WHERE t.duration_id IN (
-        SELECT d.duration_id
-        FROM TBL_DURATION d
-        WHERE d.plan_id = p.plan_id
-        )
-        AND t.image_path IS NOT NULL
-        ORDER BY t.travel_id ASC
-        LIMIT 1
-        ),
+            p.plan_id        AS planId,
+            p.plan_title     AS title,
+            p.start_date     AS startDate,
+            p.end_date       AS endDate,
+            COALESCE(
+                    (
+                        SELECT t.image_path
+                        FROM TBL_TRAVEL t
+                        WHERE t.duration_id IN (
+                            SELECT d.duration_id
+                            FROM TBL_DURATION d
+                            WHERE d.plan_id = p.plan_id
+                        )
+                          AND t.image_path IS NOT NULL
+                        ORDER BY t.travel_id ASC
+                    LIMIT 1
+                ),
         '/images/default-thumb.jpg'
         ) AS thumbnailUrl
         FROM TBL_PLAN p
         WHERE p.user_id = #{userNo}
-        AND (p.is_deleted IS NULL OR p.is_deleted = 0)
-        AND DATE(p.end_date) &lt; CURRENT_DATE
+          AND (p.is_deleted IS NULL OR p.is_deleted = 0)
+          AND DATE(p.end_date) &lt; CURRENT_DATE
         ORDER BY p.end_date DESC
     </select>
 

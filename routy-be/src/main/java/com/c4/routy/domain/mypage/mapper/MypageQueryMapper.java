@@ -34,4 +34,10 @@ public interface MypageQueryMapper {
     List<BookmarkDTO> selectBookmarks(
             @Param("userNo") Integer userNo
     );
+
+    // 전체 여행기록
+    List<TravelRecordDTO> selectAllTravelRecords(@Param("userNo") Integer userNo);
+
+    // 전체 북마크
+    List<BookmarkDTO> selectAllBookmarks(@Param("userNo") Integer userNo);
 }

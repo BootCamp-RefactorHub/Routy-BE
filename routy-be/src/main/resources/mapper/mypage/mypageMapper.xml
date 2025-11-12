@@ -160,4 +160,59 @@
             LIMIT 8
     </select>
 
+
+
+    <!-- 전체 여행 기록 -->
+    <!-- 완료된 여행만 -->
+    <select id="selectAllTravelRecords"
+            parameterType="int"
+            resultType="com.c4.routy.domain.mypage.dto.TravelRecordDTO">
+        SELECT
+        p.plan_id        AS planId,
+        p.plan_title     AS title,
+        p.start_date     AS startTime,
+        p.end_date       AS endTime,
+        COALESCE(
+        (
+        SELECT t.image_path
+        FROM TBL_TRAVEL t
+        WHERE t.duration_id IN (
+        SELECT d.duration_id
+        FROM TBL_DURATION d
+        WHERE d.plan_id = p.plan_id
+        )
+        AND t.image_path IS NOT NULL
+        ORDER BY t.travel_id ASC
+        LIMIT 1
+        ),
+        '/images/default-thumb.jpg'
+        ) AS thumbnailUrl
+        FROM TBL_PLAN p
+        WHERE p.user_id = #{userNo}
+        AND (p.is_deleted IS NULL OR p.is_deleted = 0)
+        AND DATE(p.end_date) &lt; CURRENT_DATE
+        ORDER BY p.end_date DESC
+    </select>
+
+
+    <!-- 전체 북마크 -->
+    <select id="selectAllBookmarks"
+            parameterType="int"
+            resultType="com.c4.routy.domain.mypage.dto.BookmarkDTO">
+        SELECT
+            b.bookmark_id   AS bookmarkId,
+            b.created_at    AS createdAt,
+            p.plan_id       AS planId,
+            p.plan_title    AS planTitle,
+            (
+                SELECT COUNT(*)
+                FROM TBL_BOOKMARK bb
+                WHERE bb.plan_id = p.plan_id
+            ) AS bookmarkCount
+        FROM TBL_BOOKMARK b
+                 JOIN TBL_PLAN p ON b.plan_id = p.plan_id
+        WHERE b.user_id = #{userNo}
+          AND (p.is_deleted IS NULL OR p.is_deleted = 0)
+        ORDER BY b.created_at DESC
+    </select>
 </mapper>

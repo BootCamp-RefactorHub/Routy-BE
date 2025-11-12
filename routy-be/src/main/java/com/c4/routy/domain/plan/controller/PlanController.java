@@ -5,6 +5,7 @@ import com.c4.routy.domain.plan.dto.PlanEditResponseDTO;
 import com.c4.routy.domain.plan.dto.PlanEditSaveRequestDTO;
 import com.c4.routy.domain.plan.service.PlanService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -34,6 +35,12 @@ public class PlanController {
                            @RequestBody PlanEditSaveRequestDTO dto) {
         dto.setPlanId(planId);
         planService.updatePlan(dto);
+    }
+
+    @DeleteMapping("/{planId}")
+    public ResponseEntity<Void> deletePlan(@PathVariable Integer planId) {
+        planService.deletePlan(planId);
+        return ResponseEntity.noContent().build();
     }
 }
 

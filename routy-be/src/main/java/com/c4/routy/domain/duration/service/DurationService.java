@@ -30,7 +30,7 @@ public class DurationService {
     public List<DurationEntity> createDurations(Integer planId, int dayCount) {
         List<DurationEntity> durations = new ArrayList<>();
 
-        // ✅ planId를 통해 PlanEntity 조회
+        // planId를 통해 PlanEntity 조회
         PlanEntity plan = planRepository.findById(planId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 planId가 존재하지 않습니다: " + planId));
 

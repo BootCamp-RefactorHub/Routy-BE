@@ -85,8 +85,11 @@ public class PlanServiceImpl implements PlanService {
 
         // 제목/기간 변경
         plan.changeTitle(dto.getTitle());
-        plan.changePeriod(dto.getStartDate(), dto.getEndDate());
-
+//        plan.changePeriod(dto.getStartDate(), dto.getEndDate());
+        if (dto.getStartDate() != null && dto.getEndDate() != null
+                && !dto.getStartDate().isBlank() && !dto.getEndDate().isBlank()) {
+            plan.changePeriod(dto.getStartDate(), dto.getEndDate());
+        }
         // 지역 변경
         if (dto.getDestination() != null) {
             RegionEntity region = RegionRepository.findByRegionName(dto.getDestination());
@@ -115,7 +118,7 @@ public class PlanServiceImpl implements PlanService {
                         .addressName(actDTO.getAddressName())
                         .categoryGroupName(actDTO.getCategoryGroupName())
                         .placeUrl(actDTO.getPlaceUrl())
-                        .tag(actDTO.getTag())
+//                        .tag(actDTO.getTag())
                         .travelOrder(actDTO.getTravelOrder())  // 엔티티에 맞게 수정
                         .build();
                 travelRepository.save(travel);
@@ -123,5 +126,18 @@ public class PlanServiceImpl implements PlanService {
         }
 
         planRepository.save(plan);
+    }
+
+    @Override
+    public void deletePlan(Integer planId) {
+        PlanEntity plan = planRepository.findById(planId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 일정입니다. id=" + planId));
+
+        // soft delete 방식 (isDeleted = 1)
+        plan.setDeleted(true);
+        planRepository.save(plan);
+
+        // hard delete (진짜 DB에서 지우고 싶을 때)
+        // planRepository.delete(plan);
     }
 }

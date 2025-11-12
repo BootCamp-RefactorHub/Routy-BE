@@ -9,4 +9,5 @@ public interface PlanService {
     PlanDetailResponseDTO getPlanDetail(Integer planId);
     PlanEditResponseDTO getPlanEdit(Integer planId);
     void updatePlan(PlanEditSaveRequestDTO dto);
+    void deletePlan(Integer planId);
 }

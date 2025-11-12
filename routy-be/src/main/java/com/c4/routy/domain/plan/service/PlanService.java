@@ -1,13 +1,35 @@
 package com.c4.routy.domain.plan.service;
 
-import com.c4.routy.domain.plan.dto.PlanDetailResponseDTO;
-import com.c4.routy.domain.plan.dto.PlanEditResponseDTO;
-import com.c4.routy.domain.plan.dto.PlanEditSaveRequestDTO;
+import com.c4.routy.domain.plan.dto.*;
+
+import java.util.List;
 
 
 public interface PlanService {
     PlanDetailResponseDTO getPlanDetail(Integer planId);
     PlanEditResponseDTO getPlanEdit(Integer planId);
     void updatePlan(PlanEditSaveRequestDTO dto);
-    void deletePlan(Integer planId);
+    int copyPlanToUser(Integer planId, Integer userId);
+
+    void softDeletePlan(Integer planId);
+
+    void togglePlanPublic(Integer planId);
+
+    List<BrowseResponseDTO> getPublicPlans(int page, int size, String sort, Integer regionId, Integer days);
+
+    BrowseDetailResponseDTO getPublicPlanDetail(Integer planId);
+
+    String toggleLike(Integer planId, Integer userId);
+
+    int getLikeCount(Integer planId);
+
+    List<RegionResponseDTO> getAllRegions();
+
+    void increaseViewCount(Integer planId, Integer userId);
+
+    String toggleBookmark(Integer planId, Integer userId);
+
+    int getBookmarkCount(Integer planId);
+
+    List<BrowseResponseDTO> getUserBookmarks(Integer userId);
 }

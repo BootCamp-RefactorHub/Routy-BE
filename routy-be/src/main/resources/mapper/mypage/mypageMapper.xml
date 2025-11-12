@@ -105,7 +105,6 @@
         LEFT JOIN TBL_REGION r ON p.region_id = r.region_id
         WHERE p.user_id = #{userNo}
         AND (p.is_deleted IS NULL OR p.is_deleted = 0)
-        <!-- 오늘 이후(=앞으로 다가올) 일정만 -->
         AND STR_TO_DATE(p.start_date, '%Y-%m-%d') <![CDATA[>=]]> CURRENT_DATE()
         ORDER BY p.start_date ASC
         LIMIT 10

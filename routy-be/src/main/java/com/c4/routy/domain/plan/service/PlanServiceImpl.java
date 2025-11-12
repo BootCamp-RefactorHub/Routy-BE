@@ -28,6 +28,7 @@ public class PlanServiceImpl implements PlanService {
     private final TravelRepository travelRepository;
     private final RegionRepository RegionRepository;
 
+
     /**
      * 상세 조회
      * - mapper에서 기본 정보 가져오고
@@ -127,17 +128,146 @@ public class PlanServiceImpl implements PlanService {
 
         planRepository.save(plan);
     }
+    // 게시글 소프트 삭제 기능
+    @Override
+    public void softDeletePlan(Integer planId) {
+        planMapper.softDeletePlan(planId);
+    }
+
+    // 공유하기 기능
+    @Override
+    public void togglePlanPublic(Integer planId) {
+        planMapper.togglePlanPublic(planId);
+    }
+
+    // 헤더 부분에 있는 여행 루트 둘러러보기
+    @Override
+    public List<BrowseResponseDTO> getPublicPlans(int page, int size, String sort, Integer regionId, Integer days) {
+        int offset = page * size;
+        return planMapper.selectPublicPlans(offset, size, sort, regionId, days);
+    }
+
+
+    //브라우저 카드 일정 상세 조회 (모달용)
+    @Override
+    public BrowseDetailResponseDTO getPublicPlanDetail(Integer planId) {
+        // 기본 정보 및 리뷰
+        BrowseDetailResponseDTO dto = planMapper.selectPublicPlanDetail(planId);
+        if (dto == null) return null;
+
+        // 리뷰 이미지 문자열 변환
+        if (dto.getReview() != null && dto.getReview().getImages() != null) {
+            Object imgField = dto.getReview().getImages();
+            if (imgField instanceof String imgStr) {
+                dto.getReview().setImages(imgStr);
+            }
+        }
+
+        // Day 및 장소 목록 구성
+        List<PlanDayDTO> dayList = planMapper.selectPlanDays(planId);
+        for (PlanDayDTO day : dayList) {
+            day.setActivities(planMapper.selectPlanPlaces(day.getDayId()));  // ✅ 수정됨
+        }
+        dto.setDayList(dayList);
+
+        return dto;
+    }
+
+    // 브라우저 모달 창 좋아요 토글
+    @Override
+    public String toggleLike(Integer planId, Integer userId) {
+        // 작성자 ID 확인
+        Integer authorId = planMapper.selectPlanAuthorId(planId);
+        if (authorId != null && authorId.equals(userId)) {
+            throw new IllegalArgumentException("본인은 자신의 글에 좋아요를 누를 수 없습니다.");
+        }
+
+        // 좋아요 상태 확인 후 토글
+        boolean exists = planMapper.checkUserLike(planId, userId);
+
+        if (exists) {
+            planMapper.deleteLike(planId, userId);
+            return "좋아요 취소";
+        } else {
+            planMapper.insertLike(planId, userId);
+            return "좋아요 추가";
+        }
+    }
+
+
+    // 좋아요 개수 조회
+    @Override
+    public int getLikeCount(Integer planId) {
+        return planMapper.countLikes(planId);
+    }
+
+    public List<RegionResponseDTO> getAllRegions() {
+        return planMapper.selectAllRegions();
+    }
+
+    public void increaseViewCount(Integer planId, Integer userId) {
+        Integer authorId = planMapper.selectPlanAuthorId(planId);
+
+        // 비로그인 상태나 본인일 경우 카운트 증가 X
+        if (userId == null || authorId.equals(userId)) {
+            return;
+        }
+
+        planMapper.incrementViewCount(planId);
+    }
+
+
+    // 브라우저 북마크 관련 부분
+    @Override
+    public String toggleBookmark(Integer planId, Integer userId) {
+        boolean exists = planMapper.checkUserBookmark(planId, userId);
+
+        if (exists) {
+            planMapper.deleteBookmark(planId, userId);
+        } else {
+            planMapper.insertBookmark(planId, userId);
+        }
+
+        // ✅ 북마크 개수 tbl_plan에 반영
+        planMapper.updateBookmarkCount(planId);
+
+        return exists ? "북마크 취소" : "북마크 추가";
+    }
+
+
+    // 북마크 개수 가져오기
+    @Override
+    public int getBookmarkCount(Integer planId) {
+        return planMapper.countBookmarks(planId);
+    }
+
+    public List<BrowseResponseDTO> getUserBookmarks(Integer userId) {
+        return planMapper.selectUserBookmarks(userId);
+    }
 
     @Override
-    public void deletePlan(Integer planId) {
-        PlanEntity plan = planRepository.findById(planId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 일정입니다. id=" + planId));
+    public int copyPlanToUser(Integer planId, Integer userId) {
+        // 1️⃣ 기존 일정 확인
+        PlanDetailResponseDTO original = planMapper.selectPlanDetail(planId);
+        if (original == null) {
+            throw new IllegalArgumentException("복사할 일정이 존재하지 않습니다. (planId=" + planId + ")");
+        }
 
-        // soft delete 방식 (isDeleted = 1)
-        plan.setDeleted(true);
-        planRepository.save(plan);
+        // 2️⃣ 새 일정 생성
+        PlanCopyDTO copyDTO = new PlanCopyDTO();
+        copyDTO.setSourcePlanId(planId);
+        copyDTO.setUserId(userId);
+        copyDTO.setTitle(original.getTitle() + " (복사본)");
+        copyDTO.setStartDate(original.getStartDate());
+        copyDTO.setEndDate(original.getEndDate());
 
-        // hard delete (진짜 DB에서 지우고 싶을 때)
-        // planRepository.delete(plan);
+        planMapper.insertCopiedPlan(copyDTO);
+
+        // 3️⃣ Day + Travel 복사
+        planMapper.copyDurations(planId, copyDTO.getPlanId());
+        planMapper.copyTravels(planId, copyDTO.getPlanId());
+
+        return copyDTO.getPlanId();
     }
+
 }

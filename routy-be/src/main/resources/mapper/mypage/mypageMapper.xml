@@ -129,8 +129,8 @@
                            LIMIT 1
             )             AS thumbnailUrl,
             p.plan_title AS title,
-            p.start_date AS startTime,
-            p.end_date   AS endTime
+            p.start_date AS startDate,
+            p.end_date   AS endDate
         FROM TBL_PLAN p
         WHERE p.user_id = #{userNo}
           AND (p.is_deleted IS NULL OR p.is_deleted = 0)
@@ -169,8 +169,8 @@
         SELECT
         p.plan_id        AS planId,
         p.plan_title     AS title,
-        p.start_date     AS startTime,
-        p.end_date       AS endTime,
+        p.start_date     AS startDate,
+        p.end_date       AS endDate,
         COALESCE(
         (
         SELECT t.image_path

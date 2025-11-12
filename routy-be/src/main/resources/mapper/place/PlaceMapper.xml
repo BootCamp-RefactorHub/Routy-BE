@@ -78,7 +78,7 @@
                      #{imagePath},
                      #{runTime},
                      #{startTime},
-                     #{runTime}
+                     #{endTime}
                  )
     </insert>
 

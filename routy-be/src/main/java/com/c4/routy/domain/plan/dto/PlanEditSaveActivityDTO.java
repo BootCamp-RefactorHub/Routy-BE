@@ -19,6 +19,9 @@ public class PlanEditSaveActivityDTO {
 
     private String tag;               // 숙소/식당/카페/관광 등
 
+    private String startTime;
+    private String endTime;
+
     // ===== 카카오 장소 정보 =====
     private String placeName;         // place_name
     private String addressName;       // address_name

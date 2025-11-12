@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ReviewFileDTO {
-    private Integer reviewfileId;      // TBL_REVIEWFILES PK
+    private Integer reviewFileId;      // TBL_REVIEWFILES PK
     private String fileName;
     private String filePath;
     private String fileRename;

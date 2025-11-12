@@ -94,7 +94,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .files(review.getFiles() != null
                         ? review.getFiles().stream()
                         .map(f -> ReviewFileDTO.builder()
-                                .reviewfileId(f.getReviewfileId())
+                                .reviewFileId(f.getReviewfileId())
                                 .fileName(f.getFileName())
                                 .filePath(f.getFilePath())
                                 .fileRename(f.getFileRename())

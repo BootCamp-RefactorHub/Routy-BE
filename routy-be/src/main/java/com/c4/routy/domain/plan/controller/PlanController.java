@@ -33,7 +33,8 @@ public class PlanController {
         return ResponseEntity.ok().build();
     }
 
-    // 일정 공개/비공개
+
+    // 일정 공개, 비공개처리
     @PatchMapping("/{planId}/public")
     public ResponseEntity<Void> togglePlanPublic(@PathVariable Integer planId) {
         planService.togglePlanPublic(planId);

@@ -1,18 +1,29 @@
 package com.c4.routy.domain.direction.optimization.strategy;
 
 import com.c4.routy.domain.direction.dto.KakaoMobility.Location;
+import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 public abstract  class RouteStrategy {
-    public List<Location> sort(List<Location> locations, List<Integer> fixed, int[][] weight) {
+    protected List<Location> locations;
+    protected List<Integer> fixed;
+    protected int[][] weight;
 
+    public RouteStrategy(List<Location> locations, List<Integer> fixed, int[][] weight) {
+        this.locations = locations;
+        this.fixed = fixed;
+        this.weight = weight;
+    }
+
+    public List<Location> sort() {
         // 1. 최적 경로 탐색
-        List<Integer> bestOrder = findOptimalOrder(fixed, weight);
+        List<Integer> bestOrder = findOptimalOrder(this.fixed, this.weight);
 
         // 2. 순서에 따라 Location 정렬 후 반환
         return bestOrder.stream()
-                .map(locations::get)
+                .map(this.locations::get)
                 .toList();
     }
 

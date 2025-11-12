@@ -53,11 +53,11 @@ public class MapServiceImpl implements MapService {
         }
 
         // 2. 팩토리와 전략 패턴을 통해 정렬 로직 선택
-        RouteStrategy strategy = RouteStrategyFactory.getRouteStrategy(n);
+        RouteStrategy strategy = RouteStrategyFactory.getRouteStrategy(points, fixed, times, 0);
         RouteSorter sorter = new RouteSorter(strategy);
 
         // 3. 정렬 진행
-        List<Location> ordered = sorter.sort(points, fixed, times);
+        List<Location> ordered = sorter.sort();
 
         // 4. 최종 경로 요청 (출발지~경유지~도착지)
         KakaoRouteRequest routeReq = new KakaoRouteRequest();

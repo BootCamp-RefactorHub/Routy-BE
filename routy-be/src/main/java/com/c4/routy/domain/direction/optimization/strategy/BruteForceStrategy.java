@@ -8,6 +8,10 @@ import java.util.List;
 
 // 완전 탐색 정렬
 public class BruteForceStrategy extends RouteStrategy {
+    public BruteForceStrategy(List<Location> locations, List<Integer> fixed, int[][] weight) {
+        super(locations, fixed, weight);
+    }
+
     @Override
     protected List<Integer> findOptimalOrder(List<Integer> fixed, int[][] wights) {
         int n = wights.length;

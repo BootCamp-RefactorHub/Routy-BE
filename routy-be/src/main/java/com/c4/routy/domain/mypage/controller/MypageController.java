@@ -5,14 +5,13 @@ import com.c4.routy.domain.mypage.dto.BookmarkDTO;
 import com.c4.routy.domain.mypage.dto.MyPageResponseDTO;
 import com.c4.routy.domain.mypage.dto.TravelRecordDTO;
 import com.c4.routy.domain.mypage.service.MypageService;
+import com.c4.routy.domain.plan.dto.BrowseDetailResponseDTO;
+import com.c4.routy.domain.plan.service.PlanService;
 import com.c4.routy.domain.user.websecurity.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,6 +21,7 @@ import java.util.List;
 public class MypageController {
 
     private final MypageService mypageService;
+    private final PlanService planService;
 
     @GetMapping
     public MyPageResponseDTO getMyPage(
@@ -58,13 +58,30 @@ public class MypageController {
 
 
 //     전체 북마크 (월 제한 없음)
-
     @GetMapping("/bookmarks")
     public List<BookmarkDTO> getAllBookmarks(Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Integer userNo = userDetails.getUserNo();
 
         return mypageService.getAllBookmarks(userNo);
+    }
+
+    // 북마크 상세 보기
+    @GetMapping("/bookmark/public/{planId}")
+    public ResponseEntity<?> getPublicPlanDetail(
+            @PathVariable Integer planId
+    ) {
+        try {
+            BrowseDetailResponseDTO dto = planService.getPublicPlanDetail(planId);
+            if (dto == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(dto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError()
+                    .body("일정 상세 조회 실패: " + e.getMessage());
+        }
     }
 }
 

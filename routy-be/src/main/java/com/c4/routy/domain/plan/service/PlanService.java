@@ -9,13 +9,13 @@ public interface PlanService {
     PlanDetailResponseDTO getPlanDetail(Integer planId);
     PlanEditResponseDTO getPlanEdit(Integer planId);
     void updatePlan(PlanEditSaveRequestDTO dto);
-    int copyPlanToUser(Integer planId, Integer userId);
+    int copyPlanToUser(Integer planId, Integer userId,String startDate, String endDate);
 
     void softDeletePlan(Integer planId);
 
     void togglePlanPublic(Integer planId);
 
-    List<BrowseResponseDTO> getPublicPlans(int page, int size, String sort, Integer regionId, Integer days);
+    List<BrowseResponseDTO> getPublicPlans(String sort, Integer regionId, Integer days);
 
     BrowseDetailResponseDTO getPublicPlanDetail(Integer planId);
 

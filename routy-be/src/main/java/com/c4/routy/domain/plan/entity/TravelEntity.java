@@ -43,8 +43,14 @@ public class TravelEntity {
     private Integer travelOrder;        // travel 순서
 
     @Column(name = "start_time")
-    private Integer startTime;
+    private String startTime;
 
     @Column(name = "end_time")
-    private Integer endTime;
+    private String endTime;
+
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name ="longitude")
+    private Double longitude;
 }

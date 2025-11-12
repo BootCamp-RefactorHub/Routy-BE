@@ -33,4 +33,5 @@ public class DurationController {
         List<DurationEntity> created = durationService.createDurations(planId, totalDays);
         return ResponseEntity.ok(created);
     }
+
 }

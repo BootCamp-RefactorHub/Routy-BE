@@ -15,14 +15,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PlanEditSaveActivityDTO {
     private Integer travelId;         // 기존 일정이면 있음, 새로 추가면 null
-    private Integer travelOrder;          // 위/아래 정렬용 (같은 Day 안에서의 순서)
+    private Integer travelOrder;      // 위/아래 정렬용 (같은 Day 안에서의 순서)
 
     private String tag;               // 숙소/식당/카페/관광 등
+
+    private String startTime;
+    private String endTime;
 
     // ===== 카카오 장소 정보 =====
     private String placeName;         // place_name
     private String addressName;       // address_name
     private String categoryGroupName; // category_group_name
     private String placeUrl;          // place_url
-
+    private Double latitude;          // latitude
+    private Double longitude;         // longitude
 }

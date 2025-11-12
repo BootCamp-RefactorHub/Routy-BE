@@ -23,6 +23,12 @@ public class PlanEditActivityDTO {
     private String placeName;          // place_name  카카오 장소검색: 장소 이름
     private String placeUrl;           // place_url 카카오 장소검색: 상세보기 URL
 
+    private String startTime;
+    private String endTime;
+    private Double latitude;
+    private Double longitude;
+    private String categoryCode;
+
     private String tag;          // 숙소/식당/카페/관광 등 아이콘 바인딩용
 
 }

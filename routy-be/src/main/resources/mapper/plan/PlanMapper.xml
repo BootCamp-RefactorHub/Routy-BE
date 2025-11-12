@@ -20,7 +20,6 @@
         <result property="endTime" column="end_time"/>
     </resultMap>
 
-
     <!-- Day 단위 일정 묶음 -->
     <resultMap id="PlanDayResult" type="com.c4.routy.domain.plan.dto.PlanDayDTO">
         <id property="dayId" column="duration_id"/>
@@ -154,9 +153,9 @@
     <update id="togglePlanPublic">
         UPDATE TBL_PLAN
         SET is_public = CASE
-        WHEN is_public = 0 THEN 1
-        ELSE 0
-        END
+                            WHEN is_public = 0 THEN 1
+                            ELSE 0
+            END
         WHERE plan_id = #{planId}
     </update>
 
@@ -267,6 +266,7 @@
         ORDER BY d.day ASC
     </select>
 
+    <!-- 시간 정보 추가 -->
     <select id="selectPlanPlaces"
             resultType="com.c4.routy.domain.plan.dto.PlanActivityDTO">
         SELECT
@@ -278,7 +278,9 @@
                 WHEN t.category_group_name IN ('음식점','카페') THEN t.category_group_name
                 ELSE '기타'
                 END AS tag,
-            t.place_url AS placeUrl
+            t.place_url AS placeUrl,
+            t.start_time AS startTime,
+            t.end_time AS endTime
         FROM TBL_TRAVEL t
         WHERE t.duration_id = #{dayId}
         ORDER BY t.travel_order ASC
@@ -329,15 +331,19 @@
           일정 수정 화면용 (PlanEditResponseDTO 세트)
          ======================================================= -->
 
-    <!-- 1) 수정화면에서 하루 안의 장소들 -->
+    <!-- 수정화면에서 하루 안의 장소들 - 위도/경도 포함 (중복 제거) -->
     <resultMap id="PlanEditActivityResult" type="com.c4.routy.domain.plan.dto.PlanEditActivityDTO">
         <id property="travelId" column="travel_id"/>
         <result property="placeName" column="place_name"/>
         <result property="addressName" column="address_name"/>
         <result property="categoryGroupName" column="category_group_name"/>
         <result property="placeUrl" column="place_url"/>
-<!--        <result property="tag" column="tag"/>-->
         <result property="orderNo" column="travel_order"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="latitude" column="latitude"/>
+        <result property="longitude" column="longitude"/>
+        <result property="categoryCode" column="category_code"/>
     </resultMap>
 
     <!-- 2) 수정화면 Day -->
@@ -357,13 +363,12 @@
         <result property="startDate" column="start_date"/>
         <result property="endDate" column="end_date"/>
         <result property="destination" column="region_name"/>
-<!--        <result property="theme" column="theme"/>-->
         <collection property="dayList"
                     ofType="com.c4.routy.domain.plan.dto.PlanEditDayDTO"
                     resultMap="PlanEditDayResult"/>
     </resultMap>
 
-    <!--  실제 쿼리 -->
+    <!-- 위도/경도 포함 -->
     <select id="selectPlanEdit" parameterType="int" resultMap="PlanEditResult">
         SELECT
             p.plan_id,
@@ -371,7 +376,6 @@
             p.start_date,
             p.end_date,
             r.region_name,
---          r.theme,
             d.duration_id,
             d.day,
             DATE_ADD(p.start_date, INTERVAL (d.day - 1) DAY) AS day_date,
@@ -380,8 +384,12 @@
             t.address_name AS address_name,
             t.category_group_name AS category_group_name,
             t.place_url AS place_url,
---             t.tag AS tag,
-            t.travel_order AS travel_order
+            t.travel_order AS travel_order,
+            t.start_time AS start_time,
+            t.end_time AS end_time,
+            t.latitude AS latitude,
+            t.longitude AS longitude,
+            t.category_code AS category_code
         FROM TBL_PLAN p
                  LEFT JOIN TBL_REGION  r ON p.region_id = r.region_id
                  LEFT JOIN TBL_DURATION d ON p.plan_id    = d.plan_id
@@ -540,16 +548,18 @@
         WHERE plan_id = #{oldPlanId};
     </insert>
 
-    <!-- Travel 복사 -->
+    <!-- Travel 복사 - 시간 정보 포함 -->
     <insert id="copyTravels">
-        INSERT INTO tbl_travel (duration_id, place_name, address_name, category_group_name, place_url, travel_order)
+        INSERT INTO tbl_travel (duration_id, place_name, address_name, category_group_name, place_url, travel_order, start_time, end_time)
         SELECT
             d2.duration_id,
             t.place_name,
             t.address_name,
             t.category_group_name,
             t.place_url,
-            t.travel_order
+            t.travel_order,
+            t.start_time,
+            t.end_time
         FROM tbl_duration d1
                  JOIN tbl_travel t ON d1.duration_id = t.duration_id
                  JOIN tbl_duration d2 ON d2.plan_id = #{newPlanId} AND d2.day = d1.day

@@ -4,6 +4,8 @@ import com.c4.routy.domain.plan.dto.PlanReviewFormDTO;
 import com.c4.routy.domain.plan.dto.PlanReviewResponseDTO;
 import com.c4.routy.domain.plan.dto.PlanReviewUploadRequestDTO;
 
+import java.util.List;
+
 public interface ReviewService {
     /**
      * 리뷰 작성 모달을 띄울 때, 기존 리뷰 데이터와 파일들을 함께 내려주는 메서드
@@ -19,4 +21,7 @@ public interface ReviewService {
      * @return 저장된 리뷰 응답 DTO
      */
     PlanReviewResponseDTO createOrUpdateReview(PlanReviewUploadRequestDTO dto, Integer loginUserId);
+
+    PlanReviewResponseDTO getReviewForDisplay(Integer planId);
+    List<String> getReviewImageUrls(Integer planId);
 }

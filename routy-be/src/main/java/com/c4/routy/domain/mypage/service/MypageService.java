@@ -89,12 +89,12 @@ public class MypageService {
                 .build();
     }
 
-//    전체 여행기록
+    //    전체 여행기록
     public List<TravelRecordDTO> getAllTravelRecords(Integer userNo) {
         return mypageQueryMapper.selectAllTravelRecords(userNo);
     }
 
-//    전체 북마크
+    //    전체 북마크
     public List<BookmarkDTO> getAllBookmarks(Integer userNo) {
         return mypageQueryMapper.selectAllBookmarks(userNo);
     }

@@ -9,6 +9,7 @@ public class PlanCreateRequestDTO {
     private String planTitle;    // "서울 주말 여행"
     private String startDate;    // LocalDate로 변환 가능한 문자열 (yyyy-MM-dd)
     private String endDate;
+    private String theme;
     private Integer regionId;    // 선택한 지역
     private Integer userNo;      // 로그인 사용자
 }

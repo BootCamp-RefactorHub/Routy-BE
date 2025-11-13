@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/chatbot")
+@RequestMapping("/api")
 public class ChatBotController {
 
     @Value("${openai.secret-key}")
     private String apiKey;
 
-    @PostMapping
+    @PostMapping("/chatbot")
     public Map<String, String> chat(@RequestBody Map<String, String> request) {
         String userMessage = request.get("message");
 

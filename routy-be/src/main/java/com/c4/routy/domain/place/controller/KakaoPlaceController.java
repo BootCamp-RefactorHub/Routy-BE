@@ -1,9 +1,9 @@
 package com.c4.routy.domain.place.controller;
 
-import com.c4.routy.domain.place.service.PlaceKakaoCafeService;
-import com.c4.routy.domain.place.service.PlaceKakaoFoodService;
-import com.c4.routy.domain.place.service.PlaceKakaoHotelService;
-import com.c4.routy.domain.place.service.PlaceKakaoAttractionService;
+import com.c4.routy.domain.place.service.KakaoCafeService;
+import com.c4.routy.domain.place.service.KakaoFoodService;
+import com.c4.routy.domain.place.service.KakaoHotelService;
+import com.c4.routy.domain.place.service.KakaoAttractionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,19 +14,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/kakao")
-public class PlaceKakaoAPIController {
+public class KakaoPlaceController {
 
-    private final PlaceKakaoHotelService placeKakaoHotelService;
-    private final PlaceKakaoFoodService placeKakaoFoodService;
-    private final PlaceKakaoCafeService placeKakaoCafeService;
-    private final PlaceKakaoAttractionService placeKakaoAttractionService;
+    private final KakaoHotelService kakaoHotelService;
+    private final KakaoFoodService kakaoFoodService;
+    private final KakaoCafeService kakaoCafeService;
+    private final KakaoAttractionService kakaoAttractionService;
 
     @GetMapping("/hotels")
     public ResponseEntity<String> getNearbyHotels(
             @RequestParam double lat,
             @RequestParam double lng) {
 
-        String result = placeKakaoHotelService.findNearbyHotels(lat ,lng);
+        String result = kakaoHotelService.findNearbyHotels(lat ,lng);
         return ResponseEntity.ok(result);
     }
 
@@ -35,7 +35,7 @@ public class PlaceKakaoAPIController {
             @RequestParam double lat,
             @RequestParam double lng) {
 
-        String result = placeKakaoFoodService.findNearbyRestaurants(lat, lng);
+        String result = kakaoFoodService.findNearbyRestaurants(lat, lng);
         return ResponseEntity.ok(result);
     }
 
@@ -44,7 +44,7 @@ public class PlaceKakaoAPIController {
             @RequestParam double lat,
             @RequestParam double lng) {
 
-        String result = placeKakaoCafeService.findNearbyCafes(lat, lng);
+        String result = kakaoCafeService.findNearbyCafes(lat, lng);
         return ResponseEntity.ok(result);
     }
 
@@ -53,7 +53,7 @@ public class PlaceKakaoAPIController {
             @RequestParam double lat,
             @RequestParam double lng) {
 
-        String result = placeKakaoAttractionService.findNearbyAttractions(lat, lng);
+        String result = kakaoAttractionService.findNearbyAttractions(lat, lng);
         return ResponseEntity.ok(result);
     }
 }

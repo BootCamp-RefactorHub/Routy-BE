@@ -41,7 +41,7 @@ public class PlanController {
         return ResponseEntity.ok().build();
     }
 
-    // 필터링(최신순, 조회순, 북마크순, 지역, 날짜,) 및 페이징네이션
+    // 필터링(최신순, 조회순, 북마크순, 지역, 날짜,)
     @GetMapping("/public")
     public List<BrowseResponseDTO> getPublicPlans(
             @RequestParam(defaultValue = "latest") String sort,

@@ -27,5 +27,6 @@ public class BrowseResponseDTO {
     private Boolean isBookmarked;    // 북마크 확인 여부
     private List<String> reviewImages;  // 리뷰에 저장되는 많은 사진
     private String reviewImagesRaw;
+    private String defaultPlanImage;
 }
 

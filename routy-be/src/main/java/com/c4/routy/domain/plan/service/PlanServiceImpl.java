@@ -12,6 +12,7 @@ import com.c4.routy.domain.region.entity.RegionEntity;
 import com.c4.routy.domain.region.repository.RegionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -148,29 +149,32 @@ public class PlanServiceImpl implements PlanService {
     }
 
     // 헤더 부분에 있는 여행 루트 둘러러보기
+    @Value("${app.default-plan-image}")
+    private String defaultPlanImage;
+
     @Override
     public List<BrowseResponseDTO> getPublicPlans(String sort, Integer regionId, Integer days) {
 
-        List<BrowseResponseDTO> list = planMapper.selectPublicPlans(regionId, days, sort);
+        List<BrowseResponseDTO> list = planMapper.selectPublicPlans(days, regionId, sort);
 
-        // reviewImagesRaw를 List<String>로 변환
         for (BrowseResponseDTO dto : list) {
-            String raw = dto.getReviewImagesRaw();
 
-            if (raw != null && !raw.isBlank()) {
-                // 콤마 기준으로 나누기
-                List<String> imgs = List.of(raw.split(","));
-
-                // DTO에 저장
-                dto.setReviewImages(imgs);
+            // 1) 리뷰 이미지 콤마 분리
+            if (dto.getReviewImagesRaw() != null && !dto.getReviewImagesRaw().isEmpty()) {
+                dto.setReviewImages(Arrays.asList(dto.getReviewImagesRaw().split(",")));
             } else {
-                // 이미지 없으면 빈 리스트 세팅
-                dto.setReviewImages(List.of());
+                dto.setReviewImages(List.of());  // 빈 리스트로 초기화
+            }
+
+            // 2) 리뷰 이미지가 아예 없는 경우 → 기본 이미지 1개 삽입
+            if (dto.getReviewImages().isEmpty()) {
+                dto.setReviewImages(List.of(defaultPlanImage));
             }
         }
 
         return list;
     }
+
 
 
     //브라우저 카드 일정 상세 조회 (모달용)

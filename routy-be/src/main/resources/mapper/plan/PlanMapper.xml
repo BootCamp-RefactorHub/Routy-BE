@@ -181,7 +181,7 @@
         p.is_public AS isPublic,
         p.created_at AS createdAt,
         <!-- 리뷰 이미지 여러 개 (콤마로 이어붙임) -->
-        GROUP_CONCAT(f.file_path ORDER BY f.reviewfile_id) AS reviewImages
+        GROUP_CONCAT(f.file_path ORDER BY f.reviewfile_id) AS reviewImagesRaw
         FROM TBL_PLAN p
         JOIN TBL_USER u ON u.user_no = p.user_id
         JOIN TBL_REGION r ON r.region_id = p.region_id
@@ -228,7 +228,6 @@
                 ORDER BY p.created_at DESC
             </otherwise>
         </choose>
-        LIMIT #{size} OFFSET #{offset}
     </select>
 
     <!-- 브라우저 모달 쿼리 -->

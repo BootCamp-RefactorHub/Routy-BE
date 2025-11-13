@@ -215,7 +215,6 @@
                 ORDER BY p.created_at DESC
             </otherwise>
         </choose>
-        LIMIT #{size} OFFSET #{offset}
     </select>
 
     <!-- 브라우저 모달 쿼리 -->

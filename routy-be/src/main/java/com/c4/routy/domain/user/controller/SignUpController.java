@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/auth")
 public class SignUpController {
 
     private final ModelMapper modelMapper;

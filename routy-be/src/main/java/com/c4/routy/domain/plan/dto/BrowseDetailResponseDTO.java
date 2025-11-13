@@ -26,6 +26,7 @@ public class BrowseDetailResponseDTO {
     private String createdAt;
     private Boolean isPublic;      // 공개 여부
     private Boolean isDeleted;     // 삭제 여부
+    private String theme;
 
     // 작성자
     private Integer userId;

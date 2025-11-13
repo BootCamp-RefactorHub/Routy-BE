@@ -24,7 +24,7 @@
     <resultMap id="PlanDayResult" type="com.c4.routy.domain.plan.dto.PlanDayDTO">
         <id property="dayId" column="duration_id"/>
         <result property="dayNo" column="day"/>
-        <result property="date" column="date"/>
+        <result property="date" column="day_date"/>
         <collection property="activities"
                     ofType="com.c4.routy.domain.plan.dto.PlanActivityDTO"
                     select="selectPlanPlaces"
@@ -53,6 +53,7 @@
         <id property="planId" column="plan_id"/>
         <result property="title" column="plan_title"/>
         <result property="destination" column="region_name"/>
+        <result property="theme" column="theme"/>
         <result property="startDate" column="start_date"/>
         <result property="endDate" column="end_date"/>
         <result property="days" column="days"/>
@@ -95,13 +96,12 @@
             p.start_date,
             p.end_date,
             r.region_name,
-            r.theme,
+            p.theme,
             p.is_public,
             p.is_deleted,
             d.duration_id,
             d.day,
             DATE_ADD(p.start_date, INTERVAL (d.day - 1) DAY) AS day_date,
---    이거써야될수도있습니다      DATE_ADD(p.start_date, INTERVAL (d.day - 1) DAY) AS date,
             t.travel_id,
             t.place_name AS place_name,
             t.address_name,
@@ -127,8 +127,8 @@
             p.plan_title,
             p.start_date,
             p.end_date,
+            p.theme,
             r.region_name,
-            r.theme,
             tr.transport_name AS transportation
         FROM TBL_PLAN p
                  LEFT JOIN TBL_REGION r ON p.region_id = r.region_id
@@ -212,11 +212,11 @@
                 ORDER BY p.view_count DESC
             </when>
             <otherwise>
-                ORDER BY p.created_at DESC, p.plan_id DESC
+                ORDER BY p.created_at DESC
             </otherwise>
         </choose>
+        LIMIT #{size} OFFSET #{offset}
     </select>
-
 
     <!-- 브라우저 모달 쿼리 -->
     <select id="selectPublicPlanDetail"
@@ -224,6 +224,7 @@
         SELECT
             p.plan_id,
             p.plan_title,
+            p.theme,
             r.region_name,
             DATE_FORMAT(p.start_date, '%Y-%m-%d') AS start_date,
             DATE_FORMAT(p.end_date, '%Y-%m-%d') AS end_date,
@@ -382,6 +383,7 @@
             p.plan_title,
             p.start_date,
             p.end_date,
+            p.theme,
             r.region_name,
             d.duration_id,
             d.day,
@@ -480,7 +482,6 @@
     </delete>
 
     <!-- 북마크 개수 -->
-
     <select id="countBookmarks" resultType="int">
         SELECT COUNT(*) FROM tbl_bookmark WHERE plan_id = #{planId}
     </select>
@@ -499,6 +500,7 @@
         SELECT
             p.plan_id AS planId,
             p.plan_title AS title,
+            p.theme AS theme,
             r.region_name AS destination,
             DATE_FORMAT(p.start_date, '%Y-%m-%d') AS startDate,
             DATE_FORMAT(p.end_date, '%Y-%m-%d') AS endDate,
@@ -519,7 +521,7 @@
     <!-- 일정 복사 (plan + duration + travel) -->
     <!-- ========================================= -->
 
-    <!-- 새 일정 기본정보 복사 (날짜 커스터마이징 지원) -->
+    <!-- 새 일정 기본정보 복사 -->
     <insert id="insertCopiedPlan" parameterType="com.c4.routy.domain.plan.dto.PlanCopyDTO"
             useGeneratedKeys="true" keyProperty="planId">
         INSERT INTO tbl_plan (
@@ -528,6 +530,7 @@
             region_id,
             start_date,
             end_date,
+            theme,
             created_at,
             is_deleted,
             is_public
@@ -536,17 +539,16 @@
             #{userId},
             CONCAT(p.plan_title, ' (복사본)'),
             p.region_id,
-            -- ✅ 사용자가 새로 선택한 날짜를 우선 반영 (없으면 기존 값 그대로)
             COALESCE(#{startDate}, p.start_date),
             COALESCE(#{endDate}, p.end_date),
+            p.theme,
             NOW(),
             0,
-            1
+            0
         FROM tbl_plan p
                  JOIN tbl_region r ON p.region_id = r.region_id
         WHERE p.plan_id = #{sourcePlanId};
     </insert>
-
 
 
     <!-- Day 복사 -->

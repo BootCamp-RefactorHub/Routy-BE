@@ -23,7 +23,7 @@ import java.util.Map;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PlaceKakaoAttractionService {
+public class KakaoHotelService {
 
     @Value("${kakao.api-key}")
     private String API_KEY;
@@ -31,20 +31,21 @@ public class PlaceKakaoAttractionService {
     @Value("${kakao-url}")
     private String BASE_URL;
 
+
     @PostConstruct
     public void init() {
         log.info("Kakao API 설정 확인");
         log.info("API_KEY 존재 여부: {}", API_KEY != null);
     }
 
-    public String findNearbyAttractions(double latitude, double longitude) {
+    public String findNearbyHotels(double latitude, double longitude) {
         try {
             List<Object> allDocuments = new ArrayList<>();  // 전체 결과 저장
 
             for (int page = 1; page <= 3; page++) {
                 String apiUrl = String.format(
                         "%s?category_group_code=%s&x=%f&y=%f&radius=10000&size=15&page=%d&sort=accuracy",
-                        BASE_URL, PlaceCategory.AT4, longitude, latitude, page  // page 변수 사용
+                        BASE_URL, PlaceCategory.AD5, longitude, latitude, page  // page 변수 사용
                 );
 
                 // 헤더 설정

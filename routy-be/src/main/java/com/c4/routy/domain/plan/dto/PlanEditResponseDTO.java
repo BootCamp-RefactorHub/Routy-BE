@@ -28,6 +28,7 @@ public class PlanEditResponseDTO {
 
     private String startDate;      // 여행 시작일
     private String endDate;        // 여행 종료일
+    private String theme;
     // 테마
     private List<String> selectedThemes;     // 사용자가 선택해둔 테마 코드,이름 (화면에서 체크 상태로 표시)
     private List<ThemeOptionDTO> themeOptions; // 화면에 뿌려줄 전체 테마 목록 (멀티 선택 가능)

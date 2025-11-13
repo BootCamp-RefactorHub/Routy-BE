@@ -16,4 +16,5 @@ public class MyPlanDTO {
     private String endDate;        // 종료일
     private String durationLabel;  // "ㅇ박 ㅇ일" 같은 일정기간 표시 (duration으로 계산)
     private String status;         // "예정", "진행중", "완료" 화면 상태
+    private String theme;          // 추가된 테마
 }

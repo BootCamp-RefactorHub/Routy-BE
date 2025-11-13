@@ -35,7 +35,6 @@ public class JwtFilter extends OncePerRequestFilter {
             for (Cookie cookie : cookies) {
                 if ("token".equals(cookie.getName())) {
                     token = cookie.getValue();
-                    log.info("쿠키에서 토큰 발견: {}", token);
                     break;
                 }
             }
@@ -46,7 +45,6 @@ public class JwtFilter extends OncePerRequestFilter {
             String authorizationHeader = request.getHeader("Authorization");
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 token = authorizationHeader.substring(7);
-                log.info("Authorization 헤더에서 토큰 발견: {}", token);
             }
         }
 

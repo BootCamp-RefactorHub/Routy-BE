@@ -14,6 +14,7 @@ public class NaverOAuth2UserInfo implements OAuth2UserInfo {
 
     public NaverOAuth2UserInfo(Map<String, Object> attributes) {
         this.attributes = attributes;
+
         // 네이버는 response 객체 안에 실제 데이터가 들어있음
         this.response = (Map<String, Object>) attributes.get("response");
         log.info("Naver OAuth2 사용자 정보 초기화: {}", response);

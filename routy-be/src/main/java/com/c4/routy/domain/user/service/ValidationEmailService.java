@@ -24,6 +24,7 @@ public class ValidationEmailService {
         return (int)(Math.random() * (90000)) + 100000;
     }
 
+    // 메일 보내기
     public int sendMail(String mail) {
         if(mail.equals("")) {
             return 0;
@@ -56,6 +57,7 @@ public class ValidationEmailService {
         }
     }
 
+    // 인증 확인
     public String confirm(String email, Integer number) {
 
         // Map에서 해당 이메일의 인증번호 확인

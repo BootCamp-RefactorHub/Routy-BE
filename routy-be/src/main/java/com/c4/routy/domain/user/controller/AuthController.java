@@ -4,7 +4,6 @@ import com.c4.routy.domain.user.dto.RequestChangePwdDTO;
 import com.c4.routy.domain.user.dto.RequestModifyUserInfoDTO;
 import com.c4.routy.domain.user.dto.ResponseAuthStatusDTO;
 import com.c4.routy.domain.user.dto.ResponseLogoutDTO;
-import com.c4.routy.domain.user.mapper.AuthMapper;
 import com.c4.routy.domain.user.service.AuthService;
 import com.c4.routy.domain.user.websecurity.CustomUserDetails;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,20 +17,21 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
 
     // 로그아웃
-    @PostMapping("/auth/logout")
+    @PostMapping("/logout")
     public ResponseEntity<ResponseLogoutDTO> logout(HttpServletResponse response) {
         authService.logout(response);
         return ResponseEntity.ok(ResponseLogoutDTO.success());
     }
 
     // 인증상태를 확인
-    @GetMapping("/auth/status")
+    @GetMapping("/status")
     public ResponseEntity<ResponseAuthStatusDTO> checkAuthStatus() {
         if (authService.isAuthenticated()) {
             return ResponseEntity.ok(
@@ -42,7 +42,7 @@ public class AuthController {
     }
 
     // 비밀번호 변경
-    @PutMapping("/auth/change-password")
+    @PutMapping("/change-password")
     public ResponseEntity<String> changePwd(@RequestBody RequestChangePwdDTO newPwd) {
         try {
             authService.modifyPwd(newPwd);
@@ -55,7 +55,7 @@ public class AuthController {
 
     // 회원정보 변경
     @PutMapping(
-            value = "/auth/modifyuserinfo",
+            value = "/modifyuserinfo",
             consumes = {"multipart/form-data", "multipart/mixed"}
     )
     public ResponseEntity<String> modifyUserInfo(
@@ -69,7 +69,7 @@ public class AuthController {
     }
 
     // 이메일 찾기
-    @GetMapping("/auth/find-email")
+    @GetMapping("/find-email")
     public ResponseEntity<?> findEmail(@RequestParam String username,
                                        @RequestParam String phone) {
         return ResponseEntity.ok().body(authService.findEmail(username, phone));

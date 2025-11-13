@@ -12,6 +12,7 @@ import com.c4.routy.domain.region.entity.RegionEntity;
 import com.c4.routy.domain.region.repository.RegionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PlanServiceImpl implements PlanService {
@@ -171,7 +173,7 @@ public class PlanServiceImpl implements PlanService {
                 dto.setReviewImages(List.of(defaultPlanImage));
             }
         }
-
+        log.info("fltmxmdhskfhdskh {}",list);
         return list;
     }
 

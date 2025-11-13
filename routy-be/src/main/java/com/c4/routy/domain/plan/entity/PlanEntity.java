@@ -46,6 +46,9 @@ public class PlanEntity {
     @Column(name = "end_date", nullable = false)
     private String endDate;
 
+    @Column(name= "theme")
+    private String theme;
+
     @Column(name = "is_deleted", nullable = false)
     private boolean deleted = false;
 

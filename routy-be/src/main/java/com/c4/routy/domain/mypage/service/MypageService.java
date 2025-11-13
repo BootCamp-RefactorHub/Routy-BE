@@ -35,7 +35,7 @@ public class MypageService {
         // 2) 각 영역별 조회
         ProfileDTO profile = mypageQueryMapper.selectProfile(userNo);
 
-        // 🔹 프로필이 없거나 이미지가 비어있을 경우, 기본 이미지 적용
+        // 프로필이 없거나 이미지가 비어있을 경우, 기본 이미지 적용
         if (profile == null) {
             profile = new ProfileDTO();
             profile.setProfileImage(defaultProfileImage);
@@ -89,12 +89,12 @@ public class MypageService {
                 .build();
     }
 
-//    전체 여행기록
+    //    전체 여행기록
     public List<TravelRecordDTO> getAllTravelRecords(Integer userNo) {
         return mypageQueryMapper.selectAllTravelRecords(userNo);
     }
 
-//    전체 북마크
+    //    전체 북마크
     public List<BookmarkDTO> getAllBookmarks(Integer userNo) {
         return mypageQueryMapper.selectAllBookmarks(userNo);
     }

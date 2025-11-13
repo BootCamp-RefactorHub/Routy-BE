@@ -178,4 +178,51 @@ public class ReviewServiceImpl implements ReviewService {
                     "잘못된 형식의 파일(" + fileName + ") 입니다.");
         }
     }
+
+    @Override
+    @Transactional
+    public PlanReviewResponseDTO getReviewForDisplay(Integer planId) {
+        PlanEntity plan = planRepository.findById(planId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 일정(planId=" + planId + ")이 존재하지 않습니다."));
+
+        return reviewRepository.findByPlan(plan)
+                .map(review -> {
+                    // 파일 URL들 추출
+                    List<String> urls = reviewFileRepository.findByReview(review).stream()
+                            .filter(f -> Boolean.FALSE.equals(f.getIsDeleted()))
+                            .map(ReviewFileEntity::getFilePath) // ← S3 퍼블릭 URL
+                            .toList();
+
+                    return PlanReviewResponseDTO.builder()
+                            .reviewId(review.getReviewId())
+                            .planId(plan.getPlanId())
+                            .content(review.getContent())
+                            .rating(review.getRating())
+                            .createdAt(review.getCreatedAt()) // String 이미 사용 중
+                            .files(urls)
+                            .build();
+                })
+                .orElseGet(() -> PlanReviewResponseDTO.builder()
+                        .reviewId(null)
+                        .planId(plan.getPlanId())
+                        .content(null)
+                        .rating(null)
+                        .createdAt(null)
+                        .files(List.of())
+                        .build());
+    }
+
+    @Override
+    public List<String> getReviewImageUrls(Integer planId) {
+        PlanEntity plan = planRepository.findById(planId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 일정(planId=" + planId + ")이 존재하지 않습니다."));
+
+        return reviewRepository.findByPlan(plan)
+                .map(review -> reviewFileRepository.findByReview(review).stream()
+                        .filter(f -> Boolean.FALSE.equals(f.getIsDeleted()))
+                        .map(ReviewFileEntity::getFilePath) // 퍼블릭 URL
+                        .toList()
+                )
+                .orElse(List.of());
+    }
 }

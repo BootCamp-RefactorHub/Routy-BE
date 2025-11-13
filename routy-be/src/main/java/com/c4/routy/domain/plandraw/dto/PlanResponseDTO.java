@@ -10,6 +10,7 @@ public class PlanResponseDTO {
     private String planTitle;
     private String startDate;
     private String endDate;
+    private String theme;
     private Integer regionId;
     private Integer userNo;
     private Integer bookmarkCount;

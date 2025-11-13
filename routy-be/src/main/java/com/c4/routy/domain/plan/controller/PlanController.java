@@ -44,14 +44,13 @@ public class PlanController {
     // 필터링(최신순, 조회순, 북마크순, 지역, 날짜,) 및 페이징네이션
     @GetMapping("/public")
     public List<BrowseResponseDTO> getPublicPlans(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "9") int size,
             @RequestParam(defaultValue = "latest") String sort,
             @RequestParam(required = false) Integer regionId,
             @RequestParam(required = false) Integer days
     ) {
-        return planService.getPublicPlans(page, size, sort, regionId, days);
+        return planService.getPublicPlans(sort, regionId, days);
     }
+
 
     // 브라우저 상세 모달 보기
     @GetMapping("/public/{planId}")
@@ -138,17 +137,23 @@ public class PlanController {
         return ResponseEntity.ok(bookmarks);
     }
 
-    // 브라우저 있는 일정을 내 일정으로 가져오기 기능(복사 사용)
+    // 브라우저 있는 일정을 내 일정으로 가져오기 기능 (복사 + 날짜 변경 지원)
     @PostMapping("/{planId}/copy")
     public ResponseEntity<Map<String, Object>> copyPlanToMyList(
             @PathVariable Integer planId,
+            @RequestBody Map<String, String> dateRange,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
         Integer userId = user.getUserNo();
-        int newPlanId = planService.copyPlanToUser(planId, userId);
+
+        // 프론트에서 전달된 날짜 추출
+        String startDate = dateRange.get("startDate");
+        String endDate = dateRange.get("endDate");
+
+        // 서비스로 전달
+        int newPlanId = planService.copyPlanToUser(planId, userId, startDate, endDate);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "일정이 내 일정에 추가되었습니다.");
         response.put("newPlanId", newPlanId);
 
         return ResponseEntity.ok(response);

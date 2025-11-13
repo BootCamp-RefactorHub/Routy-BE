@@ -26,11 +26,9 @@ public interface PlanMapper {
 
     //  공개된 여행 일정 목록 조회 (Browse용)
     List<BrowseResponseDTO> selectPublicPlans(
-            @Param("offset") int offset,
-            @Param("size") int size,
-            @Param("sort") String sort,
             @Param("regionId") Integer regionId,
-            @Param("days") Integer days
+            @Param("days") Integer days,
+            @Param("sort") String sort
     );
 
     // 공개 일정 상세 조회 (모달 전용)

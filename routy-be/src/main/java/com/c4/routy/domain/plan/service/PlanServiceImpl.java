@@ -147,9 +147,8 @@ public class PlanServiceImpl implements PlanService {
 
     // 헤더 부분에 있는 여행 루트 둘러러보기
     @Override
-    public List<BrowseResponseDTO> getPublicPlans(int page, int size, String sort, Integer regionId, Integer days) {
-        int offset = page * size;
-        return planMapper.selectPublicPlans(offset, size, sort, regionId, days);
+    public List<BrowseResponseDTO> getPublicPlans(String sort, Integer regionId, Integer days) {
+        return planMapper.selectPublicPlans(regionId, days, sort);
     }
 
 
@@ -251,28 +250,41 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public int copyPlanToUser(Integer planId, Integer userId) {
-        // 1️⃣ 기존 일정 확인
+    public int copyPlanToUser(Integer planId, Integer userId, String startDate, String endDate) {
+        // 기존 일정 확인
         PlanDetailResponseDTO original = planMapper.selectPlanDetail(planId);
         if (original == null) {
             throw new IllegalArgumentException("복사할 일정이 존재하지 않습니다. (planId=" + planId + ")");
         }
 
-        // 2️⃣ 새 일정 생성
+        // 새 일정 생성
         PlanCopyDTO copyDTO = new PlanCopyDTO();
         copyDTO.setSourcePlanId(planId);
         copyDTO.setUserId(userId);
         copyDTO.setTitle(original.getTitle() + " (복사본)");
-        copyDTO.setStartDate(original.getStartDate());
-        copyDTO.setEndDate(original.getEndDate());
 
+        // 날짜 선택 반영 (프론트에서 받은 값이 있으면 그걸 사용)
+        if (startDate != null && !startDate.isBlank()) {
+            copyDTO.setStartDate(startDate);
+        } else {
+            copyDTO.setStartDate(original.getStartDate());
+        }
+
+        if (endDate != null && !endDate.isBlank()) {
+            copyDTO.setEndDate(endDate);
+        } else {
+            copyDTO.setEndDate(original.getEndDate());
+        }
+
+        // DB에 새 일정 삽입
         planMapper.insertCopiedPlan(copyDTO);
 
-        // 3️⃣ Day + Travel 복사
+        //  Day + Travel 복사 (기존 일정 구조 유지)
         planMapper.copyDurations(planId, copyDTO.getPlanId());
         planMapper.copyTravels(planId, copyDTO.getPlanId());
 
         return copyDTO.getPlanId();
     }
+
 
 }

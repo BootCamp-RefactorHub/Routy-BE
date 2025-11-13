@@ -21,5 +21,6 @@ public class BrowseResponseDTO {
     private Integer bookmarkCount;   // 북마크 수 (tbl_plan.bookmark_count)
     private Integer viewCount;       // 조회 수 (tbl_plan.view_count)
     private Boolean isPublic;        // 공개 여부
+    private Integer placeCount;      // 총 day 별 총 일정 수
 }
 

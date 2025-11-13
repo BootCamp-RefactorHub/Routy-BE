@@ -66,6 +66,9 @@ public class MypageController {
         return mypageService.getAllBookmarks(userNo);
     }
 
+
+
+
     // 북마크 상세 보기
     @GetMapping("/bookmark/public/{planId}")
     public ResponseEntity<?> getPublicPlanDetail(
@@ -84,4 +87,6 @@ public class MypageController {
         }
     }
 }
+
+
 

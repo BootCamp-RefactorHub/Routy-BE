@@ -32,4 +32,5 @@ public interface PlanService {
     int getBookmarkCount(Integer planId);
 
     List<BrowseResponseDTO> getUserBookmarks(Integer userId);
+
 }

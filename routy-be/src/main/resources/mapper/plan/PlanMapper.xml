@@ -242,8 +242,9 @@
             DATE_FORMAT(rv.created_at, '%Y-%m-%d') AS review_created,
             rv.rating AS review_rating,
             ru.username AS review_username,
-            GROUP_CONCAT(CONCAT(f.file_path, '/', f.file_rename)) AS review_images
-
+--             GROUP_CONCAT(CONCAT(f.file_path, '/', f.file_rename)) AS review_images
+            GROUP_CONCAT(f.file_path ORDER BY f.reviewfile_id) AS review_images
+--         file_path 자체가 이미 완전한 S3 URL이므로 그냥 file_path만 합치면 됨
         FROM TBL_PLAN p
                  JOIN TBL_REGION r ON r.region_id = p.region_id
                  JOIN TBL_USER u ON u.user_no = p.user_id

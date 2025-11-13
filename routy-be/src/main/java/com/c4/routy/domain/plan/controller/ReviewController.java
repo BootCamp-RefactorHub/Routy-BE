@@ -3,11 +3,16 @@ package com.c4.routy.domain.plan.controller;
 import com.c4.routy.domain.plan.dto.PlanReviewFormDTO;
 import com.c4.routy.domain.plan.dto.PlanReviewResponseDTO;
 import com.c4.routy.domain.plan.dto.PlanReviewUploadRequestDTO;
+import com.c4.routy.domain.plan.dto.ReviewFileDTO;
+import com.c4.routy.domain.plan.entity.ReviewEntity;
 import com.c4.routy.domain.plan.service.ReviewService;
 import com.c4.routy.domain.user.websecurity.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 //리뷰 모달 컨트롤러
 @RestController
@@ -39,5 +44,19 @@ public class ReviewController {
 
         // 서비스에 두 번째 파라미터로 함께 넘기기
         return reviewService.createOrUpdateReview(dto, loginUserId);
+    }
+
+    @GetMapping
+    public PlanReviewResponseDTO getReviewForDisplay(
+            @PathVariable Integer planId
+    ) {
+        return reviewService.getReviewForDisplay(planId);
+    }
+
+    @GetMapping("/images")
+    public List<String> getReviewImages(
+            @PathVariable Integer planId
+    ) {
+        return reviewService.getReviewImageUrls(planId);
     }
 }

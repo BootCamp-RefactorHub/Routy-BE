@@ -6,7 +6,7 @@
     <select id="findEmailByUsernameAndPhone" parameterType="string">
         SELECT
                EMAIL
-          FROM TBL_USER U
+          FROM tbl_user U
          WHERE U.USERNAME = #{username}
            AND U.PHONE = #{phone}
     </select>

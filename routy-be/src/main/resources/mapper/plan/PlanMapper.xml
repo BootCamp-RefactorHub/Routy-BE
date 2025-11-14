@@ -109,10 +109,10 @@
             t.place_url,
             t.start_time,
             t.end_time
-        FROM TBL_PLAN p
-                 LEFT JOIN TBL_REGION r ON p.region_id = r.region_id
-                 LEFT JOIN TBL_DURATION d ON p.plan_id = d.plan_id
-                 LEFT JOIN TBL_TRAVEL t ON d.duration_id = t.duration_id
+        FROM tbl_plan p
+                 LEFT JOIN tbl_region r ON p.region_id = r.region_id
+                 LEFT JOIN tbl_duration d ON p.plan_id = d.plan_id
+                 LEFT JOIN tbl_travel t ON d.duration_id = t.duration_id
         WHERE p.plan_id = #{planId}
         ORDER BY d.day ASC, t.travel_order ASC
     </select>
@@ -130,9 +130,9 @@
             p.theme,
             r.region_name,
             tr.transport_name AS transportation
-        FROM TBL_PLAN p
-                 LEFT JOIN TBL_REGION r ON p.region_id = r.region_id
-                 LEFT JOIN TBL_TRANSPORT tr ON p.plan_id = tr.plan_id
+        FROM tbl_plan p
+                 LEFT JOIN tbl_region r ON p.region_id = r.region_id
+                 LEFT JOIN tbl_transport tr ON p.plan_id = tr.plan_id
         WHERE p.user_id = #{userId}
           AND p.is_deleted = 0
         ORDER BY p.start_date ASC
@@ -142,7 +142,7 @@
      게시물 삭제
      ======================================================= -->
     <update id="softDeletePlan" parameterType="int">
-        UPDATE TBL_PLAN
+        UPDATE tbl_plan
         SET is_deleted = 1
         WHERE plan_id = #{planId}
     </update>
@@ -151,7 +151,7 @@
     공유하기
     ======================================================= -->
     <update id="togglePlanPublic">
-        UPDATE TBL_PLAN
+        UPDATE tbl_plan
         SET is_public = CASE
                             WHEN is_public = 0 THEN 1
                             ELSE 0
@@ -182,18 +182,18 @@
         p.created_at AS createdAt,
         <!-- 리뷰 이미지 여러 개 (콤마로 이어붙임) -->
         GROUP_CONCAT(f.file_path ORDER BY f.reviewfile_id) AS reviewImagesRaw
-        FROM TBL_PLAN p
-        JOIN TBL_USER u ON u.user_no = p.user_id
-        JOIN TBL_REGION r ON r.region_id = p.region_id
-        LEFT JOIN TBL_LIKE l ON l.plan_id = p.plan_id
-        LEFT JOIN TBL_DURATION d ON d.plan_id = p.plan_id
-        LEFT JOIN TBL_TRAVEL t ON t.duration_id = d.duration_id
+        FROM tbl_plan p
+        JOIN tbl_user u ON u.user_no = p.user_id
+        JOIN tbl_region r ON r.region_id = p.region_id
+        LEFT JOIN tbl_like l ON l.plan_id = p.plan_id
+        LEFT JOIN tbl_duration d ON d.plan_id = p.plan_id
+        LEFT JOIN tbl_travel t ON t.duration_id = d.duration_id
         <!--  리뷰 조인 -->
-        LEFT JOIN TBL_REVIEW rv
+        LEFT JOIN tbl_review rv
         ON rv.plan_id = p.plan_id
         AND rv.is_deleted = 0
         <!-- 리뷰 이미지 조인 -->
-        LEFT JOIN TBL_REVIEWFILES f
+        LEFT JOIN tbl_reviewfiles f
         ON f.review_id = rv.review_id
         AND f.is_deleted = 0
         WHERE p.is_deleted = 0
@@ -259,14 +259,14 @@
 --             GROUP_CONCAT(CONCAT(f.file_path, '/', f.file_rename)) AS review_images
             GROUP_CONCAT(f.file_path ORDER BY f.reviewfile_id) AS review_images
 --         file_path 자체가 이미 완전한 S3 URL이므로 그냥 file_path만 합치면 됨
-        FROM TBL_PLAN p
-                 JOIN TBL_REGION r ON r.region_id = p.region_id
-                 JOIN TBL_USER u ON u.user_no = p.user_id
-                 LEFT JOIN (SELECT plan_id, COUNT(*) AS like_count FROM TBL_LIKE GROUP BY plan_id) l
+        FROM tbl_plan p
+                 JOIN tbl_region r ON r.region_id = p.region_id
+                 JOIN tbl_user u ON u.user_no = p.user_id
+                 LEFT JOIN (SELECT plan_id, COUNT(*) AS like_count FROM tbl_like GROUP BY plan_id) l
                            ON l.plan_id = p.plan_id
-                 LEFT JOIN TBL_REVIEW rv ON rv.plan_id = p.plan_id AND rv.is_deleted = 0
-                 LEFT JOIN TBL_USER ru ON ru.user_no = rv.user_id
-                 LEFT JOIN TBL_REVIEWFILES f ON f.review_id = rv.review_id AND f.is_deleted = 0
+                 LEFT JOIN tbl_review rv ON rv.plan_id = p.plan_id AND rv.is_deleted = 0
+                 LEFT JOIN tbl_user ru ON ru.user_no = rv.user_id
+                 LEFT JOIN tbl_reviewfiles f ON f.review_id = rv.review_id AND f.is_deleted = 0
 
         WHERE p.plan_id = #{planId}
           AND p.is_deleted = 0
@@ -281,8 +281,8 @@
             d.duration_id,
             d.day,
             DATE_ADD(p.start_date, INTERVAL (d.day - 1) DAY) AS date
-        FROM TBL_DURATION d
-            JOIN TBL_PLAN p ON d.plan_id = p.plan_id
+        FROM tbl_duration d
+            JOIN tbl_plan p ON d.plan_id = p.plan_id
         WHERE d.plan_id = #{planId}
         ORDER BY d.day ASC
     </select>
@@ -302,7 +302,7 @@
             t.place_url AS placeUrl,
             t.start_time AS startTime,
             t.end_time AS endTime
-        FROM TBL_TRAVEL t
+        FROM tbl_travel t
         WHERE t.duration_id = #{dayId}
         ORDER BY t.travel_order ASC
     </select>
@@ -320,9 +320,9 @@
             rf.file_name,
             rf.file_path,
             rf.file_rename
-        FROM TBL_PLAN p
-                 LEFT JOIN TBL_REVIEW r ON p.plan_id = r.plan_id
-                 LEFT JOIN TBL_REVIEWFILES rf ON r.review_id = rf.review_id
+        FROM tbl_plan p
+                 LEFT JOIN tbl_review r ON p.plan_id = r.plan_id
+                 LEFT JOIN tbl_reviewfiles rf ON r.review_id = rf.review_id
         WHERE p.plan_id = #{planId}
           AND (r.is_deleted IS NULL OR r.is_deleted = 0)
     </select>
@@ -412,10 +412,10 @@
             t.latitude AS latitude,
             t.longitude AS longitude,
             t.category_code AS category_code
-        FROM TBL_PLAN p
-                 LEFT JOIN TBL_REGION  r ON p.region_id = r.region_id
-                 LEFT JOIN TBL_DURATION d ON p.plan_id    = d.plan_id
-                 LEFT JOIN TBL_TRAVEL  t ON d.duration_id = t.duration_id
+        FROM tbl_plan p
+                 LEFT JOIN tbl_region  r ON p.region_id = r.region_id
+                 LEFT JOIN tbl_duration d ON p.plan_id    = d.plan_id
+                 LEFT JOIN tbl_travel  t ON d.duration_id = t.duration_id
         WHERE p.plan_id = #{planId}
         ORDER BY d.day ASC, t.travel_order ASC
     </select>
@@ -438,10 +438,10 @@
             -- 여러 이미지 콤마로 묶기
             GROUP_CONCAT(f.file_path ORDER BY f.reviewfile_id) AS images
 
-        FROM TBL_REVIEW rv
-                 JOIN TBL_USER u ON u.user_no = rv.user_id
+        FROM tbl_review rv
+                 JOIN tbl_user u ON u.user_no = rv.user_id
 
-                 LEFT JOIN TBL_REVIEWFILES f
+                 LEFT JOIN tbl_reviewfiles f
                            ON f.review_id = rv.review_id
                                AND f.is_deleted = 0
 

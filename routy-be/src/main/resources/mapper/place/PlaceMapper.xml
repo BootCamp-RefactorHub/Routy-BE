@@ -6,7 +6,7 @@
 
     <!-- 여러 장소 한꺼번에 저장 (배치 insert) -->
     <insert id="insertPlacesBatch">
-        INSERT INTO TBL_TRAVEL (
+        INSERT INTO tbl_travel (
         duration_id,
         travel_order,
         estimated_travel_time,
@@ -47,7 +47,7 @@
 
     <!-- 단일 장소 저장 -->
     <insert id="insertPlace">
-        INSERT INTO TBL_TRAVEL (
+        INSERT INTO tbl_travel (
             duration_id,
             travel_order,
             estimated_travel_time,
@@ -102,8 +102,8 @@
             t.end_Time AS endTime,
             t.duration_id AS durationId,
             d.plan_id AS planId
-        FROM TBL_TRAVEL t
-                 JOIN TBL_DURATION d ON t.duration_id = d.duration_id
+        FROM tbl_travel t
+                 JOIN tbl_duration d ON t.duration_id = d.duration_id
         WHERE d.plan_id = #{planId}
         ORDER BY t.travel_order ASC
     </select>

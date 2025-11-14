@@ -19,7 +19,7 @@
             /* 내가 만든 일정 수 */
             (
                 SELECT COUNT(*)
-                FROM TBL_PLAN p
+                FROM tbl_plan p
                 WHERE p.user_id = u.user_no
                   AND (p.is_deleted IS NULL OR p.is_deleted = 0)
             ) AS totalPlanCount,
@@ -27,8 +27,8 @@
             /* 내가 만든 일정에 달린 리뷰 수 */
             (
                 SELECT COUNT(*)
-                FROM TBL_REVIEW r
-                         JOIN TBL_PLAN p2 ON r.plan_id = p2.plan_id
+                FROM tbl_review r
+                         JOIN tbl_plan p2 ON r.plan_id = p2.plan_id
                 WHERE p2.user_id = u.user_no
                   AND (r.is_deleted IS NULL OR r.is_deleted = 0)
             ) AS totalReviewCount,
@@ -36,19 +36,19 @@
             /* 내 플랜이 받은 좋아요 수 */
             (
                 SELECT COUNT(*)
-                FROM TBL_LIKE l
-                         JOIN TBL_PLAN p3 ON l.plan_id = p3.plan_id
+                FROM tbl_like l
+                         JOIN tbl_plan p3 ON l.plan_id = p3.plan_id
                 WHERE p3.user_id = u.user_no
             ) AS totalLikeReceived,
 
             /* 내가 북마크한 일정 수 */
             (
                 SELECT COUNT(*)
-                FROM TBL_BOOKMARK b
+                FROM tbl_bookmark b
                 WHERE b.user_id = u.user_no
             ) AS totalBookmarkCount
 
-        FROM TBL_USER u
+        FROM tbl_user u
         WHERE u.user_no = #{userNo}
     </select>
 
@@ -69,7 +69,7 @@
             p.plan_title,
             p.start_date,
             p.end_date
-        FROM TBL_PLAN p
+        FROM tbl_plan p
         WHERE p.user_id = #{userNo}
           AND (p.is_deleted IS NULL OR p.is_deleted = 0)
             /* 해당 월과 겹치는 일정만 */
@@ -100,8 +100,8 @@
         r.region_name,
         p.start_date,
         p.end_date
-        FROM TBL_PLAN p
-        LEFT JOIN TBL_REGION r ON p.region_id = r.region_id
+        FROM tbl_plan p
+        LEFT JOIN tbl_region r ON p.region_id = r.region_id
         WHERE p.user_id = #{userNo}
         AND (p.is_deleted IS NULL OR p.is_deleted = 0)
         <!-- 오늘 이후(=앞으로 다가올) 일정만 -->
@@ -121,8 +121,8 @@
             p.plan_id   AS planId,
             (
                 SELECT t.image_path
-                FROM TBL_TRAVEL t
-                         JOIN TBL_DURATION d ON t.duration_id = d.duration_id
+                FROM tbl_travel t
+                         JOIN tbl_duration d ON t.duration_id = d.duration_id
                 WHERE d.plan_id = p.plan_id
                   AND t.image_path IS NOT NULL
                 ORDER BY t.travel_order ASC, t.travel_id ASC
@@ -131,7 +131,7 @@
             p.plan_title AS title,
             p.start_date AS startDate,
             p.end_date   AS endDate
-        FROM TBL_PLAN p
+        FROM tbl_plan p
         WHERE p.user_id = #{userNo}
           AND (p.is_deleted IS NULL OR p.is_deleted = 0)
           AND STR_TO_DATE(p.end_date, '%Y-%m-%d') <![CDATA[<]]> CURRENT_DATE()
@@ -152,8 +152,8 @@
             p.plan_id         AS planId,
             p.plan_title      AS planTitle,
             p.bookmark_count  AS bookmarkCount
-        FROM TBL_BOOKMARK b
-                 JOIN TBL_PLAN p ON b.plan_id = p.plan_id
+        FROM tbl_bookmark b
+                 JOIN tbl_plan p ON b.plan_id = p.plan_id
         WHERE b.user_id = #{userNo}
         ORDER BY b.created_at DESC
             LIMIT 8
@@ -174,10 +174,10 @@
             COALESCE(
                     (
                         SELECT t.image_path
-                        FROM TBL_TRAVEL t
+                        FROM tbl_travel t
                         WHERE t.duration_id IN (
                             SELECT d.duration_id
-                            FROM TBL_DURATION d
+                            FROM tbl_duration d
                             WHERE d.plan_id = p.plan_id
                         )
                           AND t.image_path IS NOT NULL
@@ -186,7 +186,7 @@
                 ),
         '/images/default-thumb.jpg'
         ) AS thumbnailUrl
-        FROM TBL_PLAN p
+        FROM tbl_plan p
         WHERE p.user_id = #{userNo}
           AND (p.is_deleted IS NULL OR p.is_deleted = 0)
           AND DATE(p.end_date) &lt; CURRENT_DATE
@@ -205,11 +205,11 @@
             p.plan_title    AS planTitle,
             (
                 SELECT COUNT(*)
-                FROM TBL_BOOKMARK bb
+                FROM tbl_bookmark bb
                 WHERE bb.plan_id = p.plan_id
             ) AS bookmarkCount
-        FROM TBL_BOOKMARK b
-                 JOIN TBL_PLAN p ON b.plan_id = p.plan_id
+        FROM tbl_bookmark b
+                 JOIN tbl_plan p ON b.plan_id = p.plan_id
         WHERE b.user_id = #{userNo}
           AND (p.is_deleted IS NULL OR p.is_deleted = 0)
         ORDER BY b.created_at DESC

@@ -10,7 +10,7 @@
             duration_id AS durationId,
             day,
             plan_id AS planId
-        FROM TBL_DURATION
+        FROM tbl_duration
         WHERE plan_id = #{planId}
         ORDER BY day ASC
     </select>
@@ -18,7 +18,7 @@
     <!-- planId + day로 durationId 단일 조회 -->
     <select id="findDurationIdByPlanIdAndDay" resultType="int">
         SELECT duration_id
-        FROM TBL_DURATION
+        FROM tbl_duration
         WHERE plan_id = #{planId} AND day = #{day}
             LIMIT 1
     </select>

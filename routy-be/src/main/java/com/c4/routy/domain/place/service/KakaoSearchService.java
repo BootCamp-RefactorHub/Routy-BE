@@ -7,9 +7,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -105,5 +112,46 @@ public class KakaoSearchService {
         }
 
         return builder.build().toUriString();
+    }
+
+    public Map<String, Object> searchByKeyword(String query, Double lat, Double lng) {
+        // UriComponentsBuilder로 파라미터 세팅
+        UriComponentsBuilder builder = UriComponentsBuilder
+                .fromHttpUrl(KAKAO_LOCAL_SEARCH_API)
+                .queryParam("query", query);
+
+        if (lat != null && lng != null) {
+            builder.queryParam("x", lng)
+                    .queryParam("y", lat)
+                    .queryParam("radius", 5000);
+        }
+
+        //UTF-8로 인코딩 후 URI 생성
+        URI uri = builder
+                .encode(StandardCharsets.UTF_8)
+                .build()
+                .toUri();
+
+
+        // 헤더 + 요청
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "KakaoAK " + kakaoApiKey);
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<Map> response = restTemplate.exchange(
+                uri,               // <-- 문자열 말고 URI 객체
+                HttpMethod.GET,
+                entity,
+                Map.class
+        );
+
+        Map<String, Object> body = response.getBody();
+
+
+        return body != null ? body : Map.of(
+                "documents", List.of(),
+                "meta", Map.of("total_count", 0)
+        );
     }
 }

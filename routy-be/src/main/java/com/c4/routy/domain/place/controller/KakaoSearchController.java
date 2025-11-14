@@ -124,4 +124,15 @@ public class KakaoSearchController {
         KakaoPlaceResponse response = kakaoSearchService.searchRestaurants(request);
         return ResponseEntity.ok(response);
     }
+    @GetMapping("/keyword-search")
+    public ResponseEntity<?> keywordSearch(
+            @RequestParam String query,
+            @RequestParam(required = false) Double lat,
+            @RequestParam(required = false) Double lng
+    ) {
+        // 서비스에서 Kakao Local API 호출
+        return ResponseEntity.ok(
+                kakaoSearchService.searchByKeyword(query, lat, lng)
+        );
+    }
 }

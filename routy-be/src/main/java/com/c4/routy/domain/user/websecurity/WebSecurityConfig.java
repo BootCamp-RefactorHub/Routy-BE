@@ -89,7 +89,7 @@ public class WebSecurityConfig {
 
     private Filter getAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
         AuthenticationFilter filter = new AuthenticationFilter(authenticationManager, jwtUtil);
-        filter.setFilterProcessesUrl("/user/login");  // ⭐ 이 줄이 핵심!
+        filter.setFilterProcessesUrl("/api/auth/login");  // ⭐ 이 줄이 핵심!
         return filter;
     }
 }

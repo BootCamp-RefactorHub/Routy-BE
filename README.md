@@ -319,6 +319,9 @@
 </div>
 
 ## 요구사항 명세서
+<div align="center">
+  <img width="1142" height="824" alt="image" src="https://github.com/user-attachments/assets/748988fb-90f4-4613-aefe-e17116c90279" />
+</div>
 
 ## REST API 명세서
 

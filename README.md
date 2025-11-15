@@ -78,7 +78,7 @@
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?logo=javascript&logoColor=black)
 ![Vue.js](https://img.shields.io/badge/Vue.js-3-4FC08D?logo=vuedotjs&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-Build-646CFF?logo=vite&logoColor=white)
-![Vue Router](https://img.shields.io/badge/Vue_Router-4-4FC08D?logo=vuedotjs&logoColor=white)
+![Vue Router](https://img.shields.io/badge/Vue_Router-4-4FC08D?logo=vuedotjs&logoColor=white) <br>
 ![CSS3](https://img.shields.io/badge/CSS3-Style-1572B6?logo=css3&logoColor=white)
 ![Axios](https://img.shields.io/badge/Axios-HTTP-5A29E4?logo=axios&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-Required-339933?logo=node.js&logoColor=white)

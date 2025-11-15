@@ -152,8 +152,7 @@
 <details>
   <summary>일반회원가입</summary>
   <div align="center">
-    <img src="" alt="일반회원가입"/>
-    
+    <img src="https://github.com/user-attachments/assets/e320566b-cd75-4a41-9991-7090165c1ffa" alt="일반회원가입"/>
   </div>
 </details>
 <details>

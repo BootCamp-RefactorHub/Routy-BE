@@ -310,32 +310,47 @@
 </details>
 </details>
 
-
+<br>
 
 ## WBS
 <div align="center">
   <img width="1335" height="835" alt="image" src="https://github.com/user-attachments/assets/0e0038b1-6d07-4f29-8e6c-ddfdf0c43a55" />
 </div>
 
+<br>
+
 ## 요구 사항 명세서
 <div align="center">
   <img width="1142" height="824" alt="image" src="https://github.com/user-attachments/assets/748988fb-90f4-4613-aefe-e17116c90279" />
 </div>
 
+<br>
+
 ## REST API 명세서
+
+<br>
 
 ## DB 모델링
 <div align="center">
   <img width="2540" height="1182" alt="DevOpsPjt (4)" src="https://github.com/user-attachments/assets/b606e8d2-8ece-4c80-a613-b1a0f3bd1a93" />
 </div>
 
+<br>
+
 ## Figma
 <div align="center">
   <img width="1816" height="782" alt="피그마 UI" src="https://github.com/user-attachments/assets/bb08ad4f-3e5f-4068-86ef-9e43e377b4bf" />
 </div>
 
+<br>
 
 ## 프로젝트 아키텍처
+
+<div align="center">
+  
+</div>
+
+<br>
 
 ## CI/CD 파이프라인
 <details>
@@ -465,6 +480,8 @@ pipeline {
     <img width="1788" height="279" alt="image" src="https://github.com/user-attachments/assets/291fd878-4d67-4ef6-9f64-627517f72547" />
   </div>
 </details>
+
+<br>
 
 ## 팀원 리뷰
 

@@ -260,53 +260,53 @@
     </div>
 </details>
 <details>
-  <summary>일정선택</summary>
+  <summary>날짜 및 일정선택</summary>
   <div align="center">
-    <img src="" alt="날짜 및 일정선택"/>
+    <img src="" alt="일정선택"/>
   </div>
 </details>
 <details>
   <summary>테마선택</summary>
   <div align="center">
-    <img src="" alt="날짜 및 일정선택"/>
+    <img src="" alt="테마선택"/>
   </div>
 </details>
 <details>
   <summary>일정추가</summary>
   <div align="center">
-    <img src="" alt="날짜 및 일정선택"/>
+    <img src="" alt="일정추가"/>
   </div>
 </details>
 
 ### 여행루트 둘러보기
 
 <details>
-  <summary>일정선택</summary>
+  <summary>루트둘러보기</summary>
   <div align="center">
-    <img src="" alt="날짜 및 일정선택"/>
+    <img src="" alt="루트둘러보기"/>
   </div>
 </details>
 </details>
 <details>
-  <summary>일정선택</summary>
+  <summary>좋아요/별점 및 북마크</summary>
   <div align="center">
-    <img src="" alt="날짜 및 일정선택"/>
+    <img src="" alt="좋아요/별점 및 북마크"/>
   </div>
 </details>
 </details>
 <details>
-  <summary>일정선택</summary>
+  <summary>나의일정으로 불러오기</summary>
   <div align="center">
-    <img src="" alt="날짜 및 일정선택"/>
+    <img src="" alt="나의일정으로 불러오기"/>
   </div>
 </details>
 </details>
 
 ### Rooting(챗봇)
 <details>
-  <summary>일정선택</summary>
+  <summary>챗봇</summary>
   <div align="center">
-    <img src="" alt="날짜 및 일정선택"/>
+    <img src="" alt="챗봇"/>
   </div>
 </details>
 </details>

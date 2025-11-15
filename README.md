@@ -71,8 +71,10 @@
 <br>
 
 ## 💡 기술 스택
-<div align="center">
 
+<div align="center">
+### 🌿Front-End
+  
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?logo=javascript&logoColor=black)
 ![Vue.js](https://img.shields.io/badge/Vue.js-3-4FC08D?logo=vuedotjs&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-Build-646CFF?logo=vite&logoColor=white)
@@ -82,7 +84,45 @@
 ![Node.js](https://img.shields.io/badge/Node.js-Required-339933?logo=node.js&logoColor=white)
 </div>
 
+<div align="center">
+### 🗃️Back-End
+
+![Java](https://img.shields.io/badge/Java-17-007396?logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5.7-6DB33F?logo=springboot&logoColor=white)
+![Spring MVC](https://img.shields.io/badge/Spring_MVC-Web-6DB33F?logo=spring&logoColor=white)
+![Spring Security](https://img.shields.io/badge/Spring_Security-Auth-6DB33F?logo=springsecurity&logoColor=white)
+![JPA](https://img.shields.io/badge/Spring_Data_JPA-Hibernate-59666C?logo=hibernate&logoColor=white)
+![Gradle](https://img.shields.io/badge/Gradle-Build-02303A?logo=gradle&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-Auth-000000?logo=jsonwebtokens&logoColor=white)
 ![OAuth2](https://img.shields.io/badge/OAuth2-Social_Login-EB5424?logo=oauth&logoColor=white)
+![MariaDB](https://img.shields.io/badge/MariaDB-DB-003545?logo=mariadb&logoColor=white)
+![AWS S3](https://img.shields.io/badge/AWS_S3-Storage-569A31?logo=amazonaws&logoColor=white)
+</div>
+
+<div align="center"> 
+### ☁️DevOps / Infra 
+
+![Docker](https://img.shields.io/badge/Docker-Container-2496ED?logo=docker&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-Orchestration-326CE5?logo=kubernetes&logoColor=white)
+![Jenkins](https://img.shields.io/badge/Jenkins-CI-D24939?logo=jenkins&logoColor=white)
+![Argo CD](https://img.shields.io/badge/Argo_CD-GitOps-EF7B4D?logo=argo&logoColor=white)
+![NGINX Ingress](https://img.shields.io/badge/NGINX_Ingress-Controller-009639?logo=nginx&logoColor=white)
+![Docker Desktop](https://img.shields.io/badge/Docker_Desktop-Local_Cluster-2496ED?logo=docker&logoColor=white)
+</div>
+
+<div>
+### 🛠️Tools
+
+![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ_IDEA-IDE-000000?logo=intellijidea&logoColor=white)
+![VS Code](https://img.shields.io/badge/VS_Code-Editor-007ACC?logo=visualstudiocode&logoColor=white)
+![Git](https://img.shields.io/badge/Git-Version_Control-F05032?logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?logo=github&logoColor=white)
+![Postman](https://img.shields.io/badge/Postman-API_Testing-FF6C37?logo=postman&logoColor=white)
+![HeidiSQL](https://img.shields.io/badge/HeidiSQL-DB_Client-24292E?logo=databricks&logoColor=white)
+![Figma](https://img.shields.io/badge/Figma-Design-F24E1E?logo=figma&logoColor=white)
+![Notion](https://img.shields.io/badge/Notion-Docs-000000?logo=notion&logoColor=white)
+![Discord](https://img.shields.io/badge/Discord-Communication-5865F2?logo=discord&logoColor=white)
+</div>
 <br>
 
 ## 📢 프로젝트 소개

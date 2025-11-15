@@ -315,7 +315,7 @@
 
 ## WBS
 <div align="center">
-  <img width="1617" height="799" alt="image" src="https://github.com/user-attachments/assets/a3882747-0649-4119-affd-3e88474da144" />
+  <img width="1335" height="835" alt="image" src="https://github.com/user-attachments/assets/0e0038b1-6d07-4f29-8e6c-ddfdf0c43a55" />
 </div>
 
 ## 요구사항 명세서

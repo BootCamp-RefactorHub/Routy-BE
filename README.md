@@ -59,7 +59,7 @@
 #### [📢 프로젝트 소개](#-프로젝트-소개)  <br>
 #### [🧳 Routy FE 결과 보고서](#-Routy-FE-결과-보고서)  <br>
 #### [📙 WBS](#-WBS)<br> 
-#### [🔡 요구사항 명세서](#-요구사항-명세서)  <br>
+#### [🔡 요구사항 명세서](#-요구_사항_명세서)  <br>
 #### [📟 REST API 명세서](#-rest-api-명세서)  <br>
 #### [🗃️ DB 모델링](#-db-모델링)  <br>
 #### [🪄 Figma](#-figma)  <br>
@@ -317,7 +317,7 @@
   <img width="1335" height="835" alt="image" src="https://github.com/user-attachments/assets/0e0038b1-6d07-4f29-8e6c-ddfdf0c43a55" />
 </div>
 
-## 요구사항 명세서
+## 요구 사항 명세서
 <div align="center">
   <img width="1142" height="824" alt="image" src="https://github.com/user-attachments/assets/748988fb-90f4-4613-aefe-e17116c90279" />
 </div>

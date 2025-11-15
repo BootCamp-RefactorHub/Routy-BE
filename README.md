@@ -104,7 +104,7 @@
 ### ☁️DevOps / Infra 
 ![Docker](https://img.shields.io/badge/Docker-Container-2496ED?logo=docker&logoColor=white)
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-Orchestration-326CE5?logo=kubernetes&logoColor=white)
-![Jenkins](https://img.shields.io/badge/Jenkins-CI-D24939?logo=jenkins&logoColor=white)
+![Jenkins](https://img.shields.io/badge/Jenkins-CI-D24939?logo=jenkins&logoColor=white) <br>
 ![Argo CD](https://img.shields.io/badge/Argo_CD-GitOps-EF7B4D?logo=argo&logoColor=white)
 ![NGINX Ingress](https://img.shields.io/badge/NGINX_Ingress-Controller-009639?logo=nginx&logoColor=white)
 ![Docker Desktop](https://img.shields.io/badge/Docker_Desktop-Local_Cluster-2496ED?logo=docker&logoColor=white)

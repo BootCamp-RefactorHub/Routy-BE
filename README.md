@@ -314,6 +314,11 @@
 
 
 ## 요구사항 명세서
+<div align="center">
+  <img width="1617" height="799" alt="image" src="https://github.com/user-attachments/assets/a3882747-0649-4119-affd-3e88474da144" />
+</div>
+
+
 
 ## REST API 명세서
 

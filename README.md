@@ -1,4 +1,4 @@
-# **🧭 Routy — 국내 여행 일정 관리 플랫폼**
+![네이버 로그인](https://github.com/user-attachments/assets/0809f124-a8c1-41f7-8ce8-ca4efa3204d0)# **🧭 Routy — 국내 여행 일정 관리 플랫폼**
 
 <center>
 <img width="900" height="700" alt="image" src="https://github.com/user-attachments/assets/f97687df-e0a0-4c4e-8dd5-8f989fdcb6b7" />
@@ -140,12 +140,13 @@
   <summary>일반회원가입</summary>
   <div align="center">
     <img src="" alt="일반회원가입"/>
+    
   </div>
 </details>
 <details>
   <summary>일반로그인</summary>
   <div align="center">
-    <img src="" alt="일반로그인"/>
+    <img src="https://github.com/user-attachments/assets/872dc753-b7b0-4e41-9cbf-6e1c55072241" alt="일반로그인"/>
   </div>
 </details>
 <details>
@@ -157,13 +158,13 @@
 <details>
   <summary>네이버로그인</summary>
   <div align="center">
-    <img src="" alt="네이버로그인"/>
+    <img src="https://github.com/user-attachments/assets/7d74a8e8-29e6-4545-9dfe-22aadf957e92" alt="네이버로그인"/>
   </div>
 </details>
 <details>
   <summary>카카오로그인</summary>
   <div align="center">
-    <img src="" alt="카카오로그인"/>
+    <img src="https://github.com/user-attachments/assets/b3929708-3024-478b-b66a-ed71ad4914cf" alt="카카오로그인"/>
   </div>
 </details>
 

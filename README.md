@@ -340,7 +340,7 @@
 
 ## CI/CD 파이프라인
 <details>
-<summary>젠킨스파일</summary>
+<summary>젠킨스 pipeline 스크립트</summary>
 <div>
 
 ```

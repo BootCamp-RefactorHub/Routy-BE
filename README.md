@@ -82,6 +82,7 @@
 ![Node.js](https://img.shields.io/badge/Node.js-Required-339933?logo=node.js&logoColor=white)
 </div>
 
+![OAuth2](https://img.shields.io/badge/OAuth2-Social_Login-EB5424?logo=oauth&logoColor=white)
 <br>
 
 ## 📢 프로젝트 소개

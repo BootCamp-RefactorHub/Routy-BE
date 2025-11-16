@@ -8,6 +8,7 @@
 <br><br>
 
 ## 👨‍💻 DEVELOPERS
+C4 - creating cool
 <div align="center">
   <table>
   <tr>
@@ -157,14 +158,20 @@
 
 ## 🔡 요구 사항 명세서
 <div align="center">
-  <img width="1142" height="824" alt="image" src="https://github.com/user-attachments/assets/748988fb-90f4-4613-aefe-e17116c90279" />
+  <img width="1335" height="835" alt="스크린샷 2025-11-17 오전 2 46 44" src="https://github.com/user-attachments/assets/265ac0ac-e0dd-4d1e-9494-1b25d86b7458" />
 </div>
 
 <br>
 
-## 🗃️ DB 모델링
+## 🗃️ 논리 모델링
 <div align="center">
-  <img width="2540" height="1182" alt="DevOpsPjt (4)" src="https://github.com/user-attachments/assets/b606e8d2-8ece-4c80-a613-b1a0f3bd1a93" />
+  <img width="674" height="693" alt="image" src="https://github.com/user-attachments/assets/6044bca4-620c-4869-98cc-9f22fd0c32a1" />
+
+</div>
+
+## 🗃️ 물리 모델링
+<div align="center">
+  <img width="1125" height="595" alt="스크린샷 2025-11-17 오전 2 49 10" src="https://github.com/user-attachments/assets/1f08fc3f-5a7c-45d9-a57c-a1304e472a2f" />
 </div>
 
 <br>

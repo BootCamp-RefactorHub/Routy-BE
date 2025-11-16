@@ -211,7 +211,7 @@
 <details>
   <summary>여행 루트 추가</summary>
   
-  ![여행 루트 추가](https://github.com/user-attachments/assets/e32c2c33-4259-4607-9873-f9e10223af99)
+  ![여행 루트 추가]![Image](https://github.com/user-attachments/assets/919007d8-beca-42ab-8ee1-990289bc4183)
 </details>
 <details>
   <summary>여행 루트 변경</summary>
@@ -328,21 +328,21 @@
 <details>
   <summary>루트둘러보기</summary>
   <div align="center">
-    <img src="" alt="루트둘러보기"/>
+    <img src="https://github.com/user-attachments/assets/919007d8-beca-42ab-8ee1-990289bc4183" alt="루트둘러보기"/>
   </div>
 </details>
 </details>
 <details>
   <summary>좋아요/별점 및 북마크</summary>
   <div align="center">
-    <img src="" alt="좋아요/별점 및 북마크"/>
+    <img src="https://github.com/user-attachments/assets/3951f280-e377-4e7a-87bc-08b8e8139455" alt="좋아요/별점 및 북마크"/>
   </div>
 </details>
 </details>
 <details>
   <summary>나의일정으로 불러오기</summary>
   <div align="center">
-    <img src="" alt="나의일정으로 불러오기"/>
+    <img src="https://github.com/user-attachments/assets/17edf420-8ebf-417c-91e1-b3dd98d4f890" alt="나의일정으로 불러오기"/>
   </div>
 </details>
 </details>

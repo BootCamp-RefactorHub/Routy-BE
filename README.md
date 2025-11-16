@@ -60,8 +60,8 @@
 #### [🧳 Routy FE 결과 보고서](#-Routy-FE-결과-보고서)  <br>
 #### [📙 WBS](#-wbs-1)<br> 
 #### [🔡 요구사항 명세서](#-요구-사항-명세서)  <br>
-#### [📟 REST API 명세서](#-rest-api-명세서)  <br>
 #### [🗃️ DB 모델링](#%EF%B8%8F-db-모델링)  <br>
+#### [📟 REST API 명세서](#-rest-api-명세서)  <br>
 #### [🪄 Figma](#-figma)  <br>
 #### [🛜 프로젝트 아키텍처](#-프로젝트-아키텍처)  <br>
 #### [📱 CI/CD 파이프라인](#-cicd-파이프라인)  <br>
@@ -370,8 +370,17 @@
 
 <br>
 
-## 📟 REST API 명세서
+## 🗃️ DB 모델링
 <div align="center">
+  <img width="2540" height="1182" alt="DevOpsPjt (4)" src="https://github.com/user-attachments/assets/b606e8d2-8ece-4c80-a613-b1a0f3bd1a93" />
+</div>
+
+<br>
+
+## 📟 REST API 명세서
+<details>
+  <summary>REST API</summary>
+  <div align="center">
   <img width="1786" height="65" alt="chatbotctrl" src="https://github.com/user-attachments/assets/8fcca479-1a4d-4915-8859-d0806fb7d6b3" /><br>
   <img width="1787" height="141" alt="validctrl" src="https://github.com/user-attachments/assets/69711971-aa89-4c23-bc03-577623c31609" /><br>
   <img width="1787" height="66" alt="signup" src="https://github.com/user-attachments/assets/9ddb8fe8-bacf-4988-96be-ad306508c919" /><br>
@@ -388,20 +397,18 @@
   <img width="1786" height="945" alt="planctrl" src="https://github.com/user-attachments/assets/1cf3a6c0-20bc-4bb1-a039-0fe76d64070a" />
 
 </div>
-
-<br>
-
-## 🗃️ DB 모델링
-<div align="center">
-  <img width="2540" height="1182" alt="DevOpsPjt (4)" src="https://github.com/user-attachments/assets/b606e8d2-8ece-4c80-a613-b1a0f3bd1a93" />
-</div>
+</details>
 
 <br>
 
 ## 🪄 Figma
-<div align="center">
+<details>
+  <summary>Figma UI</summary>
+  <div align="center">
   <img width="1816" height="782" alt="피그마 UI" src="https://github.com/user-attachments/assets/bb08ad4f-3e5f-4068-86ef-9e43e377b4bf" />
 </div>
+
+</details>
 
 <br>
 

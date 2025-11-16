@@ -196,6 +196,12 @@
     <img src="https://github.com/user-attachments/assets/e2f31ba5-d0d8-46ef-ac20-b5ed96023709" alt="일반회원가입"/>
   </div>
 </details>
+<details>
+  <summary>회원정보 수정</summary>
+  <div align="center">
+    <img src="https://github.com/user-attachments/assets/6b28a720-dbf2-45b3-8d49-2b5a11e48fc7" alt="일반회원가입"/>
+  </div>
+</details>
 
 ### 마이페이지
 <details>

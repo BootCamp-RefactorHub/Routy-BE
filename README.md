@@ -418,6 +418,8 @@
 
 <div align="center">
   
+  ![Kubernetes Architecture Diagram Template - System Architecture (1)](https://github.com/user-attachments/assets/8a24c9e2-02a8-4b2e-b36e-86c704a9d2ec)
+
 </div>
 
 <br>

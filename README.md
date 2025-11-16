@@ -280,33 +280,41 @@
 
 ### 여행루트 그리기
 <details>
-  <summary>지역선택</summary>
-     ![지역_선택.gif](./routy-gif/지역_선택.gif)
-</details>
-<details>
-  <summary>날짜 및 일정선택</summary>
-  <div align="center">
-    <img src="" alt="일정선택"/>
-  </div>
-</details>
-<details>
-  <summary>테마선택</summary>
-  <div align="center">
-    <img src="" alt="테마선택"/>
-  </div>
-</details>
-<details>
-  <summary>일정추가</summary>
-  <div align="center">
-    <img src="" alt="일정추가"/>
-  </div>
-</details>
-<details>
-  <summary>마커 애니메이션</summary>
-
-![Image](https://github.com/user-attachments/assets/02d389a9-8a04-4b01-9714-3e7e915fa69d)
+  <summary>지역 선택</summary>
+  
+  ![region_select](./routy-gif/draw/1-region_select.gif)
 
 </details>
+<details>
+  <summary>날짜 선택</summary>
+
+  ![date_select](./routy-gif/draw/2-date_select.gif)
+
+</details>
+<details>
+  <summary>테마 선택</summary>
+
+  ![theme_select](./routy-gif/draw/3-theme_select.gif)
+
+</details>
+<details>
+  <summary>초기 테마 선택 기반 추천 리스트</summary>
+
+  ![finaldraw_theme](./routy-gif/draw/finaldraw/1-theme_select.gif)
+
+</details>
+<details>
+  <summary>맛집 선택 과정</summary>
+
+  ![finaldraw_restaurant](./routy-gif/draw/finaldraw/2-restarurant_select.gif)
+</details>
+
+<details>
+  <summary>☕ 카페 선택 과정</summary>
+
+  ![finaldraw_cafe](./routy-gif/draw/finaldraw/3-cafe_select.gif)
+</details>
+
 <details>
   <summary>경로 그리기</summary>
 

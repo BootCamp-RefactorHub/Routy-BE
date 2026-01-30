@@ -22,7 +22,7 @@ import java.util.Map;
 @Service
 public class KakaoSearchService {
 
-    @Value("${kakao.api-key}")
+    @Value("${maps.kakao.api_key}")
     private String kakaoApiKey;
 
     private static final String KAKAO_LOCAL_SEARCH_API = "https://dapi.kakao.com/v2/local/search/keyword.json";

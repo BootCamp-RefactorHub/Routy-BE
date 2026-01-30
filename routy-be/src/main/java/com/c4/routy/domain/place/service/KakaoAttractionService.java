@@ -25,10 +25,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class KakaoAttractionService {
 
-    @Value("${kakao.api-key}")
+    @Value("${maps.kakao.api_key}")
     private String API_KEY;
 
-    @Value("${kakao-url}")
+    @Value("${kakao.url:https://dapi.kakao.com/v2/local/search/category.json}")
     private String BASE_URL;
 
     @PostConstruct

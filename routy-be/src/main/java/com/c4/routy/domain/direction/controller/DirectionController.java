@@ -16,6 +16,7 @@ public class DirectionController {
 
     private final MapService mapService;
 
+    // 테스트 용인거 같음
     @GetMapping("/health")
     public String health(){
         return "I'm Alive";

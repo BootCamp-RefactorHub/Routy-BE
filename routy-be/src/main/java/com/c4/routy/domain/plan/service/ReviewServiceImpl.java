@@ -164,6 +164,15 @@ public class ReviewServiceImpl implements ReviewService {
                 .build();
     }
 
+
+    /**
+     * 여기의 S3용 메서드 들을 분리해서
+     * 새로운 클래스를 만들어 다른 곳에서도 사용할 수 있게 만드는 방향
+     * 리뷰뿐만 아니라 프로필 같은데서도 사용할 수 있으므로
+     *
+     * 추가로 페이징 처리용 클래스도 만들었으면 좋을 것 같다.
+     */
+    
     // S3 객체 키(사진이름) 만들기 폴더 경로를 추가해야함. s3 버킷에 폴더 나눠놓음.
     private String createFileName(String fileName) {
         return folder + UUID.randomUUID().toString().concat(getFileExtension(fileName));

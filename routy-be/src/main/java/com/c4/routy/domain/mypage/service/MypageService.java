@@ -21,7 +21,11 @@ public class MypageService {
     private String defaultProfileImage;
 
 
-
+    /**
+     * 이거 한 페이지에 나오는 모든 정보를 묶어서 보여주는 것 같은데...
+     *
+     * 분리해서 가져가게 만들어주는게 좋을듯?
+     */
     public MyPageResponseDTO getMyPage(Integer userNo, int year, int month) {
 
         // 1) 달력 범위 계산
@@ -43,12 +47,20 @@ public class MypageService {
             profile.setProfileImage(defaultProfileImage);
         }
 
+
+        /**
+         * 이 것들이 다 개별적인 섹션들이므로 이걸 분리해서 만들어주는 것도 좋지 않을까?
+         */
+        //달력에 뿌릴 일정들
         List<CalendarPlanDTO> calendarPlans =
                 mypageQueryMapper.selectCalendarPlans(userNo, startStr, endStr);
+        //오른쪽 "내 일정" (다가오는 일정)
         List<MyPlanDTO> upcomingPlans =
                 mypageQueryMapper.selectUpcomingPlans(userNo, today);
+        //여행 기록 (지난 일정)
         List<TravelRecordDTO> travelHistory =
                 mypageQueryMapper.selectTravelHistory(userNo);
+        //북마크 목록
         List<BookmarkDTO> bookmarks =
                 mypageQueryMapper.selectBookmarks(userNo);
 

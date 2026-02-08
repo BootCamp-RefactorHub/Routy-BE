@@ -27,6 +27,36 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PlanServiceImpl implements PlanService {
 
+    /**
+     * 이거 CQRS 구조로 변경은 어떠한가?
+     * 
+     * 그냥 조회를 별도 클래스로 분리해서 관리해주는 방향은?
+     * 
+     * -----
+     * Gemini 답변
+     * 
+     * 결론부터 말씀드리면: 현재 프로젝트 규모와 복잡도를 고려했을 때, 완전한 CQRS(DB 분리 등)보다는 
+     * "코드 레벨에서의 분리(단순 조회용 서비스 분리)" 정도가 적절하고 효율적일 것으로 보입니다.
+     * 
+     * 장점
+     *  - 복잡도 관리: 비즈니스 로직은 명령쪽에 몰려 있고, 조회는 단순 데이터 조합인 경우가 많음. 이를 분리해주면 코드가 훨씬 깔끔해진다.
+     *  - 최적화 용이: 조회 로직은 JPA의 Dirty Checking이나 트랜잭션 오버헤드 없기 일기 전용 트랜잭션으로 최적화하거나, 필요하면 MyBatis로 복잡한 쿼리만 따로 짤 수 있음
+     *  - 가독성: 클래스 분리를 통해 각 클래스의 역할을 바로 알 수 있음
+     * 단점
+     *  - 클래스 폭발: 파일 개수가 2배로 늘어남, 간단한 CRUD만 있는 도메인이라면 Over-engineering이 될 수 있음
+     *  - 러닝 커브: 팀원들이 익숙하지 않으면 "왜 굳이 나눴지?"하고 혼란스로울 수 있음
+     *  
+     * 추천 방향
+     *  - 거창하게 DB를 나누거나 메시지 큐를 도입하는 CQRS가 아니라, 클래스 설계 레벨에서의 분리를 추천
+     *  
+     * 결론 및 제안
+     *  - 복잡한 도메인만 분리: 모든 도메인을 다 나누지 말고, 로직이 복잡하고 메서드가 많은 핵심 도메인부터 적용
+     *  - 조회 성능 최적화: 조회 전용  서비스에서는 엔티티를 직접 리턴하기 보다 DTO로 바로 조회하는 방식을 쓰면 성능 이점도 챙길 수 있음
+     *  - 유지보수성: 이렇게 나누면 나중에 "조회 기능이 너무 느려서 캐시를 붙여야겠다" 또는 "검색 엔진을 도입해야겠다" 할 때 QueryService만 건드리면 되므로 유지보수가 빨라짐
+     *  
+     * 한 줄 요약
+     *  - 완전한 아키텍쳐 변경보다는, 서비스 클래스가 너무 커지는 것을 막기 위해 CommandService와 QueryService로 쪼개는 것부터 시작하는 것을 추천
+     */
     private final PlanMapper planMapper;
     private final PlanRepository planRepository;
     private final DurationRepository DurationRepository;
@@ -66,6 +96,12 @@ public class PlanServiceImpl implements PlanService {
             dto.setStatus("진행중");
         }
 
+        /**
+         * 지금 상세 조회기능이 본인 일정을 본다는 가정하에 있는 것인가?
+         * 남의 일정을 보는 것은 따로 있나? 그게 아니면 저게 무조건 true이면 안될텐데?
+         * 만일 따로 있다면 통합하고 user 정보를 받아오게 해서 조절하는게 맞을 듯
+         *
+         */
         // 프론트에서 쓸 플래그 기본값
         dto.setEditable(true);
         dto.setReviewWritable(true);

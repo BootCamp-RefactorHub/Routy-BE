@@ -1,12 +1,14 @@
 package com.c4.routy.domain.region.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class RegionALLDTO {
     private Integer regionId;
     private String regionName;

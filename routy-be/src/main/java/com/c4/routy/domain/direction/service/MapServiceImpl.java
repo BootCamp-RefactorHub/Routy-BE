@@ -34,6 +34,7 @@ public class MapServiceImpl implements MapService {
         return kakaoApiService.getDirection(request);
     }
 
+    // 계산 기준은 waypoint별 최단 도착시간이다.
     @Override
     public OptimizationResponse getOptimization(OptimizationRequest request) {
         int n = request.getWayPoints().size();  // 총 지점 개수
@@ -61,8 +62,11 @@ public class MapServiceImpl implements MapService {
 
         // 4. 최종 경로 요청 (출발지~경유지~도착지)
         KakaoRouteRequest routeReq = new KakaoRouteRequest();
+        // 출발지
         routeReq.setOrigin(ordered.get(0));
+        // 목적지
         routeReq.setDestination(ordered.get(ordered.size() - 1));
+        // 경유지
         if (ordered.size() > 2)
             routeReq.setWayPoints(ordered.subList(1, ordered.size() - 1));
 

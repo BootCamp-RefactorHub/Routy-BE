@@ -27,6 +27,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import java.util.concurrent.TimeUnit;
+import java.util.Random;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,15 +51,17 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AuthMapper authMapper;
+    private final StringRedisTemplate redisTemplate;
 
     @Autowired
     public AuthServiceImpl(AmazonS3 amazonS3,
                            UserRepository userRepository,
-                           BCryptPasswordEncoder bCryptPasswordEncoder, AuthMapper authMapper) {
+                           BCryptPasswordEncoder bCryptPasswordEncoder, AuthMapper authMapper, StringRedisTemplate redisTemplate) {
         this.amazonS3 = amazonS3;
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.authMapper = authMapper;
+        this.redisTemplate = redisTemplate;
     }
 
     // UserDetailsService에 의한 로그인을 위한 DB 조회용 메서드
@@ -142,16 +147,18 @@ public class AuthServiceImpl implements AuthService {
     }
 
     //현재 인증된 사용자 이름 반환
-    @Override
-    public String getCurrentUsername() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication != null && authentication.isAuthenticated()) {
-            return authentication.getName();
-        }
-
-        return null;
-    }
+    /* 현재 이 함수가 사용되어지는 곳이 거의 없다 이 함수를 사용할 수 있는 부분을 찾아서 사용해보자
+       단. 이메일만 사용하는 함수일 경우에만 사용할 수 있으니 주의하자 */
+//    @Override
+//    public String getCurrentUsername() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        if (authentication != null && authentication.isAuthenticated()) {
+//            return authentication.getName();
+//        }
+//
+//        return null;
+//    }
 
     // HttpOnly 쿠키 삭제 (private helper method)
     private void deleteCookie(HttpServletResponse response) {
@@ -176,6 +183,9 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // 2. 사용자 조회
+        /* 지금 이런 식이면 클라이언트 즉 프론트 엔드 API 버그로 인해 로그인한 사람 외에 이메일이 넘어가는 경우가 발생
+           이럴 경우 다른 사람의 비밀번호를 변경할 수 잇는 문제 발생 getCurrentUsername() 함수 사용 권장
+           ex) 로그아웃 후 다른 이메일로 로그인 했는데 이전 로그인한 계정으로 넘어갈 수 있는 버그 발생에 대비*/
         UserEntity user = userRepository.findByEmail(newPwd.getEmail());
 
         // 3. 새 비밀번호 암호화
@@ -259,5 +269,40 @@ public class AuthServiceImpl implements AuthService {
 
         // 이메일을 찾은 경우 그대로 반환
         return email;
+    }
+
+    // Redis를 통한 이메일 인증 방식
+    // 1. 인증번호 생성 및 Redis 저장
+    public void sendVerificationCode(String email){
+        // 6자리 난수 생성
+        String code = String.format("%06d", new Random().nextInt(1000000));
+
+        // Redis에 저장: Key는 "AUTH_CODE:이메일", Value는 "인증번호", 유효기간 "3분"
+        redisTemplate.opsForValue().set("AUTH_CODE:" + email, code, 3, TimeUnit.MINUTES);
+
+        log.info("🟢 [Redis 발송 저장] 이메일: {}, 발급된 인증번호: {} (3분 유효)", email, code);
+    }
+
+    // 2. 인증번호 확인 및 '인증 완료' 도장 찍기
+    public boolean confirmVerificationCode(String email, String code){
+        // Redis에서 저장된 인증번호 꺼내기
+        String savedCode = redisTemplate.opsForValue().get("AUTH_CODE:" + email);
+
+        log.info("🔵 [Redis 검증 시도] 이메일: {}, 입력코드: {}, 저장된코드: {}", email, code, savedCode);
+
+        // 저장된 코드가 존재하고, 입력한 코드와 일치하는지 확인
+        if(savedCode != null && savedCode.equals(code)){
+            // 1) 성공했으니 기존 인증번호 임시 데이터는 삭제
+            redisTemplate.delete(("AUTH_CODE:" + email));
+
+            // 2) '인증 완료'라는 새로운 기록을 10분간 저장(회원 가입할 때까지의 여유 시간)
+            redisTemplate.opsForValue().set("VERIFIDE:" + email, "true", 10, TimeUnit.MINUTES);
+
+            log.info("🟢 [Redis 인증 성공] 이메일: {} -> 'VERIFIED' 상태로 10분간 저장 완료!", email);
+            return true;
+        }
+
+        log.warn("🔴 [Redis 인증 실패] 이메일: {} -> 번호가 틀렸거나 3분이 지나 만료됨", email);
+        return false;
     }
 }

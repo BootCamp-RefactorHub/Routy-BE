@@ -37,11 +37,33 @@ public class AuthController {
     }
 
     // 인증상태를 확인
+    // 리펙토링 전 코드
+//    @GetMapping("/status")
+//    public ResponseEntity<ResponseAuthStatusDTO> checkAuthStatus() {
+//
+//        if (authService.isAuthenticated()) {
+//            return ResponseEntity.ok(
+//                    ResponseAuthStatusDTO.authenticated(authService.getCurrentUsername())
+//            );
+//        }
+//        return ResponseEntity.ok(ResponseAuthStatusDTO.notAuthenticated());
+//    }
+
+    // 리펙토링 후 코드
+    /* 리펙토링 한 이유
+     * 기존의 authService.getCurrentUsername()은 내부적으로 SecurityContextHolder를 직접 참조하여 보안 정보에 의존하고 있다.
+     * 이를 @AuthenticationPrincipal 주입 방식으로 변경함으로써,
+     * 컨트롤러 단계에서 이미 검증된 사용자 객체를 직접 사용하게 하여 서비스 레이어와의 불필요한 결합도를 낮추고 로직의 가독성을 높였다
+     * 정리하면 getCurrentUsername으로 로그인 정보를 가져오는 것이 아니라 이미 @AuthenticationPrincipal를 통해 정보를 가져왔으니
+     * 거기서 정보를 추출하자 */
     @GetMapping("/status")
-    public ResponseEntity<ResponseAuthStatusDTO> checkAuthStatus() {
-        if (authService.isAuthenticated()) {
-            return ResponseEntity.ok(
-                    ResponseAuthStatusDTO.authenticated(authService.getCurrentUsername())
+    public ResponseEntity<ResponseAuthStatusDTO> checkAuthStatus(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+
+        if(userDetails != null ){
+            return  ResponseEntity.ok(
+                    ResponseAuthStatusDTO.authenticated(userDetails.getUsername())
             );
         }
         return ResponseEntity.ok(ResponseAuthStatusDTO.notAuthenticated());

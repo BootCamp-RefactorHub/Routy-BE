@@ -7,13 +7,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.multipart.MultipartFile;
 
+
 public interface AuthService extends UserDetailsService {
 
     void logout(HttpServletResponse response);
 
     boolean isAuthenticated();
 
-    String getCurrentUsername();
+//    String getCurrentUsername();
 
     UserDetails loadUserByUserNo(Integer userNo);
 

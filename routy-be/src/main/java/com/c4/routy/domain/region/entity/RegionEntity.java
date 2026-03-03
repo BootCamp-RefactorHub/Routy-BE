@@ -1,8 +1,12 @@
 package com.c4.routy.domain.region.entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
+
+/**
+ * tbl_region: 여행지 지역과 해당 지역의 위경도 등이 들어있는 테이블
+ *
+ */
 
 @Entity
 @Table(name = "TBL_REGION")

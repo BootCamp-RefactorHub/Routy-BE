@@ -28,18 +28,40 @@ public class PlanController {
         return planService.getPlanDetail(planId);
     }
 
+    // 리펙토링 전
+    // 일정 삭제
+//    @PatchMapping("/{planId}/delete")
+//    public ResponseEntity<Void> softDeletePlan(@PathVariable Integer planId) {
+//        planService.softDeletePlan(planId);
+//        return ResponseEntity.ok().build();
+//    }
+
+    // 리펙토링 후
     // 일정 삭제
     @PatchMapping("/{planId}/delete")
-    public ResponseEntity<Void> softDeletePlan(@PathVariable Integer planId) {
-        planService.softDeletePlan(planId);
+    public ResponseEntity<Void> softDeletePlan(
+            @PathVariable Integer planId,
+            @AuthenticationPrincipal CustomUserDetails user) {
+        planService.softDeletePlan(planId, user.getUserNo());
         return ResponseEntity.ok().build();
     }
 
 
+    // 리펙토링 전
     // 일정 공개, 비공개처리
+//    @PatchMapping("/{planId}/public")
+//    public ResponseEntity<Void> togglePlanPublic(@PathVariable Integer planId) {
+//        planService.togglePlanPublic(planId);
+//        return ResponseEntity.ok().build();
+//    }
+
+    //리펙토링 후
+    // 일정, 공개, 비공개 처리
     @PatchMapping("/{planId}/public")
-    public ResponseEntity<Void> togglePlanPublic(@PathVariable Integer planId) {
-        planService.togglePlanPublic(planId);
+    public ResponseEntity<Void> togglePlanPublic(
+            @PathVariable Integer planId,
+            @AuthenticationPrincipal CustomUserDetails user) {
+        planService.togglePlanPublic(planId, user.getUserNo());
         return ResponseEntity.ok().build();
     }
 
@@ -72,12 +94,24 @@ public class PlanController {
         return planService.getPlanEdit(planId);
     }
 
+    // 리펙토링 전
+    // 수정 저장
+//    @PutMapping("/{planId}")
+//    public void updatePlan(@PathVariable Integer planId,
+//                           @RequestBody PlanEditSaveRequestDTO dto) {
+//        dto.setPlanId(planId);
+//        planService.updatePlan(dto);
+//    }
+
+    //리펙토링 후
     // 수정 저장
     @PutMapping("/{planId}")
     public void updatePlan(@PathVariable Integer planId,
-                           @RequestBody PlanEditSaveRequestDTO dto) {
+                           @RequestBody PlanEditSaveRequestDTO dto,
+                           @AuthenticationPrincipal CustomUserDetails user) {
         dto.setPlanId(planId);
-        planService.updatePlan(dto);
+
+        planService.updatePlan(dto, user.getUserNo());
     }
 
     //브라우저 모달 창 좋아요 수 증가 기능

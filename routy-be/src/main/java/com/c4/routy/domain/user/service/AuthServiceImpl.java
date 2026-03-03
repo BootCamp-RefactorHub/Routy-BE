@@ -270,39 +270,4 @@ public class AuthServiceImpl implements AuthService {
         // 이메일을 찾은 경우 그대로 반환
         return email;
     }
-
-    // Redis를 통한 이메일 인증 방식
-    // 1. 인증번호 생성 및 Redis 저장
-    public void sendVerificationCode(String email){
-        // 6자리 난수 생성
-        String code = String.format("%06d", new Random().nextInt(1000000));
-
-        // Redis에 저장: Key는 "AUTH_CODE:이메일", Value는 "인증번호", 유효기간 "3분"
-        redisTemplate.opsForValue().set("AUTH_CODE:" + email, code, 3, TimeUnit.MINUTES);
-
-        log.info("🟢 [Redis 발송 저장] 이메일: {}, 발급된 인증번호: {} (3분 유효)", email, code);
-    }
-
-    // 2. 인증번호 확인 및 '인증 완료' 도장 찍기
-    public boolean confirmVerificationCode(String email, String code){
-        // Redis에서 저장된 인증번호 꺼내기
-        String savedCode = redisTemplate.opsForValue().get("AUTH_CODE:" + email);
-
-        log.info("🔵 [Redis 검증 시도] 이메일: {}, 입력코드: {}, 저장된코드: {}", email, code, savedCode);
-
-        // 저장된 코드가 존재하고, 입력한 코드와 일치하는지 확인
-        if(savedCode != null && savedCode.equals(code)){
-            // 1) 성공했으니 기존 인증번호 임시 데이터는 삭제
-            redisTemplate.delete(("AUTH_CODE:" + email));
-
-            // 2) '인증 완료'라는 새로운 기록을 10분간 저장(회원 가입할 때까지의 여유 시간)
-            redisTemplate.opsForValue().set("VERIFIDE:" + email, "true", 10, TimeUnit.MINUTES);
-
-            log.info("🟢 [Redis 인증 성공] 이메일: {} -> 'VERIFIED' 상태로 10분간 저장 완료!", email);
-            return true;
-        }
-
-        log.warn("🔴 [Redis 인증 실패] 이메일: {} -> 번호가 틀렸거나 3분이 지나 만료됨", email);
-        return false;
-    }
 }

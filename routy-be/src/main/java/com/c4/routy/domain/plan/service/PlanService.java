@@ -7,13 +7,28 @@ import java.util.List;
 
 public interface PlanService {
     PlanDetailResponseDTO getPlanDetail(Integer planId);
+
     PlanEditResponseDTO getPlanEdit(Integer planId);
-    void updatePlan(PlanEditSaveRequestDTO dto);
+
+    // 리펙토링 전
+    // void updatePlan(PlanEditSaveRequestDTO dto);
+
+    // 리펙토링 후
+    void updatePlan(PlanEditSaveRequestDTO dto, Integer userNo);
+
     int copyPlanToUser(Integer planId, Integer userId,String startDate, String endDate);
 
-    void softDeletePlan(Integer planId);
+    // 리펙토링 전
+    // void softDeletePlan(Integer planId);
 
-    void togglePlanPublic(Integer planId);
+    // 리펙토링 후
+    void softDeletePlan(Integer planId, Integer userNo);
+
+    // 리펙토링 전
+    // void togglePlanPublic(Integer planId);
+
+    //리펙토링 후
+    void togglePlanPublic(Integer planId, Integer userNo);
 
     List<BrowseResponseDTO> getPublicPlans(String sort, Integer regionId, Integer days);
 

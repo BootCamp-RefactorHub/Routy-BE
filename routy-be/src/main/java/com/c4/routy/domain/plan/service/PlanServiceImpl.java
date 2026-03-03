@@ -84,7 +84,7 @@ public class PlanServiceImpl implements PlanService {
      */
     @Override
     @Transactional
-    public void updatePlan(PlanEditSaveRequestDTO dto) {
+    public void updatePlan(PlanEditSaveRequestDTO dto, Integer userNo) {
 
         PlanEntity plan = planRepository.findById(dto.getPlanId())
                 .orElseThrow(() -> new IllegalArgumentException("플랜을 찾을 수 없습니다."));
@@ -138,16 +138,33 @@ public class PlanServiceImpl implements PlanService {
 
         planRepository.save(plan);
     }
+
+    //리펙토링 전
+    // 게시글 소프트 삭제 기능
+//    @Override
+//    public void softDeletePlan(Integer planId) {
+//        planMapper.softDeletePlan(planId);
+//    }
+
+    //리펙토링 후
     // 게시글 소프트 삭제 기능
     @Override
-    public void softDeletePlan(Integer planId) {
-        planMapper.softDeletePlan(planId);
+    public void softDeletePlan(Integer planId, Integer userNo) {
+        planMapper.softDeletePlan(planId, userNo);
     }
 
+    // 리펙토링 전
+//    // 공유하기 기능
+//    @Override
+//    public void togglePlanPublic(Integer planId) {
+//        planMapper.togglePlanPublic(planId);
+//    }
+
+    // 리펙토링 후
     // 공유하기 기능
     @Override
-    public void togglePlanPublic(Integer planId) {
-        planMapper.togglePlanPublic(planId);
+    public void togglePlanPublic(Integer planId, Integer userNo) {
+        planMapper.togglePlanPublic(planId, userNo);
     }
 
     // 헤더 부분에 있는 여행 루트 둘러러보기

@@ -134,7 +134,7 @@ public class PlanController {
          *  Q. Spring Security의 장점과 POJO에 대해 설명해줘
          *  A.
          *      Spring Security의 장점
-         *          - 표준화된 보안 로직(검증도니 보안)
+         *          - 표준화된 보안 로직(검증된 보안)
          *              - 보안을 직접 구현하면 구멍이 생기기 쉬움. Spring Security는 검증된 방식으로 인증과 인가를 처리
          *              - 세션 고정 공격, CSRF, 클릭재킹 같은 일반적인 웹 보안 공격들을 기본적으로 방어
          *          - 관심사의 분리(AOP)

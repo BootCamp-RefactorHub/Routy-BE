@@ -5,6 +5,8 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.c4.routy.common.exception.BusinessException;
+import com.c4.routy.common.exception.ErrorCode;
 import com.c4.routy.domain.user.dto.RequestChangePwdDTO;
 import com.c4.routy.domain.user.dto.RequestModifyUserInfoDTO;
 import com.c4.routy.domain.user.entity.UserEntity;
@@ -62,6 +64,10 @@ public class AuthServiceImpl implements AuthService {
     // UserDetailsService에 의한 로그인을 위한 DB 조회용 메서드
     // provider에서 userService가 호출하는 메서드
     // 스프링 시큐리티 사용 시 프로바이더에서 활용할 로그인용 메서드(UserDetails 타입을 반환하는 메서드)
+
+    // UsernameNotFoundException은 Spring Security가 인증 과정에서 사용자를 찾지 못했을 때 캐치하여 처리하는 표준 예외로
+    // 이를 BusinessException으로 변경하게 되면 Spring Security의 실패 핸들링 흐름이 제대로 동작 X
+    // 때문에 기존대로 유지하고 다른 예외들만 BusinessException을 ㅗ처리
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
@@ -172,11 +178,15 @@ public class AuthServiceImpl implements AuthService {
 
         // 1. 비밀번호 유효성 검사
         if (newPwd.getNewPassword() == null || newPwd.getNewPassword().length() < 8) {
-            throw new IllegalArgumentException("비밀번호는 8자 이상이어야 합니다.");
+//            throw new IllegalArgumentException("비밀번호는 8자 이상이어야 합니다.");
+            throw new BusinessException(ErrorCode.INVALID_PASSWORD);
         }
 
         // 2. 사용자 조회
         UserEntity user = userRepository.findByEmail(newPwd.getEmail());
+        if (user == null) {
+            throw new BusinessException(ErrorCode.USER_NOT_FOUND);
+        }
 
         // 3. 새 비밀번호 암호화
         String encodedPassword = bCryptPasswordEncoder.encode(newPwd.getNewPassword());
@@ -193,7 +203,10 @@ public class AuthServiceImpl implements AuthService {
     // 회원정보 수정
     @Override
     public String modifyUserInfo(RequestModifyUserInfoDTO newUserInfo, Integer userNo, MultipartFile profile) {
-        UserEntity userInfo = userRepository.findById(userNo).get();
+//        UserEntity userInfo = userRepository.findById(userNo).get();
+        UserEntity userInfo = userRepository.findById(userNo)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
 
         if(newUserInfo.getUsername() != null) {
             userInfo.setUsername(newUserInfo.getUsername());
@@ -225,7 +238,8 @@ public class AuthServiceImpl implements AuthService {
                 // 접근 가능한 URL 반환
                 userInfo.setImageUrl(amazonS3.getUrl(bucket, fileName).toString());
             } catch (IOException e){
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
+//                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
+                throw new BusinessException(ErrorCode.FILE_UPLOAD_FAIL);
             }
         }
 
@@ -242,7 +256,8 @@ public class AuthServiceImpl implements AuthService {
         try{
             return fileName.substring(fileName.lastIndexOf("."));
         } catch (StringIndexOutOfBoundsException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 형식의 파일" + fileName + ") 입니다.");
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 형식의 파일" + fileName + ") 입니다.");
+            throw new BusinessException(ErrorCode.INVALID_FILE_FORMAT);
         }
     }
 

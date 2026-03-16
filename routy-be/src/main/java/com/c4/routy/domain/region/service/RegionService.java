@@ -1,6 +1,8 @@
 package com.c4.routy.domain.region.service;
 
 
+import com.c4.routy.common.exception.BusinessException;
+import com.c4.routy.common.exception.ErrorCode;
 import com.c4.routy.domain.region.dto.RegionALLDTO;
 import com.c4.routy.domain.region.dto.RegionDTO;
 import com.c4.routy.domain.region.entity.RegionEntity;
@@ -55,8 +57,8 @@ public class RegionService {
     // 단건 조회
     public RegionALLDTO getRegionById(Integer regionId) {
         RegionEntity region = regionRepository.findById(regionId)
-                .orElseThrow(() -> new RuntimeException("Region not found with id: " + regionId));
-
+//                .orElseThrow(() -> new RuntimeException("Region not found with id: " + regionId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.REGION_NOT_FOUND));
         RegionALLDTO dto = new RegionALLDTO();
         dto.setRegionId(region.getRegionId());
         dto.setRegionName(region.getRegionName());

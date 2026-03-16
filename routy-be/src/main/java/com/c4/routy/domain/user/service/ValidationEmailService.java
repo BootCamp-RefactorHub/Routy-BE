@@ -1,5 +1,7 @@
 package com.c4.routy.domain.user.service;
 
+import com.c4.routy.common.exception.BusinessException;
+import com.c4.routy.common.exception.ErrorCode;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +55,8 @@ public class ValidationEmailService {
             verificationCodes.put(mail, number);
             return number;
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+//            throw new RuntimeException(e);
+            throw new BusinessException(ErrorCode.MAIL_SEND_FAIL);
         }
     }
 

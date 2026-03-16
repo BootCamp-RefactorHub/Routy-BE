@@ -1,5 +1,7 @@
 package com.c4.routy.domain.user.websecurity;
 
+import com.c4.routy.common.exception.BusinessException;
+import com.c4.routy.common.exception.ErrorCode;
 import com.c4.routy.domain.user.service.AuthService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -65,13 +67,15 @@ public class JwtUtil {
             if (userDetails instanceof CustomUserDetails) {
                 userNo = ((CustomUserDetails) userDetails).getUserNo();
             } else {
-                throw new RuntimeException("CustomUserDetails를 찾을 수 없습니다.");
+//                throw new RuntimeException("CustomUserDetails를 찾을 수 없습니다.");
+                throw new BusinessException(ErrorCode.USER_NOT_FOUND);
             }
 
             log.info("OAuth2 로그인 - 이메일: {}, 회원번호: {}", email, userNo);
 
         } else {
-            throw new IllegalArgumentException("지원하지 않는 Principal 타입: " + authResult.getPrincipal().getClass());
+//            throw new IllegalArgumentException("지원하지 않는 Principal 타입: " + authResult.getPrincipal().getClass());
+            throw new BusinessException("지원하지 않는 Principal 타입: " + authResult.getPrincipal().getClass(), ErrorCode.INVALID_REQUEST);
         }
 
         // 권한 추출
@@ -124,7 +128,8 @@ public class JwtUtil {
         // 토큰에 들어있는 권한들 추출
         Collection<GrantedAuthority> authorities;
         if (claims.get("auth") == null) {
-            throw new RuntimeException("권한이 들어있지 않은 토큰입니다.");
+//            throw new RuntimeException("권한이 들어있지 않은 토큰입니다.");
+            throw new BusinessException(ErrorCode.UNAUTHORIZED_USER);
         } else {
             authorities = Arrays.stream(claims.get("auth").toString()
                             .replace("[", "")

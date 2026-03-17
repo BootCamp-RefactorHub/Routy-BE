@@ -1,6 +1,8 @@
 package com.c4.routy.domain.plandraw.service;
 
 
+import com.c4.routy.common.exception.BusinessException;
+import com.c4.routy.common.exception.ErrorCode;
 import com.c4.routy.common.util.DateTimeUtil;
 import com.c4.routy.domain.plan.entity.PlanEntity;
 import com.c4.routy.domain.plandraw.dto.PlanCreateRequestDTO;
@@ -73,11 +75,13 @@ public class PlanDrawService {
         plan.setTheme(dto.getTheme());
         //  region_id -> RegionEntity 로 변환해서 주입
         RegionEntity region = RegionRepository.findById(dto.getRegionId())
-                .orElseThrow(() -> new IllegalArgumentException("지역 없음"));
+//                .orElseThrow(() -> new IllegalArgumentException("지역 없음"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.REGION_NOT_FOUND));
         plan.setRegion(region);
 
         UserEntity user = userRepository.findById(userNo)
-                .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+//                .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
         plan.setUser(user);
 
         plan.setCreatedAt(DateTimeUtil.now());
@@ -98,7 +102,8 @@ public class PlanDrawService {
     // Plan 단건 조회
     public PlanResponseDTO getPlanById(Integer planId) {
         PlanEntity plan = planRepository.findById(planId)
-                .orElseThrow(() -> new RuntimeException("Plan not found with id: " + planId));
+//                .orElseThrow(() -> new RuntimeException("Plan not found with id: " + planId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PLAN_NOT_FOUND));
         return modelMapper.map(plan, PlanResponseDTO.class);
     }
 

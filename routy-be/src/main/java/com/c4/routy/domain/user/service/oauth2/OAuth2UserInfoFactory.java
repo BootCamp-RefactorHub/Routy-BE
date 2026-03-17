@@ -1,5 +1,7 @@
 package com.c4.routy.domain.user.service.oauth2;
 
+import com.c4.routy.common.exception.BusinessException;
+import com.c4.routy.common.exception.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -20,7 +22,8 @@ public class OAuth2UserInfoFactory {
             case "google" -> new GoogleOAuth2UserInfo(attributes);
             case "naver" -> new NaverOAuth2UserInfo(attributes);
             case "kakao" -> new KakaoOAuth2UserInfo(attributes);
-            default -> throw new IllegalArgumentException("지원하지 않는 OAuth2 Provider입니다: " + registrationId);
+//            default -> throw new IllegalArgumentException("지원하지 않는 OAuth2 Provider입니다: " + registrationId);
+            default -> throw new BusinessException(ErrorCode.OAuth2_NOT_PROVIDE);
         };
     }
 }

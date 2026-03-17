@@ -4,6 +4,8 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.c4.routy.common.exception.BusinessException;
+import com.c4.routy.common.exception.ErrorCode;
 import com.c4.routy.domain.plan.dto.PlanReviewFormDTO;
 import com.c4.routy.domain.plan.dto.PlanReviewResponseDTO;
 import com.c4.routy.domain.plan.dto.PlanReviewUploadRequestDTO;
@@ -133,8 +135,9 @@ public class ReviewServiceImpl implements ReviewService {
 
                 } catch (IOException e) {
                     log.error("리뷰 파일 업로드 실패: {}", file.getOriginalFilename(), e);
-                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
-                            "파일 업로드에 실패했습니다: " + file.getOriginalFilename());
+//                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+//                            "파일 업로드에 실패했습니다: " + file.getOriginalFilename());
+                    throw new BusinessException(ErrorCode.FILE_UPLOAD_FAIL);
                 }
 
             }
@@ -183,8 +186,9 @@ public class ReviewServiceImpl implements ReviewService {
         try {
             return fileName.substring(fileName.lastIndexOf("."));
         } catch (StringIndexOutOfBoundsException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "잘못된 형식의 파일(" + fileName + ") 입니다.");
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+//                    "잘못된 형식의 파일(" + fileName + ") 입니다.");
+            throw new BusinessException(ErrorCode.INVALID_FILE_FORMAT);
         }
     }
 

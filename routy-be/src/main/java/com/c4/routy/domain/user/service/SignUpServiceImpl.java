@@ -1,5 +1,7 @@
 package com.c4.routy.domain.user.service;
 
+import com.c4.routy.common.exception.BusinessException;
+import com.c4.routy.common.exception.ErrorCode;
 import com.c4.routy.domain.user.dto.UserDTO;
 import com.c4.routy.domain.user.entity.UserEntity;
 import com.c4.routy.domain.user.repository.UserRepository;
@@ -33,7 +35,8 @@ public class SignUpServiceImpl implements SignUpService{
     public void registUser(UserDTO userDTO) {
         log.info("회원가입 서비스 메서드: {}", userDTO.getEmail());
         if (userRepository.existsByEmail(userDTO.getEmail())) {
-            throw new DuplicateUserException("이미 가입된 이메일입니다.");
+//            throw new DuplicateUserException("이미 가입된 이메일입니다.");
+            throw new BusinessException(ErrorCode.DUPLICATE_USER);
         }
         userDTO.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
         userDTO.setRole("ROLE_USER");

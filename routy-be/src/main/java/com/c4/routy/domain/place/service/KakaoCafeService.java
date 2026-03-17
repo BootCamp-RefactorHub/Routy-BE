@@ -1,5 +1,6 @@
 package com.c4.routy.domain.place.service;
 
+import com.c4.routy.common.exception.BusinessException;
 import com.c4.routy.domain.place.enums.PlaceCategory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +19,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.c4.routy.common.exception.ErrorCode.EXTERNAL_API_FAIL;
 
 
 @Slf4j
@@ -101,7 +104,8 @@ public class KakaoCafeService {
             log.error("에러 메시지: {}", e.getMessage());
             log.error("전체 스택:", e);
             log.error("==================================");
-            throw new RuntimeException("카카오 맛집 API 호출 실패: " + e.getMessage(), e);
+//            throw new RuntimeException("카카오 맛집 API 호출 실패: " + e.getMessage(), e);
+            throw new BusinessException("카카오 카페 API 호출 실패: " + e.getMessage(), EXTERNAL_API_FAIL);
         }
     }
 }

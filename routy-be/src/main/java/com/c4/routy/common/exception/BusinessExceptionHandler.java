@@ -17,7 +17,7 @@ public class BusinessExceptionHandler {
      */
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
-        return ErrorResponse.toResponseEntity(e.getErrorCode());
+        return ErrorResponse.toResponseEntity(e.getErrorCode(), e.getMessage());
     }
 
     /**
@@ -25,6 +25,6 @@ public class BusinessExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
-        return ErrorResponse.toResponseEntity(ErrorCode.INTERNAL_SERVER_ERROR);
+        return ErrorResponse.toResponseEntity(ErrorCode.INTERNAL_SERVER_ERROR, e.getMessage());
     }
 }

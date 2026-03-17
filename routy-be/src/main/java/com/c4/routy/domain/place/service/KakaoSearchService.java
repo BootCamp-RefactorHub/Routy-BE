@@ -1,5 +1,6 @@
 package com.c4.routy.domain.place.service;
 
+import com.c4.routy.common.exception.BusinessException;
 import com.c4.routy.domain.place.dto.KakaoPlaceResponse;
 import com.c4.routy.domain.place.dto.KakaoSearchRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,8 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+
+import static com.c4.routy.common.exception.ErrorCode.EXTERNAL_API_FAIL;
 
 @Slf4j
 @Service
@@ -61,7 +64,8 @@ public class KakaoSearchService {
 
         } catch (Exception e) {
             log.error("카카오 API 호출 실패", e);
-            throw new RuntimeException("맛집 검색 중 오류가 발생했습니다.", e);
+//            throw new RuntimeException("맛집 검색 중 오류가 발생했습니다.", e);
+            throw new BusinessException("카카오 검색 API 호출 실패: " + e.getMessage(), EXTERNAL_API_FAIL);
         }
     }
 

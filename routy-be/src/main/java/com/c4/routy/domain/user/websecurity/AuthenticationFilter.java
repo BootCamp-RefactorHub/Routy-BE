@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -43,7 +44,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(creds.getEmail(), creds.getPassword(), new ArrayList<>()));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+//            throw new RuntimeException(e);
+            // Spring Security의 흐름에서 벗어나지 않도록 RuntimeException이 아닌 AuthenticationServiceException을 던짐
+            throw new AuthenticationServiceException("요청 본문을 파싱할 수 없습니다.");
         }
     }
 
@@ -74,9 +77,15 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     protected void unsuccessfulAuthentication(HttpServletRequest request,
                                               HttpServletResponse response,
                                               AuthenticationException failed) throws IOException, ServletException {
+        // 백엔드 내부 로그로는 상세한 실패 이유를 남김. (예: "비밀번호가 일치하지 않습니다.")
         log.error("로그인 실패: {}", failed.getMessage());
+        
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write("{\"error\": \"" + failed.getMessage() + "\"}");
+//        response.getWriter().write("{\"error\": \"" + failed.getMessage() + "\"}");
+
+        // 클라이언트에게는 보안을 위해 구체적인 실패 이유(아이디가 틀렸는지, 비밀번호가 틀렸는지)를 숨기고
+        // 모호한 공통 메시지를 반환하는 것이 보안상(계정 열거 공격 방지) 안전
+        response.getWriter().write("{\"error\": \"이메일 또는 비밀번호가 올바르지 않습니다.\"}");
     }
 }

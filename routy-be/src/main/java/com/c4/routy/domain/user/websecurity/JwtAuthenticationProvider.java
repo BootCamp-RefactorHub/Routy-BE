@@ -36,6 +36,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         CustomUserDetails userDetails = (CustomUserDetails) authService.loadUserByUsername(email);
 
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+            // Spring Security의 표준 예외로 절대 변경 불가
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
 

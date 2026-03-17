@@ -1,5 +1,7 @@
 package com.c4.routy.domain.plan.service;
 
+import com.c4.routy.common.exception.BusinessException;
+import com.c4.routy.common.exception.ErrorCode;
 import com.c4.routy.domain.duration.entity.DurationEntity;
 import com.c4.routy.domain.duration.repository.DurationRepository;
 import com.c4.routy.domain.plan.dto.*;
@@ -74,7 +76,8 @@ public class PlanServiceImpl implements PlanService {
         PlanDetailResponseDTO dto = planMapper.selectPlanDetail(planId);
 
         if (dto == null) {
-            throw new IllegalArgumentException("해당 일정의 상세 데이터가 없습니다. (planId=" + planId + ")");
+//            throw new IllegalArgumentException("해당 일정의 상세 데이터가 없습니다. (planId=" + planId + ")");
+            throw new BusinessException(ErrorCode.PLAN_NOT_FOUND);
         }
 
         // startDate / endDate 는 mapper에서 문자열로 온다고 가정 (yyyy-MM-dd)
@@ -222,7 +225,8 @@ public class PlanServiceImpl implements PlanService {
         // 1) 기본 상세 조회 (plan 정보 + days)
         BrowseDetailResponseDTO detail = planMapper.selectPublicPlanDetail(planId);
         if (detail == null) {
-            throw new IllegalArgumentException("해당 일정이 존재하지 않습니다. planId=" + planId);
+//            throw new IllegalArgumentException("해당 일정이 존재하지 않습니다. planId=" + planId);
+            throw new BusinessException(ErrorCode.PLAN_NOT_FOUND);
         }
 
         // 2) 리뷰 + 리뷰 이미지 조회 (별도 쿼리)
@@ -260,7 +264,8 @@ public class PlanServiceImpl implements PlanService {
         // 작성자 ID 확인
         Integer authorId = planMapper.selectPlanAuthorId(planId);
         if (authorId != null && authorId.equals(userId)) {
-            throw new IllegalArgumentException("본인은 자신의 글에 좋아요를 누를 수 없습니다.");
+//            throw new IllegalArgumentException("본인은 자신의 글에 좋아요를 누를 수 없습니다.");
+            throw new BusinessException(ErrorCode.CANNOT_LIKE_OWN_POST);
         }
 
         // 좋아요 상태 확인 후 토글
@@ -331,7 +336,9 @@ public class PlanServiceImpl implements PlanService {
         // 기존 일정 확인
         PlanDetailResponseDTO original = planMapper.selectPlanDetail(planId);
         if (original == null) {
-            throw new IllegalArgumentException("복사할 일정이 존재하지 않습니다. (planId=" + planId + ")");
+//            throw new IllegalArgumentException("복사할 일정이 존재하지 않습니다. (planId=" + planId + ")");
+             throw new BusinessException(ErrorCode.PLAN_NOT_FOUND);
+
         }
 
         // 새 일정 생성
